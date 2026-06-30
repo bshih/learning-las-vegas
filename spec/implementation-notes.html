@@ -48,6 +48,7 @@
       <li>Starting a fresh unrevealed question restores the default valley frame so any reveal/inspection zoom does not carry forward.</li>
       <li>Close marker labels split left/right to avoid stacking when the guess is nearly correct.</li>
       <li>Result feedback can call out when the guess appears close to one road but misses the cross street.</li>
+      <li>The Lake Mead Boulevard / Las Vegas Boulevard North seed point is explicitly guarded in validation after QA found it had drifted west to the I-15/Lake Mead interchange.</li>
     </ul>
 
     <h2>Deviations</h2>
@@ -66,6 +67,7 @@
       <li>Zoom/pan is intentionally modest for V1. It is enough for reading the local road grid, not a full slippy-map replacement.</li>
       <li>Reveal no longer zooms in to expose labels because that removed too much location context; split labels and a small preserve-zoom pan are the current compromise.</li>
       <li>Tile post-processing depends on CARTO returning CORS-enabled PNGs. If processing fails, the image falls back to the original CARTO tile instead of blanking the map.</li>
+      <li>Spot-check coordinate guards are intentionally narrow for now; broader corpus precision still needs a future ETL or review pass.</li>
     </ul>
 
     <h2>Open Questions</h2>

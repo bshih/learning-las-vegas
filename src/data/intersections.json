@@ -600,8 +600,8 @@
     "id": "north-las-vegas-lake-mead-las-vegas-blvd",
     "streetA": "Lake Mead Boulevard",
     "streetB": "Las Vegas Boulevard",
-    "lat": 36.1957,
-    "lon": -115.1396,
+    "lat": 36.1958,
+    "lon": -115.129,
     "region": "North Las Vegas",
     "difficulty": "medium",
     "aliases": ["Lake Mead & Las Vegas Blvd", "Lake Mead & LV Blvd"]

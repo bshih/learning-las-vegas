@@ -31,6 +31,14 @@ const requiredAnchors = [
   "Lamb Boulevard",
   "Nellis Boulevard"
 ];
+const coordinateQaChecks = [
+  {
+    id: "north-las-vegas-lake-mead-las-vegas-blvd",
+    expected: { lat: 36.1958, lon: -115.129 },
+    maxDelta: 0.002,
+    note: "should mark North Las Vegas Boulevard, not the I-15/Lake Mead interchange"
+  }
+];
 const ids = new Set();
 const coveredStreets = new Set();
 const errors = [];
@@ -85,6 +93,20 @@ for (const [index, item] of intersections.entries()) {
 for (const anchor of requiredAnchors) {
   if (!coveredStreets.has(anchor)) {
     errors.push(`missing required anchor street: ${anchor}`);
+  }
+}
+
+for (const check of coordinateQaChecks) {
+  const item = intersections.find((candidate) => candidate.id === check.id);
+  if (!item) {
+    errors.push(`${check.id}: missing coordinate QA target`);
+    continue;
+  }
+
+  const latDelta = Math.abs(item.lat - check.expected.lat);
+  const lonDelta = Math.abs(item.lon - check.expected.lon);
+  if (latDelta > check.maxDelta || lonDelta > check.maxDelta) {
+    errors.push(`${check.id}: coordinate QA failed; ${check.note}`);
   }
 }
 

@@ -27,3 +27,4 @@
 - 2026-06-29: Added a generated slate road-grid overlay from the seed corpus because raster-only no-label tiles were either yellow or too faint at the default valley view.
 - 2026-06-29: Removed the generated road overlay after QA showed it did not match real road geometry; switched back to actual CARTO Voyager tiles only, tuned darker/clearer in CSS.
 - 2026-06-29: Replaced broad CSS tile filters with client-side CARTO tile post-processing: real Voyager raster tiles are converted to a higher-contrast neutral grayscale map, with yellow road pixels recolored directly and original tiles used as fallback if processing fails.
+- 2026-06-29: Corrected the Lake Mead Boulevard / Las Vegas Boulevard seed point from the I-15/Lake Mead interchange to the North Las Vegas Boulevard crossing and added a seed validation guard for that QA case.
