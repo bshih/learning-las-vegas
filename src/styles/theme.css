@@ -1,0 +1,18 @@
+:root {
+  --font-body: "Avenir Next", "Trebuchet MS", ui-sans-serif, system-ui, sans-serif;
+  --color-background: #f6f7f9;
+  --color-surface: #ffffff;
+  --color-surface-strong: #fbfcfe;
+  --color-text: #172033;
+  --color-muted: #657082;
+  --color-border: #d7dde7;
+  --color-accent: #265fbc;
+  --color-focus: #84a8ff;
+  --color-map-bg: #e8edf5;
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+}

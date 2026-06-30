@@ -1,0 +1,709 @@
+[
+  {
+    "id": "sahara-las-vegas-blvd",
+    "streetA": "Sahara Avenue",
+    "streetB": "Las Vegas Boulevard",
+    "lat": 36.1447,
+    "lon": -115.1569,
+    "region": "Strip / Gateway District",
+    "difficulty": "easy",
+    "aliases": ["Sahara & The Strip", "Sahara and Las Vegas Blvd", "LV Blvd & Sahara"],
+    "teachingNote": "Sahara is the useful north-edge anchor for the resort corridor."
+  },
+  {
+    "id": "sahara-rainbow",
+    "streetA": "Sahara Avenue",
+    "streetB": "Rainbow Boulevard",
+    "lat": 36.1446,
+    "lon": -115.2422,
+    "region": "West Las Vegas",
+    "difficulty": "medium",
+    "aliases": ["Sahara & Rainbow"]
+  },
+  {
+    "id": "sahara-decatur",
+    "streetA": "Sahara Avenue",
+    "streetB": "Decatur Boulevard",
+    "lat": 36.1445,
+    "lon": -115.2078,
+    "region": "Central West",
+    "difficulty": "easy",
+    "aliases": ["Sahara & Decatur"]
+  },
+  {
+    "id": "sahara-jones",
+    "streetA": "Sahara Avenue",
+    "streetB": "Jones Boulevard",
+    "lat": 36.1445,
+    "lon": -115.2246,
+    "region": "West Las Vegas",
+    "difficulty": "medium",
+    "aliases": ["Sahara & Jones"]
+  },
+  {
+    "id": "sahara-buffalo",
+    "streetA": "Sahara Avenue",
+    "streetB": "Buffalo Drive",
+    "lat": 36.1446,
+    "lon": -115.2598,
+    "region": "West Las Vegas",
+    "difficulty": "medium",
+    "aliases": ["Sahara & Buffalo"]
+  },
+  {
+    "id": "sahara-durango",
+    "streetA": "Sahara Avenue",
+    "streetB": "Durango Drive",
+    "lat": 36.1446,
+    "lon": -115.279,
+    "region": "West Las Vegas",
+    "difficulty": "hard",
+    "aliases": ["Sahara & Durango"]
+  },
+  {
+    "id": "sahara-fort-apache",
+    "streetA": "Sahara Avenue",
+    "streetB": "Fort Apache Road",
+    "lat": 36.1447,
+    "lon": -115.2972,
+    "region": "The Lakes / West Las Vegas",
+    "difficulty": "hard",
+    "aliases": ["Sahara & Fort Apache"]
+  },
+  {
+    "id": "sahara-maryland",
+    "streetA": "Sahara Avenue",
+    "streetB": "Maryland Parkway",
+    "lat": 36.1446,
+    "lon": -115.1366,
+    "region": "Central Las Vegas",
+    "difficulty": "easy",
+    "aliases": ["Sahara & Maryland"]
+  },
+  {
+    "id": "sahara-eastern",
+    "streetA": "Sahara Avenue",
+    "streetB": "Eastern Avenue",
+    "lat": 36.1447,
+    "lon": -115.119,
+    "region": "East Las Vegas",
+    "difficulty": "medium",
+    "aliases": ["Sahara & Eastern"]
+  },
+  {
+    "id": "sahara-lamb",
+    "streetA": "Sahara Avenue",
+    "streetB": "Lamb Boulevard",
+    "lat": 36.1447,
+    "lon": -115.0802,
+    "region": "East Las Vegas",
+    "difficulty": "medium",
+    "aliases": ["Sahara & Lamb"]
+  },
+  {
+    "id": "sahara-nellis",
+    "streetA": "Sahara Avenue",
+    "streetB": "Nellis Boulevard",
+    "lat": 36.1448,
+    "lon": -115.0621,
+    "region": "East Las Vegas",
+    "difficulty": "medium",
+    "aliases": ["Sahara & Nellis"]
+  },
+  {
+    "id": "charleston-las-vegas-blvd",
+    "streetA": "Charleston Boulevard",
+    "streetB": "Las Vegas Boulevard",
+    "lat": 36.1597,
+    "lon": -115.1494,
+    "region": "Downtown / Arts District",
+    "difficulty": "easy",
+    "aliases": ["Charleston & Las Vegas Blvd", "Charleston & LV Blvd"],
+    "teachingNote": "Charleston sits north of Sahara and runs through the downtown/Arts District edge."
+  },
+  {
+    "id": "charleston-rainbow",
+    "streetA": "Charleston Boulevard",
+    "streetB": "Rainbow Boulevard",
+    "lat": 36.1597,
+    "lon": -115.2422,
+    "region": "West Las Vegas",
+    "difficulty": "medium",
+    "aliases": ["Charleston & Rainbow"]
+  },
+  {
+    "id": "charleston-decatur",
+    "streetA": "Charleston Boulevard",
+    "streetB": "Decatur Boulevard",
+    "lat": 36.1597,
+    "lon": -115.2078,
+    "region": "Central West",
+    "difficulty": "easy",
+    "aliases": ["Charleston & Decatur"]
+  },
+  {
+    "id": "charleston-jones",
+    "streetA": "Charleston Boulevard",
+    "streetB": "Jones Boulevard",
+    "lat": 36.1597,
+    "lon": -115.2246,
+    "region": "West Las Vegas",
+    "difficulty": "medium",
+    "aliases": ["Charleston & Jones"]
+  },
+  {
+    "id": "charleston-buffalo",
+    "streetA": "Charleston Boulevard",
+    "streetB": "Buffalo Drive",
+    "lat": 36.1597,
+    "lon": -115.2598,
+    "region": "West Las Vegas",
+    "difficulty": "medium",
+    "aliases": ["Charleston & Buffalo"]
+  },
+  {
+    "id": "charleston-durango",
+    "streetA": "Charleston Boulevard",
+    "streetB": "Durango Drive",
+    "lat": 36.1598,
+    "lon": -115.279,
+    "region": "West Las Vegas",
+    "difficulty": "hard",
+    "aliases": ["Charleston & Durango"]
+  },
+  {
+    "id": "charleston-fort-apache",
+    "streetA": "Charleston Boulevard",
+    "streetB": "Fort Apache Road",
+    "lat": 36.1598,
+    "lon": -115.2972,
+    "region": "Summerlin / West Las Vegas",
+    "difficulty": "hard",
+    "aliases": ["Charleston & Fort Apache"]
+  },
+  {
+    "id": "charleston-eastern",
+    "streetA": "Charleston Boulevard",
+    "streetB": "Eastern Avenue",
+    "lat": 36.1598,
+    "lon": -115.119,
+    "region": "East Las Vegas",
+    "difficulty": "medium",
+    "aliases": ["Charleston & Eastern"]
+  },
+  {
+    "id": "charleston-lamb",
+    "streetA": "Charleston Boulevard",
+    "streetB": "Lamb Boulevard",
+    "lat": 36.1598,
+    "lon": -115.0802,
+    "region": "East Las Vegas",
+    "difficulty": "medium",
+    "aliases": ["Charleston & Lamb"]
+  },
+  {
+    "id": "charleston-nellis",
+    "streetA": "Charleston Boulevard",
+    "streetB": "Nellis Boulevard",
+    "lat": 36.1598,
+    "lon": -115.0621,
+    "region": "East Las Vegas",
+    "difficulty": "medium",
+    "aliases": ["Charleston & Nellis"]
+  },
+  {
+    "id": "flamingo-las-vegas-blvd",
+    "streetA": "Flamingo Road",
+    "streetB": "Las Vegas Boulevard",
+    "lat": 36.1147,
+    "lon": -115.1728,
+    "region": "Strip",
+    "difficulty": "easy",
+    "aliases": ["Flamingo & The Strip", "Flamingo & Las Vegas Blvd", "Flamingo & LV Blvd"],
+    "teachingNote": "One of the clearest mid-Strip anchors, near Caesars/Bellagio."
+  },
+  {
+    "id": "flamingo-rainbow",
+    "streetA": "Flamingo Road",
+    "streetB": "Rainbow Boulevard",
+    "lat": 36.1147,
+    "lon": -115.2422,
+    "region": "Spring Valley",
+    "difficulty": "medium",
+    "aliases": ["Flamingo & Rainbow"]
+  },
+  {
+    "id": "flamingo-decatur",
+    "streetA": "Flamingo Road",
+    "streetB": "Decatur Boulevard",
+    "lat": 36.1147,
+    "lon": -115.2078,
+    "region": "Spring Valley",
+    "difficulty": "easy",
+    "aliases": ["Flamingo & Decatur"]
+  },
+  {
+    "id": "flamingo-jones",
+    "streetA": "Flamingo Road",
+    "streetB": "Jones Boulevard",
+    "lat": 36.1147,
+    "lon": -115.2246,
+    "region": "Spring Valley",
+    "difficulty": "medium",
+    "aliases": ["Flamingo & Jones"]
+  },
+  {
+    "id": "flamingo-buffalo",
+    "streetA": "Flamingo Road",
+    "streetB": "Buffalo Drive",
+    "lat": 36.1147,
+    "lon": -115.2598,
+    "region": "Spring Valley",
+    "difficulty": "medium",
+    "aliases": ["Flamingo & Buffalo"]
+  },
+  {
+    "id": "flamingo-paradise",
+    "streetA": "Flamingo Road",
+    "streetB": "Paradise Road",
+    "lat": 36.1147,
+    "lon": -115.1539,
+    "region": "Paradise / Resort Corridor",
+    "difficulty": "medium",
+    "aliases": ["Flamingo & Paradise"]
+  },
+  {
+    "id": "flamingo-maryland",
+    "streetA": "Flamingo Road",
+    "streetB": "Maryland Parkway",
+    "lat": 36.1148,
+    "lon": -115.1366,
+    "region": "Paradise / UNLV",
+    "difficulty": "medium",
+    "aliases": ["Flamingo & Maryland"]
+  },
+  {
+    "id": "flamingo-eastern",
+    "streetA": "Flamingo Road",
+    "streetB": "Eastern Avenue",
+    "lat": 36.1148,
+    "lon": -115.119,
+    "region": "Paradise / East Las Vegas",
+    "difficulty": "medium",
+    "aliases": ["Flamingo & Eastern"]
+  },
+  {
+    "id": "flamingo-lamb",
+    "streetA": "Flamingo Road",
+    "streetB": "Lamb Boulevard",
+    "lat": 36.1148,
+    "lon": -115.0802,
+    "region": "East Las Vegas",
+    "difficulty": "hard",
+    "aliases": ["Flamingo & Lamb"]
+  },
+  {
+    "id": "flamingo-nellis",
+    "streetA": "Flamingo Road",
+    "streetB": "Nellis Boulevard",
+    "lat": 36.1148,
+    "lon": -115.0621,
+    "region": "East Las Vegas",
+    "difficulty": "hard",
+    "aliases": ["Flamingo & Nellis"]
+  },
+  {
+    "id": "tropicana-las-vegas-blvd",
+    "streetA": "Tropicana Avenue",
+    "streetB": "Las Vegas Boulevard",
+    "lat": 36.099,
+    "lon": -115.1716,
+    "region": "Strip / Stadium District",
+    "difficulty": "easy",
+    "aliases": ["Tropicana & The Strip", "Tropicana & Las Vegas Blvd", "Tropicana & LV Blvd"],
+    "teachingNote": "Tropicana is the major Strip anchor by MGM Grand, Excalibur, and the airport/stadium side."
+  },
+  {
+    "id": "tropicana-rainbow",
+    "streetA": "Tropicana Avenue",
+    "streetB": "Rainbow Boulevard",
+    "lat": 36.099,
+    "lon": -115.2422,
+    "region": "Spring Valley",
+    "difficulty": "medium",
+    "aliases": ["Tropicana & Rainbow"]
+  },
+  {
+    "id": "tropicana-decatur",
+    "streetA": "Tropicana Avenue",
+    "streetB": "Decatur Boulevard",
+    "lat": 36.099,
+    "lon": -115.2078,
+    "region": "Spring Valley",
+    "difficulty": "easy",
+    "aliases": ["Tropicana & Decatur"]
+  },
+  {
+    "id": "tropicana-jones",
+    "streetA": "Tropicana Avenue",
+    "streetB": "Jones Boulevard",
+    "lat": 36.099,
+    "lon": -115.2246,
+    "region": "Spring Valley",
+    "difficulty": "medium",
+    "aliases": ["Tropicana & Jones"]
+  },
+  {
+    "id": "tropicana-buffalo",
+    "streetA": "Tropicana Avenue",
+    "streetB": "Buffalo Drive",
+    "lat": 36.099,
+    "lon": -115.2598,
+    "region": "Spring Valley",
+    "difficulty": "medium",
+    "aliases": ["Tropicana & Buffalo"]
+  },
+  {
+    "id": "tropicana-durango",
+    "streetA": "Tropicana Avenue",
+    "streetB": "Durango Drive",
+    "lat": 36.099,
+    "lon": -115.279,
+    "region": "Spring Valley",
+    "difficulty": "hard",
+    "aliases": ["Tropicana & Durango"]
+  },
+  {
+    "id": "tropicana-fort-apache",
+    "streetA": "Tropicana Avenue",
+    "streetB": "Fort Apache Road",
+    "lat": 36.099,
+    "lon": -115.2972,
+    "region": "Southwest Las Vegas",
+    "difficulty": "hard",
+    "aliases": ["Tropicana & Fort Apache"]
+  },
+  {
+    "id": "tropicana-paradise",
+    "streetA": "Tropicana Avenue",
+    "streetB": "Paradise Road",
+    "lat": 36.099,
+    "lon": -115.1539,
+    "region": "Paradise / Airport",
+    "difficulty": "medium",
+    "aliases": ["Tropicana & Paradise"]
+  },
+  {
+    "id": "tropicana-maryland",
+    "streetA": "Tropicana Avenue",
+    "streetB": "Maryland Parkway",
+    "lat": 36.0991,
+    "lon": -115.1366,
+    "region": "Paradise / UNLV South",
+    "difficulty": "medium",
+    "aliases": ["Tropicana & Maryland"]
+  },
+  {
+    "id": "tropicana-eastern",
+    "streetA": "Tropicana Avenue",
+    "streetB": "Eastern Avenue",
+    "lat": 36.0991,
+    "lon": -115.119,
+    "region": "Paradise / East Las Vegas",
+    "difficulty": "medium",
+    "aliases": ["Tropicana & Eastern"]
+  },
+  {
+    "id": "tropicana-pecos",
+    "streetA": "Tropicana Avenue",
+    "streetB": "Pecos Road",
+    "lat": 36.0991,
+    "lon": -115.1002,
+    "region": "Paradise / East Las Vegas",
+    "difficulty": "hard",
+    "aliases": ["Tropicana & Pecos"]
+  },
+  {
+    "id": "spring-mountain-las-vegas-blvd",
+    "streetA": "Spring Mountain Road",
+    "streetB": "Las Vegas Boulevard",
+    "lat": 36.1264,
+    "lon": -115.1711,
+    "region": "Strip / Fashion Show",
+    "difficulty": "easy",
+    "aliases": ["Spring Mountain & The Strip", "Spring Mountain & Las Vegas Blvd", "Spring Mountain & LV Blvd"],
+    "teachingNote": "Spring Mountain is the Chinatown-to-north-Strip connector."
+  },
+  {
+    "id": "spring-mountain-rainbow",
+    "streetA": "Spring Mountain Road",
+    "streetB": "Rainbow Boulevard",
+    "lat": 36.1264,
+    "lon": -115.2422,
+    "region": "Spring Valley",
+    "difficulty": "medium",
+    "aliases": ["Spring Mountain & Rainbow"]
+  },
+  {
+    "id": "spring-mountain-decatur",
+    "streetA": "Spring Mountain Road",
+    "streetB": "Decatur Boulevard",
+    "lat": 36.1264,
+    "lon": -115.2078,
+    "region": "Chinatown / Central West",
+    "difficulty": "easy",
+    "aliases": ["Spring Mountain & Decatur"]
+  },
+  {
+    "id": "spring-mountain-jones",
+    "streetA": "Spring Mountain Road",
+    "streetB": "Jones Boulevard",
+    "lat": 36.1264,
+    "lon": -115.2246,
+    "region": "Chinatown / Spring Valley",
+    "difficulty": "medium",
+    "aliases": ["Spring Mountain & Jones"]
+  },
+  {
+    "id": "spring-mountain-valley-view",
+    "streetA": "Spring Mountain Road",
+    "streetB": "Valley View Boulevard",
+    "lat": 36.1264,
+    "lon": -115.1903,
+    "region": "Chinatown",
+    "difficulty": "medium",
+    "aliases": ["Spring Mountain & Valley View"]
+  },
+  {
+    "id": "spring-mountain-paradise",
+    "streetA": "Spring Mountain Road",
+    "streetB": "Paradise Road",
+    "lat": 36.1264,
+    "lon": -115.1539,
+    "region": "Paradise / Convention Center",
+    "difficulty": "hard",
+    "aliases": ["Spring Mountain & Paradise", "Sands & Paradise"]
+  },
+  {
+    "id": "spring-mountain-maryland",
+    "streetA": "Spring Mountain Road",
+    "streetB": "Maryland Parkway",
+    "lat": 36.1265,
+    "lon": -115.1366,
+    "region": "Central Las Vegas",
+    "difficulty": "hard",
+    "aliases": ["Spring Mountain & Maryland"]
+  },
+  {
+    "id": "summerlin-charleston-rampart",
+    "streetA": "Charleston Boulevard",
+    "streetB": "Rampart Boulevard",
+    "lat": 36.1599,
+    "lon": -115.2916,
+    "region": "Summerlin",
+    "difficulty": "medium",
+    "aliases": ["Charleston & Rampart"],
+    "teachingNote": "A strong Summerlin anchor west of Fort Apache."
+  },
+  {
+    "id": "summerlin-sahara-hualapai",
+    "streetA": "Sahara Avenue",
+    "streetB": "Hualapai Way",
+    "lat": 36.1448,
+    "lon": -115.314,
+    "region": "Summerlin / The Lakes",
+    "difficulty": "hard",
+    "aliases": ["Sahara & Hualapai"]
+  },
+  {
+    "id": "summerlin-charleston-hualapai",
+    "streetA": "Charleston Boulevard",
+    "streetB": "Hualapai Way",
+    "lat": 36.1599,
+    "lon": -115.314,
+    "region": "Summerlin",
+    "difficulty": "hard",
+    "aliases": ["Charleston & Hualapai"]
+  },
+  {
+    "id": "summerlin-lake-mead-rampart",
+    "streetA": "Lake Mead Boulevard",
+    "streetB": "Rampart Boulevard",
+    "lat": 36.1958,
+    "lon": -115.2916,
+    "region": "Summerlin",
+    "difficulty": "hard",
+    "aliases": ["Lake Mead & Rampart"]
+  },
+  {
+    "id": "henderson-sunset-eastern",
+    "streetA": "Sunset Road",
+    "streetB": "Eastern Avenue",
+    "lat": 36.0717,
+    "lon": -115.119,
+    "region": "Henderson / Green Valley",
+    "difficulty": "medium",
+    "aliases": ["Sunset & Eastern"]
+  },
+  {
+    "id": "henderson-sunset-green-valley",
+    "streetA": "Sunset Road",
+    "streetB": "Green Valley Parkway",
+    "lat": 36.0716,
+    "lon": -115.0837,
+    "region": "Henderson / Green Valley",
+    "difficulty": "medium",
+    "aliases": ["Sunset & Green Valley"]
+  },
+  {
+    "id": "henderson-warm-springs-eastern",
+    "streetA": "Warm Springs Road",
+    "streetB": "Eastern Avenue",
+    "lat": 36.057,
+    "lon": -115.119,
+    "region": "Henderson / Green Valley",
+    "difficulty": "medium",
+    "aliases": ["Warm Springs & Eastern"]
+  },
+  {
+    "id": "henderson-warm-springs-stephanie",
+    "streetA": "Warm Springs Road",
+    "streetB": "Stephanie Street",
+    "lat": 36.057,
+    "lon": -115.0469,
+    "region": "Henderson",
+    "difficulty": "hard",
+    "aliases": ["Warm Springs & Stephanie"]
+  },
+  {
+    "id": "henderson-st-rose-eastern",
+    "streetA": "St. Rose Parkway",
+    "streetB": "Eastern Avenue",
+    "lat": 36.0004,
+    "lon": -115.1188,
+    "region": "Henderson / Seven Hills",
+    "difficulty": "hard",
+    "aliases": ["St Rose & Eastern", "Saint Rose & Eastern"]
+  },
+  {
+    "id": "henderson-lake-mead-boulder-hwy",
+    "streetA": "Lake Mead Parkway",
+    "streetB": "Boulder Highway",
+    "lat": 36.0334,
+    "lon": -114.9827,
+    "region": "Henderson",
+    "difficulty": "hard",
+    "aliases": ["Lake Mead Pkwy & Boulder Highway", "Lake Mead & Boulder Hwy"],
+    "teachingNote": "Henderson's Lake Mead Parkway is separate from Lake Mead Boulevard in North/West Las Vegas."
+  },
+  {
+    "id": "north-las-vegas-lake-mead-las-vegas-blvd",
+    "streetA": "Lake Mead Boulevard",
+    "streetB": "Las Vegas Boulevard",
+    "lat": 36.1957,
+    "lon": -115.1396,
+    "region": "North Las Vegas",
+    "difficulty": "medium",
+    "aliases": ["Lake Mead & Las Vegas Blvd", "Lake Mead & LV Blvd"]
+  },
+  {
+    "id": "north-las-vegas-lake-mead-nellis",
+    "streetA": "Lake Mead Boulevard",
+    "streetB": "Nellis Boulevard",
+    "lat": 36.1958,
+    "lon": -115.0621,
+    "region": "North Las Vegas / East Las Vegas",
+    "difficulty": "medium",
+    "aliases": ["Lake Mead & Nellis"]
+  },
+  {
+    "id": "north-las-vegas-craig-mlk",
+    "streetA": "Craig Road",
+    "streetB": "Martin Luther King Boulevard",
+    "lat": 36.2395,
+    "lon": -115.1594,
+    "region": "North Las Vegas",
+    "difficulty": "hard",
+    "aliases": ["Craig & MLK", "Craig & Martin Luther King"]
+  },
+  {
+    "id": "north-las-vegas-craig-lamb",
+    "streetA": "Craig Road",
+    "streetB": "Lamb Boulevard",
+    "lat": 36.2395,
+    "lon": -115.0802,
+    "region": "North Las Vegas",
+    "difficulty": "hard",
+    "aliases": ["Craig & Lamb"]
+  },
+  {
+    "id": "north-las-vegas-craig-nellis",
+    "streetA": "Craig Road",
+    "streetB": "Nellis Boulevard",
+    "lat": 36.2395,
+    "lon": -115.0621,
+    "region": "North Las Vegas",
+    "difficulty": "hard",
+    "aliases": ["Craig & Nellis"]
+  },
+  {
+    "id": "north-las-vegas-cheyenne-lamb",
+    "streetA": "Cheyenne Avenue",
+    "streetB": "Lamb Boulevard",
+    "lat": 36.2186,
+    "lon": -115.0802,
+    "region": "North Las Vegas",
+    "difficulty": "hard",
+    "aliases": ["Cheyenne & Lamb"]
+  },
+  {
+    "id": "north-las-vegas-cheyenne-nellis",
+    "streetA": "Cheyenne Avenue",
+    "streetB": "Nellis Boulevard",
+    "lat": 36.2187,
+    "lon": -115.0621,
+    "region": "North Las Vegas",
+    "difficulty": "hard",
+    "aliases": ["Cheyenne & Nellis"]
+  },
+  {
+    "id": "northwest-ann-decatur",
+    "streetA": "Ann Road",
+    "streetB": "Decatur Boulevard",
+    "lat": 36.2628,
+    "lon": -115.2078,
+    "region": "Northwest Las Vegas",
+    "difficulty": "hard",
+    "aliases": ["Ann & Decatur"]
+  },
+  {
+    "id": "airport-sunset-las-vegas-blvd",
+    "streetA": "Sunset Road",
+    "streetB": "Las Vegas Boulevard",
+    "lat": 36.0716,
+    "lon": -115.1712,
+    "region": "South Strip / Airport",
+    "difficulty": "medium",
+    "aliases": ["Sunset & Las Vegas Blvd", "Sunset & LV Blvd"]
+  },
+  {
+    "id": "airport-warm-springs-las-vegas-blvd",
+    "streetA": "Warm Springs Road",
+    "streetB": "Las Vegas Boulevard",
+    "lat": 36.057,
+    "lon": -115.1711,
+    "region": "South Strip / Enterprise",
+    "difficulty": "hard",
+    "aliases": ["Warm Springs & Las Vegas Blvd", "Warm Springs & LV Blvd"]
+  },
+  {
+    "id": "southwest-rainbow-blue-diamond",
+    "streetA": "Blue Diamond Road",
+    "streetB": "Rainbow Boulevard",
+    "lat": 36.0201,
+    "lon": -115.2422,
+    "region": "Southwest Las Vegas",
+    "difficulty": "hard",
+    "aliases": ["Blue Diamond & Rainbow"]
+  }
+]

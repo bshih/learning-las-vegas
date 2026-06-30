@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Melissa Map Implementation Notes</title>
+    <style>
+      body {
+        font-family: ui-sans-serif, system-ui, sans-serif;
+        line-height: 1.5;
+        max-width: 760px;
+        margin: 40px auto;
+        padding: 0 20px;
+        color: #172033;
+      }
+
+      h1,
+      h2 {
+        line-height: 1.15;
+      }
+
+      code {
+        background: #eef2f7;
+        padding: 0.1rem 0.25rem;
+        border-radius: 4px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Melissa Map Implementation Notes</h1>
+
+    <h2>Design Decisions</h2>
+    <ul>
+      <li>V1 is static-first: no live geocoding or corpus-building calls during gameplay.</li>
+      <li>Primary mode is click-the-intersection; other modes are deferred.</li>
+      <li>CSS should be token-driven so a later aesthetic pass can reskin without rewriting game logic.</li>
+      <li>Map/data V1 uses a dependency-free coordinate-map adapter because the app scaffold and package file had not landed yet. The adapter API is intentionally small so a MapLibre implementation can satisfy the same contract later.</li>
+      <li>Question order is deterministic by seed and intersection id, which keeps QA repeatable while avoiding hardcoded array order as gameplay order.</li>
+      <li>Distance scoring uses haversine distance between lat/lon coordinates; screen position is only used to convert a click into a guess coordinate.</li>
+      <li>Seed corpus lives in <code>src/data/intersections.json</code>; <code>src/data/intersections.ts</code> adapts it into the map/data <code>Intersection</code> contract.</li>
+      <li>Seed coordinates are playable approximate points, with uncertainty documented in <code>src/data/seed-notes.md</code>.</li>
+      <li>App shell uses React + Vite + TypeScript with small components and a tokenized CSS layer for the later aesthetic pass.</li>
+      <li>Game-loop state consumes the map/data workstream exports instead of duplicating question selection or scoring.</li>
+      <li>The placeholder SVG grid was replaced with dependency-free raster tiles from CARTO basemaps. The app renders no-label tiles while guessing and fades in label tiles after reveal.</li>
+      <li>The map uses actual CARTO Voyager no-label tiles while guessing. Each raster tile is post-processed in a canvas to neutralize the yellow road palette and increase contrast while preserving real CARTO road geometry.</li>
+      <li>The map default now focuses on the developed Las Vegas valley rather than the full Lake Mead / far desert extent, but starts slightly farther out than the first tuned pass so more valley context is visible.</li>
+      <li>Map controls support zoom in, zoom out, reset, drag-to-pan, and wheel zoom without adding MapLibre.</li>
+      <li>Reveal mode preserves the current zoom and only nudges the center when the guess or answer would be too close to the viewport edge.</li>
+      <li>Starting a fresh unrevealed question restores the default valley frame so any reveal/inspection zoom does not carry forward.</li>
+      <li>Close marker labels split left/right to avoid stacking when the guess is nearly correct.</li>
+      <li>Result feedback can call out when the guess appears close to one road but misses the cross street.</li>
+    </ul>
+
+    <h2>Deviations</h2>
+    <ul>
+      <li>MapLibre is still not installed. The current V1 map is a custom lightweight tile adapter using Web Mercator tile math, which keeps the app dependency-light while showing a real Vegas basemap.</li>
+      <li>The road-read feedback is heuristic. It infers street orientation from the seed corpus and should be reviewed as more intersections are added.</li>
+    </ul>
+
+    <h2>Tradeoffs</h2>
+    <ul>
+      <li>Manual seed corpus is faster and safer for V1 than building the full OSM/Clark County ETL immediately.</li>
+      <li>MapLibre is preferred, but a coordinate-map fallback is acceptable if it keeps V1 playable quickly.</li>
+      <li>The sample corpus remains available for tiny fixtures, but app gameplay should use the 70-item <code>intersections</code> export.</li>
+      <li>The first corpus stops at 70 intersections to keep quality and reviewability higher than a larger shaky set.</li>
+      <li>The basemap now depends on public CARTO tile availability. A future production pass should decide whether to self-host tiles, use PMTiles, or move to MapLibre with a managed style.</li>
+      <li>Zoom/pan is intentionally modest for V1. It is enough for reading the local road grid, not a full slippy-map replacement.</li>
+      <li>Reveal no longer zooms in to expose labels because that removed too much location context; split labels and a small preserve-zoom pan are the current compromise.</li>
+      <li>Tile post-processing depends on CARTO returning CORS-enabled PNGs. If processing fails, the image falls back to the original CARTO tile instead of blanking the map.</li>
+    </ul>
+
+    <h2>Open Questions</h2>
+    <ul>
+      <li>Future QA should decide whether scoring needs a per-point accuracy/review field before expanding beyond 100 intersections.</li>
+      <li>Integration follow-up: replace the coordinate-map adapter with MapLibre behind the same adapter contract when the aesthetic/map pass is ready.</li>
+    </ul>
+  </body>
+</html>
