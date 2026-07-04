@@ -104,8 +104,8 @@
     "id": "sahara-nellis",
     "streetA": "Sahara Avenue",
     "streetB": "Nellis Boulevard",
-    "lat": 36.1448,
-    "lon": -115.0621,
+    "lat": 36.1443,
+    "lon": -115.0654,
     "region": "East Las Vegas",
     "difficulty": "medium",
     "aliases": ["Sahara & Nellis"]
@@ -175,8 +175,8 @@
     "id": "charleston-fort-apache",
     "streetA": "Charleston Boulevard",
     "streetB": "Fort Apache Road",
-    "lat": 36.1598,
-    "lon": -115.2972,
+    "lat": 36.159,
+    "lon": -115.2915,
     "region": "Summerlin / West Las Vegas",
     "difficulty": "hard",
     "aliases": ["Charleston & Fort Apache"]
@@ -293,14 +293,14 @@
     "aliases": ["Flamingo & Eastern"]
   },
   {
-    "id": "flamingo-lamb",
+    "id": "flamingo-pecos",
     "streetA": "Flamingo Road",
-    "streetB": "Lamb Boulevard",
-    "lat": 36.1148,
-    "lon": -115.0802,
+    "streetB": "Pecos Road",
+    "lat": 36.1152,
+    "lon": -115.1009,
     "region": "East Las Vegas",
     "difficulty": "hard",
-    "aliases": ["Flamingo & Lamb"]
+    "aliases": ["Flamingo & Pecos"]
   },
   {
     "id": "flamingo-nellis",
@@ -387,8 +387,8 @@
     "id": "tropicana-paradise",
     "streetA": "Tropicana Avenue",
     "streetB": "Paradise Road",
-    "lat": 36.099,
-    "lon": -115.1539,
+    "lat": 36.101,
+    "lon": -115.1498,
     "region": "Paradise / Airport",
     "difficulty": "medium",
     "aliases": ["Tropicana & Paradise"]
@@ -476,23 +476,24 @@
   },
   {
     "id": "spring-mountain-paradise",
-    "streetA": "Spring Mountain Road",
+    "streetA": "Sands Avenue",
     "streetB": "Paradise Road",
-    "lat": 36.1264,
-    "lon": -115.1539,
+    "lat": 36.1213,
+    "lon": -115.1551,
     "region": "Paradise / Convention Center",
     "difficulty": "hard",
-    "aliases": ["Spring Mountain & Paradise", "Sands & Paradise"]
+    "aliases": ["Sands & Paradise", "Spring Mountain corridor & Paradise"],
+    "teachingNote": "Spring Mountain transitions into Sands Avenue east of the Strip; the OSM-verified crossing is Sands and Paradise."
   },
   {
-    "id": "spring-mountain-maryland",
-    "streetA": "Spring Mountain Road",
+    "id": "desert-inn-maryland",
+    "streetA": "Desert Inn Road",
     "streetB": "Maryland Parkway",
-    "lat": 36.1265,
-    "lon": -115.1366,
+    "lat": 36.1298,
+    "lon": -115.1369,
     "region": "Central Las Vegas",
     "difficulty": "hard",
-    "aliases": ["Spring Mountain & Maryland"]
+    "aliases": ["Desert Inn & Maryland"]
   },
   {
     "id": "summerlin-charleston-rampart",
@@ -529,8 +530,8 @@
     "id": "summerlin-lake-mead-rampart",
     "streetA": "Lake Mead Boulevard",
     "streetB": "Rampart Boulevard",
-    "lat": 36.1958,
-    "lon": -115.2916,
+    "lat": 36.1998,
+    "lon": -115.2824,
     "region": "Summerlin",
     "difficulty": "hard",
     "aliases": ["Lake Mead & Rampart"]
@@ -579,8 +580,8 @@
     "id": "henderson-st-rose-eastern",
     "streetA": "St. Rose Parkway",
     "streetB": "Eastern Avenue",
-    "lat": 36.0004,
-    "lon": -115.1188,
+    "lat": 36.0071,
+    "lon": -115.1143,
     "region": "Henderson / Seven Hills",
     "difficulty": "hard",
     "aliases": ["St Rose & Eastern", "Saint Rose & Eastern"]
@@ -589,12 +590,52 @@
     "id": "henderson-lake-mead-boulder-hwy",
     "streetA": "Lake Mead Parkway",
     "streetB": "Boulder Highway",
-    "lat": 36.0334,
-    "lon": -114.9827,
+    "lat": 36.0396,
+    "lon": -114.982,
     "region": "Henderson",
     "difficulty": "hard",
     "aliases": ["Lake Mead Pkwy & Boulder Highway", "Lake Mead & Boulder Hwy"],
     "teachingNote": "Henderson's Lake Mead Parkway is separate from Lake Mead Boulevard in North/West Las Vegas."
+  },
+  {
+    "id": "henderson-warm-springs-green-valley",
+    "streetA": "Warm Springs Road",
+    "streetB": "Green Valley Parkway",
+    "lat": 36.05653,
+    "lon": -115.08415,
+    "region": "Henderson / Green Valley",
+    "difficulty": "medium",
+    "aliases": ["Warm Springs & Green Valley"]
+  },
+  {
+    "id": "henderson-sunset-stephanie",
+    "streetA": "Sunset Road",
+    "streetB": "Stephanie Street",
+    "lat": 36.06377,
+    "lon": -115.04627,
+    "region": "Henderson",
+    "difficulty": "medium",
+    "aliases": ["Sunset & Stephanie"]
+  },
+  {
+    "id": "henderson-sunset-boulder-hwy",
+    "streetA": "Sunset Road",
+    "streetB": "Boulder Highway",
+    "lat": 36.06595,
+    "lon": -115.01142,
+    "region": "Henderson",
+    "difficulty": "hard",
+    "aliases": ["Sunset & Boulder Highway", "Sunset & Boulder Hwy"]
+  },
+  {
+    "id": "henderson-horizon-ridge-eastern",
+    "streetA": "Horizon Ridge Parkway",
+    "streetB": "Eastern Avenue",
+    "lat": 35.99931,
+    "lon": -115.10473,
+    "region": "Henderson / Seven Hills",
+    "difficulty": "hard",
+    "aliases": ["Horizon Ridge & Eastern"]
   },
   {
     "id": "north-las-vegas-lake-mead-las-vegas-blvd",
@@ -620,8 +661,8 @@
     "id": "north-las-vegas-craig-mlk",
     "streetA": "Craig Road",
     "streetB": "Martin Luther King Boulevard",
-    "lat": 36.2395,
-    "lon": -115.1594,
+    "lat": 36.2394,
+    "lon": -115.162,
     "region": "North Las Vegas",
     "difficulty": "hard",
     "aliases": ["Craig & MLK", "Craig & Martin Luther King"]
@@ -677,6 +718,26 @@
     "aliases": ["Ann & Decatur"]
   },
   {
+    "id": "north-las-vegas-cheyenne-mlk",
+    "streetA": "Cheyenne Avenue",
+    "streetB": "Martin Luther King Boulevard",
+    "lat": 36.21776,
+    "lon": -115.16134,
+    "region": "North Las Vegas",
+    "difficulty": "hard",
+    "aliases": ["Cheyenne & MLK", "Cheyenne & Martin Luther King"]
+  },
+  {
+    "id": "northwest-lone-mountain-decatur",
+    "streetA": "Lone Mountain Road",
+    "streetB": "Decatur Boulevard",
+    "lat": 36.24673,
+    "lon": -115.20746,
+    "region": "Northwest Las Vegas",
+    "difficulty": "hard",
+    "aliases": ["Lone Mountain & Decatur"]
+  },
+  {
     "id": "airport-sunset-las-vegas-blvd",
     "streetA": "Sunset Road",
     "streetB": "Las Vegas Boulevard",
@@ -700,8 +761,8 @@
     "id": "southwest-rainbow-blue-diamond",
     "streetA": "Blue Diamond Road",
     "streetB": "Rainbow Boulevard",
-    "lat": 36.0201,
-    "lon": -115.2422,
+    "lat": 36.0224,
+    "lon": -115.2435,
     "region": "Southwest Las Vegas",
     "difficulty": "hard",
     "aliases": ["Blue Diamond & Rainbow"]

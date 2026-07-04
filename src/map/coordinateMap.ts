@@ -1,4 +1,4 @@
-import type { BoundingBox, Coordinate } from "../data/types";
+import type { BoundingBox, Coordinate, Intersection } from "../data/types";
 import { LAS_VEGAS_BOUNDS } from "../lib/geo";
 import type {
   MapAdapter,
@@ -13,13 +13,20 @@ const BASE_LAYER = "rastertiles/voyager_nolabels";
 const LABEL_LAYER = "rastertiles/voyager_only_labels";
 const MAP_PADDING = 16;
 const INITIAL_ZOOM_BOOST = 0.15;
-const MIN_ZOOM = 10;
+const MIN_ZOOM_FLOOR = 10;
 const MAX_ZOOM = 14.5;
+const WHEEL_ZOOM_SPEED = 0.0016;
+const MAX_WHEEL_ZOOM_STEP = 0.263;
+const WHEEL_LINE_HEIGHT_PX = 16;
+const TILE_PRELOAD_DELAY_MS = 80;
+const TILE_PRELOAD_PADDING = 1;
+const TILE_PRELOAD_LIMIT_PER_LAYER = 48;
 const MARKER_LABEL_COLLISION_PX = 78;
 const REVEAL_SAFE_PADDING_X = 128;
 const REVEAL_SAFE_PADDING_Y = 96;
 const ATTRIBUTION_TEXT = "© OpenStreetMap contributors © CARTO";
 const processedTileCache = new Map<string, Promise<string>>();
+const preloadedTileCache = new Set<string>();
 
 const DEFAULT_VIEW_BOUNDS: BoundingBox = {
   southwest: { lat: 35.96, lon: -115.38 },
@@ -44,6 +51,21 @@ type TileLayout = {
   topLeft: WorldPoint;
   width: number;
   zoom: number;
+};
+
+type TileRenderOptions = {
+  processMode?: TileProcessingMode;
+};
+
+type TileProcessingMode = "base" | "labels";
+
+type TileRequest = {
+  layerName: string;
+  processMode?: TileProcessingMode;
+  tileX: number;
+  tileY: number;
+  wrappedTileX: number;
+  z: number;
 };
 
 type ViewState = {
@@ -76,6 +98,11 @@ export class CoordinateMapAdapter implements MapAdapter {
   private drag?: DragState;
   private lastRevealKey?: string;
   private resizeObserver?: ResizeObserver;
+  private minimumZoom = MIN_ZOOM_FLOOR;
+  private pendingWheelZoomDelta = 0;
+  private wheelAnimationFrame?: number;
+  private wheelFocalPoint?: WorldPoint;
+  private tilePreloadTimeout?: number;
   private suppressNextClick = false;
   private state: MapViewState;
 
@@ -164,6 +191,12 @@ export class CoordinateMapAdapter implements MapAdapter {
     this.viewport?.removeEventListener("pointercancel", this.handlePointerEnd);
     this.viewport?.removeEventListener("wheel", this.handleWheel);
     this.resizeObserver?.disconnect();
+    if (this.wheelAnimationFrame !== undefined) {
+      window.cancelAnimationFrame(this.wheelAnimationFrame);
+    }
+    if (this.tilePreloadTimeout !== undefined) {
+      window.clearTimeout(this.tilePreloadTimeout);
+    }
     this.container?.replaceChildren();
     this.container?.classList.remove("tile-map");
     this.container = undefined;
@@ -177,6 +210,10 @@ export class CoordinateMapAdapter implements MapAdapter {
     this.view = undefined;
     this.drag = undefined;
     this.resizeObserver = undefined;
+    this.pendingWheelZoomDelta = 0;
+    this.wheelAnimationFrame = undefined;
+    this.wheelFocalPoint = undefined;
+    this.tilePreloadTimeout = undefined;
     this.lastRevealKey = undefined;
   }
 
@@ -259,11 +296,35 @@ export class CoordinateMapAdapter implements MapAdapter {
 
     event.preventDefault();
     const rect = this.viewport.getBoundingClientRect();
-    const focalPoint = {
+    this.wheelFocalPoint = {
       x: event.clientX - rect.left,
       y: event.clientY - rect.top,
     };
-    const zoomDelta = event.deltaY > 0 ? -0.35 : 0.35;
+    const normalizedDeltaY = normalizeWheelDeltaY(event, rect.height);
+    const zoomDelta = clamp(
+      -normalizedDeltaY * WHEEL_ZOOM_SPEED,
+      -MAX_WHEEL_ZOOM_STEP,
+      MAX_WHEEL_ZOOM_STEP,
+    );
+    this.pendingWheelZoomDelta += zoomDelta;
+
+    if (this.wheelAnimationFrame === undefined) {
+      this.wheelAnimationFrame = window.requestAnimationFrame(this.applyPendingWheelZoom);
+    }
+  };
+
+  private readonly applyPendingWheelZoom = (): void => {
+    this.wheelAnimationFrame = undefined;
+    if (!this.view || this.pendingWheelZoomDelta === 0) return;
+
+    const zoomDelta = clamp(
+      this.pendingWheelZoomDelta,
+      -MAX_WHEEL_ZOOM_STEP,
+      MAX_WHEEL_ZOOM_STEP,
+    );
+    const focalPoint = this.wheelFocalPoint;
+    this.pendingWheelZoomDelta = 0;
+    this.wheelFocalPoint = undefined;
     this.zoomTo(this.view.zoom + zoomDelta, focalPoint);
   };
 
@@ -280,62 +341,146 @@ export class CoordinateMapAdapter implements MapAdapter {
     const rect = this.container.getBoundingClientRect();
     if (rect.width <= 0 || rect.height <= 0) return;
 
+    this.minimumZoom = getDefaultZoom(rect.width, rect.height, this.state.bounds);
     if (!this.view) {
       this.view = createInitialView(rect.width, rect.height, this.state.bounds);
+    } else if (this.view.zoom < this.minimumZoom) {
+      this.view = {
+        ...this.view,
+        zoom: this.minimumZoom,
+      };
     }
 
     this.layout = createTileLayout(rect.width, rect.height, this.view);
-    this.renderTiles(this.baseLayer, BASE_LAYER);
-    this.renderTiles(this.labelLayer, LABEL_LAYER);
+    this.renderTiles(this.baseLayer, BASE_LAYER, { processMode: "base" });
+    this.renderTiles(this.labelLayer, LABEL_LAYER, { processMode: "labels" });
     this.labelLayer.style.opacity = this.state.revealed ? "1" : "0";
 
     this.markerLayer.replaceChildren();
+    if (this.state.revealed && this.state.correctIntersection) {
+      this.markerLayer.appendChild(this.createAnswerCallout(this.state.correctIntersection));
+    }
     for (const marker of this.getRenderMarkers()) {
       this.markerLayer.appendChild(this.createMarker(marker));
     }
+    this.scheduleFutureTilePreload();
   }
 
-  private renderTiles(layerElement: HTMLDivElement, layerName: string): void {
+  private renderTiles(
+    layerElement: HTMLDivElement,
+    layerName: string,
+    options: TileRenderOptions = {},
+  ): void {
     if (!this.layout) return;
 
-    const { scale, tileZoom, topLeft, width, height } = this.layout;
+    const processMode = options.processMode;
+    const { scale, topLeft } = this.layout;
     const scaledTileSize = TILE_SIZE * scale;
-    const tileCount = 2 ** tileZoom;
-    const startTileX = Math.floor((topLeft.x / scale) / TILE_SIZE);
-    const startTileY = Math.floor((topLeft.y / scale) / TILE_SIZE);
-    const endTileX = Math.floor(((topLeft.x + width) / scale) / TILE_SIZE);
-    const endTileY = Math.floor(((topLeft.y + height) / scale) / TILE_SIZE);
     const fragment = document.createDocumentFragment();
+    const tileRequests = collectTileRequests(this.layout, layerName, processMode);
 
-    for (let tileY = startTileY; tileY <= endTileY; tileY += 1) {
-      if (tileY < 0 || tileY >= tileCount) continue;
-
-      for (let tileX = startTileX; tileX <= endTileX; tileX += 1) {
-        const wrappedTileX = modulo(tileX, tileCount);
-        const image = document.createElement("img");
-        image.className = "tile-map-tile";
-        image.alt = "";
-        image.decoding = "async";
-        image.draggable = false;
-        const sourceUrl = tileUrl(layerName, tileZoom, wrappedTileX, tileY);
-        image.crossOrigin = "anonymous";
-        image.dataset.sourceTile = sourceUrl;
+    for (const tileRequest of tileRequests) {
+      const image = document.createElement("img");
+      image.className = "tile-map-tile";
+      image.alt = "";
+      image.decoding = "async";
+      image.draggable = false;
+      const sourceUrl = tileUrl(
+        tileRequest.layerName,
+        tileRequest.z,
+        tileRequest.wrappedTileX,
+        tileRequest.tileY,
+      );
+      image.crossOrigin = "anonymous";
+      image.dataset.sourceTile = sourceUrl;
+      image.src = sourceUrl;
+      image.style.left = `${tileRequest.tileX * scaledTileSize - topLeft.x}px`;
+      image.style.top = `${tileRequest.tileY * scaledTileSize - topLeft.y}px`;
+      image.style.width = `${scaledTileSize}px`;
+      image.style.height = `${scaledTileSize}px`;
+      if (processMode) {
         image.classList.add("tile-map-tile-pending");
-        image.src = sourceUrl;
-        image.style.left = `${tileX * scaledTileSize - topLeft.x}px`;
-        image.style.top = `${tileY * scaledTileSize - topLeft.y}px`;
-        image.style.width = `${scaledTileSize}px`;
-        image.style.height = `${scaledTileSize}px`;
-        void getProcessedTileUrl(sourceUrl).then((processedUrl) => {
+        void getProcessedTileUrl(sourceUrl, processMode).then((processedUrl) => {
           if (image.dataset.sourceTile !== sourceUrl) return;
           image.src = processedUrl;
           image.classList.remove("tile-map-tile-pending");
         });
-        fragment.appendChild(image);
       }
+      fragment.appendChild(image);
     }
 
     layerElement.replaceChildren(fragment);
+  }
+
+  private scheduleFutureTilePreload(): void {
+    if (this.tilePreloadTimeout !== undefined) {
+      window.clearTimeout(this.tilePreloadTimeout);
+    }
+
+    this.tilePreloadTimeout = window.setTimeout(() => {
+      this.tilePreloadTimeout = undefined;
+      this.preloadFutureTiles();
+    }, TILE_PRELOAD_DELAY_MS);
+  }
+
+  private preloadFutureTiles(): void {
+    if (!this.layout || !this.view) return;
+
+    const nextTileZoom = Math.min(this.layout.tileZoom + 1, Math.ceil(MAX_ZOOM));
+    if (nextTileZoom <= this.layout.tileZoom) return;
+
+    const targetView = {
+      center: this.view.center,
+      zoom: clamp(nextTileZoom, this.minimumZoom, MAX_ZOOM),
+    };
+    const targetLayout = createTileLayout(this.layout.width, this.layout.height, targetView);
+    const baseRequests = collectTileRequests(
+      targetLayout,
+      BASE_LAYER,
+      "base",
+      TILE_PRELOAD_PADDING,
+    ).slice(0, TILE_PRELOAD_LIMIT_PER_LAYER);
+    const labelRequests = collectTileRequests(
+      targetLayout,
+      LABEL_LAYER,
+      "labels",
+      TILE_PRELOAD_PADDING,
+    ).slice(0, TILE_PRELOAD_LIMIT_PER_LAYER);
+
+    for (const tileRequest of [...baseRequests, ...labelRequests]) {
+      preloadTile(tileRequest);
+    }
+  }
+
+  private createAnswerCallout(intersection: Intersection): HTMLDivElement {
+    if (!this.layout) {
+      throw new Error("Map layout must be available before rendering the answer callout.");
+    }
+
+    const point = coordinateToScreenPoint(intersection.coordinate, this.layout);
+    const maxWidth = Math.min(270, Math.max(168, this.layout.width - 40));
+    const x = clamp(point.x, maxWidth / 2 + 12, this.layout.width - maxWidth / 2 - 12);
+    const placement = point.y < 122 ? "below" : "above";
+    const callout = document.createElement("div");
+    callout.className = `tile-map-answer-callout tile-map-answer-callout-${placement}`;
+    callout.setAttribute(
+      "aria-label",
+      `Answer streets: ${intersection.primaryStreet} and ${intersection.crossStreet}`,
+    );
+    callout.style.left = `${x}px`;
+    callout.style.top = `${point.y}px`;
+    callout.style.maxWidth = `${maxWidth}px`;
+
+    const primaryStreet = document.createElement("span");
+    primaryStreet.className = "tile-map-answer-street";
+    primaryStreet.textContent = intersection.primaryStreet;
+
+    const crossStreet = document.createElement("span");
+    crossStreet.className = "tile-map-answer-street";
+    crossStreet.textContent = intersection.crossStreet;
+
+    callout.append(primaryStreet, crossStreet);
+    return callout;
   }
 
   private createMarker(marker: RenderMarker): HTMLDivElement {
@@ -436,6 +581,7 @@ export class CoordinateMapAdapter implements MapAdapter {
     if (!this.container) return;
 
     const rect = this.container.getBoundingClientRect();
+    this.minimumZoom = getDefaultZoom(rect.width, rect.height, this.state.bounds);
     this.view = createInitialView(rect.width, rect.height, this.state.bounds);
   }
 
@@ -473,7 +619,8 @@ export class CoordinateMapAdapter implements MapAdapter {
     if (!this.view || !this.container) return;
 
     const rect = this.container.getBoundingClientRect();
-    const zoom = clamp(nextZoom, MIN_ZOOM, MAX_ZOOM);
+    this.minimumZoom = getDefaultZoom(rect.width, rect.height, this.state.bounds);
+    const zoom = clamp(nextZoom, this.minimumZoom, MAX_ZOOM);
     let center = this.view.center;
 
     if (focalPoint && this.layout) {
@@ -504,6 +651,21 @@ export function createCoordinateMapAdapter(
 }
 
 function createInitialView(width: number, height: number, bounds = DEFAULT_VIEW_BOUNDS): ViewState {
+  const zoom = getDefaultZoom(width, height, bounds);
+
+  return {
+    center: clampCoordinate(
+      {
+        lat: (bounds.southwest.lat + bounds.northeast.lat) / 2,
+        lon: (bounds.southwest.lon + bounds.northeast.lon) / 2,
+      },
+      PAN_LIMIT_BOUNDS,
+    ),
+    zoom,
+  };
+}
+
+function getDefaultZoom(width: number, height: number, bounds = DEFAULT_VIEW_BOUNDS): number {
   const southwest = coordinateToWorldPoint(bounds.southwest, 0);
   const northeast = coordinateToWorldPoint(bounds.northeast, 0);
   const boundsWidth = Math.max(0.0001, northeast.x - southwest.x);
@@ -515,16 +677,7 @@ function createInitialView(width: number, height: number, bounds = DEFAULT_VIEW_
     Math.log2(usableHeight / boundsHeight),
   );
 
-  return {
-    center: clampCoordinate(
-      {
-        lat: (bounds.southwest.lat + bounds.northeast.lat) / 2,
-        lon: (bounds.southwest.lon + bounds.northeast.lon) / 2,
-      },
-      PAN_LIMIT_BOUNDS,
-    ),
-    zoom: clamp(fitZoom + INITIAL_ZOOM_BOOST, MIN_ZOOM, MAX_ZOOM),
-  };
+  return clamp(fitZoom + INITIAL_ZOOM_BOOST, MIN_ZOOM_FLOOR, MAX_ZOOM);
 }
 
 function keepCoordinatesInsideView(
@@ -595,6 +748,44 @@ function createTileLayout(width: number, height: number, view: ViewState): TileL
   };
 }
 
+function collectTileRequests(
+  layout: TileLayout,
+  layerName: string,
+  processMode?: TileProcessingMode,
+  padding = 0,
+): TileRequest[] {
+  const { scale, tileZoom, topLeft, width, height } = layout;
+  const tileCount = 2 ** tileZoom;
+  const startTileX = Math.floor((topLeft.x / scale) / TILE_SIZE) - padding;
+  const startTileY = Math.floor((topLeft.y / scale) / TILE_SIZE) - padding;
+  const endTileX = Math.floor(((topLeft.x + width) / scale) / TILE_SIZE) + padding;
+  const endTileY = Math.floor(((topLeft.y + height) / scale) / TILE_SIZE) + padding;
+  const centerTileX = ((topLeft.x + width / 2) / scale) / TILE_SIZE;
+  const centerTileY = ((topLeft.y + height / 2) / scale) / TILE_SIZE;
+  const requests: TileRequest[] = [];
+
+  for (let tileY = startTileY; tileY <= endTileY; tileY += 1) {
+    if (tileY < 0 || tileY >= tileCount) continue;
+
+    for (let tileX = startTileX; tileX <= endTileX; tileX += 1) {
+      requests.push({
+        layerName,
+        processMode,
+        tileX,
+        tileY,
+        wrappedTileX: modulo(tileX, tileCount),
+        z: tileZoom,
+      });
+    }
+  }
+
+  return requests.sort((a, b) => {
+    const distanceA = Math.hypot(a.tileX + 0.5 - centerTileX, a.tileY + 0.5 - centerTileY);
+    const distanceB = Math.hypot(b.tileX + 0.5 - centerTileX, b.tileY + 0.5 - centerTileY);
+    return distanceA - distanceB;
+  });
+}
+
 function coordinateToScreenPoint(coordinate: Coordinate, layout: TileLayout): WorldPoint {
   const world = coordinateToWorldPoint(coordinate, layout.tileZoom);
   return {
@@ -638,16 +829,50 @@ function tileUrl(layerName: string, z: number, x: number, y: number): string {
   return `https://${host}.basemaps.cartocdn.com/${layerName}/${z}/${x}/${y}@2x.png`;
 }
 
-function getProcessedTileUrl(sourceUrl: string): Promise<string> {
-  const cached = processedTileCache.get(sourceUrl);
+function preloadTile(tileRequest: TileRequest): void {
+  const sourceUrl = tileUrl(
+    tileRequest.layerName,
+    tileRequest.z,
+    tileRequest.wrappedTileX,
+    tileRequest.tileY,
+  );
+  const cacheKey = `${tileRequest.processMode ?? "raw"}:${sourceUrl}`;
+  if (preloadedTileCache.has(cacheKey)) return;
+
+  preloadedTileCache.add(cacheKey);
+  if (tileRequest.processMode) {
+    void getProcessedTileUrl(sourceUrl, tileRequest.processMode);
+    return;
+  }
+
+  preloadImage(sourceUrl);
+}
+
+function preloadImage(sourceUrl: string): void {
+  const image = new Image();
+  image.crossOrigin = "anonymous";
+  image.decoding = "async";
+  image.loading = "eager";
+  image.src = sourceUrl;
+}
+
+function getProcessedTileUrl(
+  sourceUrl: string,
+  mode: TileProcessingMode,
+): Promise<string> {
+  const cacheKey = `${mode}:${sourceUrl}`;
+  const cached = processedTileCache.get(cacheKey);
   if (cached) return cached;
 
-  const promise = processTileImage(sourceUrl).catch(() => sourceUrl);
-  processedTileCache.set(sourceUrl, promise);
+  const promise = processTileImage(sourceUrl, mode).catch(() => sourceUrl);
+  processedTileCache.set(cacheKey, promise);
   return promise;
 }
 
-function processTileImage(sourceUrl: string): Promise<string> {
+function processTileImage(
+  sourceUrl: string,
+  mode: TileProcessingMode,
+): Promise<string> {
   return new Promise((resolve, reject) => {
     const image = new Image();
     image.crossOrigin = "anonymous";
@@ -665,7 +890,11 @@ function processTileImage(sourceUrl: string): Promise<string> {
 
       context.drawImage(image, 0, 0);
       const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
-      recolorTilePixels(imageData.data);
+      if (mode === "base") {
+        recolorBaseTilePixels(imageData.data, canvas.width, canvas.height);
+      } else {
+        recolorLabelTilePixels(imageData.data, canvas.width, canvas.height);
+      }
       context.putImageData(imageData, 0, 0);
       resolve(canvas.toDataURL("image/png"));
     };
@@ -674,7 +903,99 @@ function processTileImage(sourceUrl: string): Promise<string> {
   });
 }
 
-function recolorTilePixels(pixels: Uint8ClampedArray): void {
+function recolorBaseTilePixels(
+  pixels: Uint8ClampedArray,
+  width: number,
+  height: number,
+): void {
+  const source = new Uint8ClampedArray(pixels);
+  const yellowMask = createYellowRoadMask(source);
+
+  for (let index = 0; index < pixels.length; index += 4) {
+    const alpha = source[index + 3];
+    if (alpha === 0) continue;
+
+    const red = source[index];
+    const green = source[index + 1];
+    const blue = source[index + 2];
+    const luminance = 0.299 * red + 0.587 * green + 0.114 * blue;
+    const yellowStrength = getYellowStrength(red, green, blue);
+    const pixel = index / 4;
+    const x = pixel % width;
+    const y = Math.floor(pixel / width);
+    const neighborCount = countMaskedNeighbors(yellowMask, width, height, x, y, 4);
+    const isMajorRoad =
+      yellowMask[pixel] === 1 &&
+      neighborCount >= 16 &&
+      yellowStrength > 0.12;
+
+    if (isMajorRoad) {
+      const roadTone = clamp(
+        178 - yellowStrength * 112 - neighborCount * 1.35,
+        62,
+        154,
+      );
+      const blend = clamp(0.68 + yellowStrength * 0.22, 0, 0.9);
+      pixels[index] = mix(red, roadTone, blend);
+      pixels[index + 1] = mix(green, roadTone + 1, blend);
+      pixels[index + 2] = mix(blue, roadTone + 3, blend);
+      continue;
+    }
+
+    const neutral = clamp(231 + (luminance - 225) * 1.05, 200, 250);
+    const blend = luminance > 210 ? 0.64 : 0.44;
+    pixels[index] = mix(red, neutral, blend);
+    pixels[index + 1] = mix(green, neutral, blend);
+    pixels[index + 2] = mix(blue, neutral, blend);
+  }
+}
+
+function recolorLabelTilePixels(
+  pixels: Uint8ClampedArray,
+  width: number,
+  height: number,
+): void {
+  const source = new Uint8ClampedArray(pixels);
+  const labelMask = createLabelMask(source);
+
+  pixels.fill(0);
+  for (let y = 0; y < height; y += 1) {
+    for (let x = 0; x < width; x += 1) {
+      const pixel = y * width + x;
+      const index = pixel * 4;
+      const haloAlpha = maxMaskedNeighbor(labelMask, width, height, x, y, 2);
+
+      if (haloAlpha > 0) {
+        pixels[index] = 255;
+        pixels[index + 1] = 255;
+        pixels[index + 2] = 255;
+        pixels[index + 3] = Math.max(
+          pixels[index + 3],
+          Math.min(220, haloAlpha * 0.82),
+        );
+      }
+
+      const alpha = source[index + 3];
+      if (alpha < 12) continue;
+
+      const red = source[index];
+      const green = source[index + 1];
+      const blue = source[index + 2];
+      const luminance = 0.299 * red + 0.587 * green + 0.114 * blue;
+      if (luminance > 235) continue;
+
+      const ink = clamp(luminance * 0.45, 22, 108);
+      pixels[index] = Math.min(red * 0.45, ink);
+      pixels[index + 1] = Math.min(green * 0.45, ink + 4);
+      pixels[index + 2] = Math.min(blue * 0.5, ink + 12);
+      pixels[index + 3] = clamp(alpha * 1.45, 160, 255);
+    }
+  }
+}
+
+function createYellowRoadMask(pixels: Uint8ClampedArray): Uint8Array {
+  const mask = new Uint8Array(pixels.length / 4);
+
   for (let index = 0; index < pixels.length; index += 4) {
     const alpha = pixels[index + 3];
     if (alpha === 0) continue;
@@ -683,32 +1004,97 @@ function recolorTilePixels(pixels: Uint8ClampedArray): void {
     const green = pixels[index + 1];
     const blue = pixels[index + 2];
     const luminance = 0.299 * red + 0.587 * green + 0.114 * blue;
-    const yellowBias = Math.max(0, Math.min(red, green) - blue);
-    const yellowBalance = 1 - clamp(Math.abs(red - green) / 64, 0, 1);
-    const yellowStrength =
-      clamp((yellowBias - 10) / 48, 0, 1) *
-      yellowBalance *
-      clamp((luminance - 142) / 90, 0, 1);
-    const isRoadLike = yellowStrength > 0.08 && red > 168 && green > 152 && luminance > 142;
+    const yellowStrength = getYellowStrength(red, green, blue);
+    const isYellowRoad =
+      yellowStrength > 0.09 &&
+      red > 170 &&
+      green > 154 &&
+      luminance > 142;
 
-    if (isRoadLike) {
-      const roadTone = clamp(166 - yellowStrength * 104 - (255 - luminance) * 0.12, 58, 168);
-      const blend = clamp(0.68 + yellowStrength * 0.26, 0, 0.94);
-      const neutralRed = roadTone;
-      const neutralGreen = roadTone + 1;
-      const neutralBlue = roadTone + 3;
-      pixels[index] = mix(red, neutralRed, blend);
-      pixels[index + 1] = mix(green, neutralGreen, blend);
-      pixels[index + 2] = mix(blue, neutralBlue, blend);
-      continue;
+    if (isYellowRoad) {
+      mask[index / 4] = 1;
     }
-
-    const neutral = clamp(225 + (luminance - 225) * 1.18, 188, 248);
-    const blend = luminance > 210 ? 0.72 : 0.58;
-    pixels[index] = mix(red, neutral, blend);
-    pixels[index + 1] = mix(green, neutral, blend);
-    pixels[index + 2] = mix(blue, neutral, blend);
   }
+
+  return mask;
+}
+
+function createLabelMask(pixels: Uint8ClampedArray): Uint8Array {
+  const mask = new Uint8Array(pixels.length / 4);
+
+  for (let index = 0; index < pixels.length; index += 4) {
+    const alpha = pixels[index + 3];
+    if (alpha < 18) continue;
+
+    const red = pixels[index];
+    const green = pixels[index + 1];
+    const blue = pixels[index + 2];
+    const luminance = 0.299 * red + 0.587 * green + 0.114 * blue;
+    if (luminance < 230) {
+      mask[index / 4] = alpha;
+    }
+  }
+
+  return mask;
+}
+
+function getYellowStrength(red: number, green: number, blue: number): number {
+  const luminance = 0.299 * red + 0.587 * green + 0.114 * blue;
+  const yellowBias = Math.max(0, Math.min(red, green) - blue);
+  const yellowBalance = 1 - clamp(Math.abs(red - green) / 64, 0, 1);
+  return (
+    clamp((yellowBias - 10) / 48, 0, 1) *
+    yellowBalance *
+    clamp((luminance - 142) / 90, 0, 1)
+  );
+}
+
+function countMaskedNeighbors(
+  mask: Uint8Array,
+  width: number,
+  height: number,
+  x: number,
+  y: number,
+  radius: number,
+): number {
+  let count = 0;
+
+  for (let offsetY = -radius; offsetY <= radius; offsetY += 1) {
+    const sampleY = y + offsetY;
+    if (sampleY < 0 || sampleY >= height) continue;
+
+    for (let offsetX = -radius; offsetX <= radius; offsetX += 1) {
+      const sampleX = x + offsetX;
+      if (sampleX < 0 || sampleX >= width) continue;
+      count += mask[sampleY * width + sampleX];
+    }
+  }
+
+  return count;
+}
+
+function maxMaskedNeighbor(
+  mask: Uint8Array,
+  width: number,
+  height: number,
+  x: number,
+  y: number,
+  radius: number,
+): number {
+  let max = 0;
+
+  for (let offsetY = -radius; offsetY <= radius; offsetY += 1) {
+    const sampleY = y + offsetY;
+    if (sampleY < 0 || sampleY >= height) continue;
+
+    for (let offsetX = -radius; offsetX <= radius; offsetX += 1) {
+      const sampleX = x + offsetX;
+      if (sampleX < 0 || sampleX >= width) continue;
+      max = Math.max(max, mask[sampleY * width + sampleX]);
+    }
+  }
+
+  return max;
 }
 
 function clampCoordinate(coordinate: Coordinate, bounds: BoundingBox = LAS_VEGAS_BOUNDS): Coordinate {
@@ -720,6 +1106,18 @@ function clampCoordinate(coordinate: Coordinate, bounds: BoundingBox = LAS_VEGAS
 
 function distanceBetweenPoints(a: WorldPoint, b: WorldPoint): number {
   return Math.hypot(a.x - b.x, a.y - b.y);
+}
+
+function normalizeWheelDeltaY(event: WheelEvent, viewportHeight: number): number {
+  if (event.deltaMode === WheelEvent.DOM_DELTA_LINE) {
+    return event.deltaY * WHEEL_LINE_HEIGHT_PX;
+  }
+
+  if (event.deltaMode === WheelEvent.DOM_DELTA_PAGE) {
+    return event.deltaY * Math.max(viewportHeight, TILE_SIZE);
+  }
+
+  return event.deltaY;
 }
 
 function clamp(value: number, min: number, max: number): number {

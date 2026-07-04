@@ -1,4 +1,6 @@
+import { getAreaBucketId } from "./areaBuckets";
 import type { Intersection } from "./types";
+import type { AreaBucketId } from "./types";
 import rawIntersections from "./intersections.json";
 
 export type IntersectionDifficulty = "easy" | "medium" | "hard";
@@ -10,6 +12,7 @@ export type SeedIntersection = {
   lat: number;
   lon: number;
   region: string;
+  area?: AreaBucketId;
   difficulty: IntersectionDifficulty;
   aliases: string[];
   teachingNote?: string;
@@ -24,13 +27,12 @@ export const intersections: Intersection[] = seedIntersectionData.map((item) => 
   lat: item.lat,
   lon: item.lon,
   region: item.region,
+  area: getAreaBucketId(item),
   difficulty: item.difficulty,
   aliases: item.aliases,
   teachingNote: item.teachingNote,
   primaryStreet: item.streetA,
   crossStreet: item.streetB,
   coordinate: { lat: item.lat, lon: item.lon },
-  area: item.region,
   notes: item.teachingNote,
 }));
-

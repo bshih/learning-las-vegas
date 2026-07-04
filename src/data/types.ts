@@ -12,6 +12,16 @@ export type IntersectionId = string;
 
 export type IntersectionDifficulty = "easy" | "medium" | "hard";
 
+export type AreaBucketId =
+  | "spring-valley-southwest"
+  | "summerlin-west"
+  | "strip-paradise"
+  | "north-las-vegas-northwest"
+  | "henderson-green-valley"
+  | "downtown-central-east";
+
+export type PlayAreaId = "all" | AreaBucketId;
+
 export type Intersection = {
   id: IntersectionId;
   streetA?: string;
@@ -25,7 +35,7 @@ export type Intersection = {
   primaryStreet: string;
   crossStreet: string;
   coordinate: Coordinate;
-  area?: string;
+  area?: AreaBucketId;
   notes?: string;
 };
 
@@ -40,7 +50,11 @@ export type IntersectionQuestion = {
 export type Guess = {
   coordinate: Coordinate;
   distanceMeters: number;
-  score: number;
+  closenessScore: 1 | 2 | 3 | 4 | 5;
+  nearestIntersection: Intersection;
+  nearestDistanceMeters: number;
+  isCorrect: boolean;
+  result: "correct" | "near" | "miss";
 };
 
 export type RevealState = {

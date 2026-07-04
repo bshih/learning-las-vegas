@@ -1,0 +1,32 @@
+[
+  {
+    "id": "spring-valley-southwest",
+    "label": "Spring Valley / Chinatown / Southwest",
+    "patterns": ["Spring Valley", "Chinatown", "Southwest Las Vegas"]
+  },
+  {
+    "id": "summerlin-west",
+    "label": "Summerlin / West",
+    "patterns": ["Summerlin", "The Lakes", "West Las Vegas", "Central West"]
+  },
+  {
+    "id": "strip-paradise",
+    "label": "Strip / Paradise / Airport",
+    "patterns": ["Strip", "Paradise", "Airport", "Convention Center", "Resort Corridor", "UNLV"]
+  },
+  {
+    "id": "north-las-vegas-northwest",
+    "label": "North Las Vegas / Northwest",
+    "patterns": ["North Las Vegas", "Northwest Las Vegas"]
+  },
+  {
+    "id": "henderson-green-valley",
+    "label": "Henderson / Green Valley",
+    "patterns": ["Henderson", "Green Valley", "Seven Hills"]
+  },
+  {
+    "id": "downtown-central-east",
+    "label": "Downtown / Central / East",
+    "patterns": ["Downtown", "Arts District", "Central Las Vegas", "East Las Vegas"]
+  }
+]

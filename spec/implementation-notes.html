@@ -35,20 +35,32 @@
       <li>CSS should be token-driven so a later aesthetic pass can reskin without rewriting game logic.</li>
       <li>Map/data V1 uses a dependency-free coordinate-map adapter because the app scaffold and package file had not landed yet. The adapter API is intentionally small so a MapLibre implementation can satisfy the same contract later.</li>
       <li>Question order is deterministic by seed and intersection id, which keeps QA repeatable while avoiding hardcoded array order as gameplay order.</li>
-      <li>Distance scoring uses haversine distance between lat/lon coordinates; screen position is only used to convert a click into a guess coordinate.</li>
+      <li>Guess resolution uses haversine distance between lat/lon coordinates; screen position is only used to convert a click into a guess coordinate.</li>
+      <li>Scoring is intentionally coarse. A click is correct when the requested intersection is the nearest known intersection within the snap radius; correct guesses display at the snapped intersection, while misses name the nearest known intersection and receive 1-5 closeness points instead of 0-100 coordinate points.</li>
       <li>Seed corpus lives in <code>src/data/intersections.json</code>; <code>src/data/intersections.ts</code> adapts it into the map/data <code>Intersection</code> contract.</li>
       <li>Seed coordinates are playable approximate points, with uncertainty documented in <code>src/data/seed-notes.md</code>.</li>
       <li>App shell uses React + Vite + TypeScript with small components and a tokenized CSS layer for the later aesthetic pass.</li>
       <li>Game-loop state consumes the map/data workstream exports instead of duplicating question selection or scoring.</li>
       <li>The placeholder SVG grid was replaced with dependency-free raster tiles from CARTO basemaps. The app renders no-label tiles while guessing and fades in label tiles after reveal.</li>
-      <li>The map uses actual CARTO Voyager no-label tiles while guessing. Each raster tile is post-processed in a canvas to neutralize the yellow road palette and increase contrast while preserving real CARTO road geometry.</li>
+      <li>The map uses actual CARTO Voyager no-label tiles while guessing. Each raster tile is post-processed in a canvas to quiet the yellow road palette while preserving real CARTO road geometry.</li>
+      <li>Base tile processing now uses a raster heuristic to darken only thicker yellow road bands, keeping smaller local streets quieter than the earlier broad yellow-road recolor.</li>
+      <li>Reveal mode processes CARTO label tiles separately: labels keep CARTO's native placement, but the raster text is darkened and given a white halo for readability. The adaptive white-text-on-dark-road experiment was rejected because it created artifacts on dark major-road labels.</li>
       <li>The map default now focuses on the developed Las Vegas valley rather than the full Lake Mead / far desert extent, but starts slightly farther out than the first tuned pass so more valley context is visible.</li>
       <li>Map controls support zoom in, zoom out, reset, drag-to-pan, and wheel zoom without adding MapLibre.</li>
+      <li>The starting valley frame is also the minimum zoom level for the current viewport. Wheel zoom uses normalized delta values batched through animation frames so mouse wheels and trackpads feel closer in speed.</li>
+      <li>After each map render, the adapter preloads a capped set of center-near CARTO base and label tiles for the next zoom level, including processed tile variants, to soften the first zoom-in.</li>
       <li>Reveal mode preserves the current zoom and only nudges the center when the guess or answer would be too close to the viewport edge.</li>
       <li>Starting a fresh unrevealed question restores the default valley frame so any reveal/inspection zoom does not carry forward.</li>
       <li>Close marker labels split left/right to avoid stacking when the guess is nearly correct.</li>
+      <li>Reveal mode adds a high-contrast answer-street callout near the correct marker using the current intersection's primary and cross streets, so the answer remains readable even when raster tile labels are small.</li>
+      <li>Wrong reveals no longer render generated learning labels from the seed corpus. The improved CARTO label layer now carries nearby street learning context, while the answer callout remains the explicit exact-answer anchor.</li>
       <li>Result feedback can call out when the guess appears close to one road but misses the cross street.</li>
       <li>The Lake Mead Boulevard / Las Vegas Boulevard North seed point is explicitly guarded in validation after QA found it had drifted west to the I-15/Lake Mead interchange.</li>
+      <li>Area-specific play uses a normalized <code>area</code> bucket separate from the descriptive <code>region</code> field. This keeps the UI stable while preserving more granular seed notes.</li>
+      <li>The selected area is stored with local progress. Changing areas resets the current deck for that area; using Reset clears progress while preserving the selected area.</li>
+      <li>Coordinate QA now has two layers: dependency-free static guards in <code>npm run validate:seed</code> for known corrected rows, plus network-backed OSM road-crossing verification in <code>npm run verify:seed:coords</code>.</li>
+      <li>The Spring Mountain / Paradise prompt was corrected to Sands Avenue / Paradise Road because OSM road geometry shows the east-of-Strip crossing under the Sands Avenue name.</li>
+      <li>The invalid/non-crossing Flamingo / Lamb and Spring Mountain / Maryland rows were replaced with OSM-verifiable Flamingo / Pecos and Desert Inn / Maryland rows.</li>
     </ul>
 
     <h2>Deviations</h2>
@@ -61,18 +73,27 @@
     <ul>
       <li>Manual seed corpus is faster and safer for V1 than building the full OSM/Clark County ETL immediately.</li>
       <li>MapLibre is preferred, but a coordinate-map fallback is acceptable if it keeps V1 playable quickly.</li>
-      <li>The sample corpus remains available for tiny fixtures, but app gameplay should use the 70-item <code>intersections</code> export.</li>
-      <li>The first corpus stops at 70 intersections to keep quality and reviewability higher than a larger shaky set.</li>
+      <li>The sample corpus remains available for tiny fixtures, but app gameplay should use the 76-item <code>intersections</code> export.</li>
+      <li>The first corpus started at 70 intersections and was expanded to 76 to give every exposed area bucket at least 10 playable prompts.</li>
       <li>The basemap now depends on public CARTO tile availability. A future production pass should decide whether to self-host tiles, use PMTiles, or move to MapLibre with a managed style.</li>
       <li>Zoom/pan is intentionally modest for V1. It is enough for reading the local road grid, not a full slippy-map replacement.</li>
+      <li>Tile preloading is capped per layer and only looks one tile-zoom level ahead. This avoids large background fetches while improving the jarring first zoom-in case.</li>
       <li>Reveal no longer zooms in to expose labels because that removed too much location context; split labels and a small preserve-zoom pan are the current compromise.</li>
-      <li>Tile post-processing depends on CARTO returning CORS-enabled PNGs. If processing fails, the image falls back to the original CARTO tile instead of blanking the map.</li>
+      <li>The answer-street callout duplicates information that may also exist in tile labels, but it keeps the reveal legible without forcing zoom or depending on third-party label density.</li>
+      <li>The processed CARTO labels are more geographically faithful than generated DOM labels, but the halo is still raster-based rather than true vector text styling.</li>
+      <li>Tile post-processing depends on CARTO returning CORS-enabled PNGs. If base or label processing fails, the image falls back to the original CARTO tile instead of blanking the map.</li>
       <li>Spot-check coordinate guards are intentionally narrow for now; broader corpus precision still needs a future ETL or review pass.</li>
+      <li>The static build is deployed to the permanent here.now site at <code>https://clever-grove-3t69.here.now/</code>. The live app was browser-verified after the 1-5 closeness scoring change.</li>
+      <li>Playable area buckets require at least 10 intersections before being shown. Henderson/Green Valley and North Las Vegas/Northwest are being topped up manually rather than splitting them into smaller sparse regions.</li>
+      <li>The first area chooser is a native select in the sidebar instead of a full start screen; this preserves the fast first prompt while still letting the player choose All Areas or a specific bucket before guessing.</li>
+      <li>The OSM verifier is intentionally separate from the normal build because it depends on public Overpass availability and live map data.</li>
+      <li>Rows that do not produce an OSM road crossing should be treated as content QA failures, not just coordinate misses; the verifier exposes those instead of hiding them behind approximate points.</li>
+      <li>The here.now site was redeployed after the coordinate QA fixes; refreshing the live page should load the bundle with the corrected Lake Mead Parkway / Boulder Highway point.</li>
     </ul>
 
     <h2>Open Questions</h2>
     <ul>
-      <li>Future QA should decide whether scoring needs a per-point accuracy/review field before expanding beyond 100 intersections.</li>
+      <li>Future QA should tune the snap radius as the corpus grows denser, especially in areas with closely spaced intersections.</li>
       <li>Integration follow-up: replace the coordinate-map adapter with MapLibre behind the same adapter contract when the aesthetic/map pass is ready.</li>
     </ul>
   </body>

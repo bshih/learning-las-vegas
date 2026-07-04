@@ -1,3 +1,4 @@
+import { getAreaBucketLabel } from "../data";
 import type { Guess, Intersection, IntersectionQuestion } from "../data";
 import { getRoadFeedback } from "../lib/roadFeedback";
 
@@ -11,42 +12,51 @@ export function ResultSummary({ intersections, question, result }: ResultSummary
   if (!result) {
     return (
       <section className="result-summary result-empty">
-        <p>Make a guess to reveal the answer and distance.</p>
+        <p>Make a guess to reveal the answer.</p>
       </section>
     );
   }
 
   const roadFeedback = getRoadFeedback(question.answer, result.coordinate, intersections);
+  const nearestPrompt = `${result.nearestIntersection.primaryStreet} & ${result.nearestIntersection.crossStreet}`;
+  const areaLabel = question.answer.area
+    ? getAreaBucketLabel(question.answer.area)
+    : question.answer.region ?? "Las Vegas valley";
 
   return (
     <section className="result-summary" aria-live="polite">
       <div>
-        <p className="result-rating">{getRating(result.distanceMeters)}</p>
+        <p className="result-rating">{getRating(result)}</p>
         <p className="result-distance">
-          {(result.distanceMeters / 1609.344).toFixed(2)} mi /{" "}
-          {Math.round(result.distanceMeters)} m away
+          {result.isCorrect
+            ? `Snapped to: ${nearestPrompt}`
+            : `Resolved as: ${nearestPrompt}`}
         </p>
       </div>
       <dl className="result-details">
         <div>
           <dt>Region</dt>
-          <dd>{question.answer.area ?? "Las Vegas valley"}</dd>
+          <dd>{areaLabel}</dd>
         </div>
         <div>
-          <dt>Score</dt>
-          <dd>{result.score}/100</dd>
+          <dt>Result</dt>
+          <dd>{result.isCorrect ? "Correct" : "Missed"}</dd>
+        </div>
+        <div>
+          <dt>Points</dt>
+          <dd>{result.closenessScore}/5</dd>
         </div>
       </dl>
-      {roadFeedback ? <p className="road-feedback">{roadFeedback}</p> : null}
+      {!result.isCorrect && roadFeedback ? <p className="road-feedback">{roadFeedback}</p> : null}
       {question.answer.notes ? <p className="teaching-note">{question.answer.notes}</p> : null}
     </section>
   );
 }
 
-function getRating(distanceMeters: number) {
-  if (distanceMeters <= 250) return "Bullseye";
-  if (distanceMeters <= 800) return "Close";
-  if (distanceMeters <= 1609.344) return "In the neighborhood";
-  if (distanceMeters <= 4000) return "Needs calibration";
-  return "Lost in the valley";
+function getRating(result: Guess) {
+  if (result.isCorrect) return "Correct";
+  if (result.closenessScore === 4) return "Close, but not that intersection";
+  if (result.closenessScore === 3) return "In the area";
+  if (result.closenessScore === 2) return "Farther out";
+  return "Try the road order again";
 }

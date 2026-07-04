@@ -6,6 +6,7 @@
 - `01_app_shell_game_loop.md`: done
 - `02_map_data_layer.md`: done
 - `03_seed_corpus.md`: done
+- `04_area_buckets.md`: done
 
 ## Blockers
 
@@ -28,3 +29,18 @@
 - 2026-06-29: Removed the generated road overlay after QA showed it did not match real road geometry; switched back to actual CARTO Voyager tiles only, tuned darker/clearer in CSS.
 - 2026-06-29: Replaced broad CSS tile filters with client-side CARTO tile post-processing: real Voyager raster tiles are converted to a higher-contrast neutral grayscale map, with yellow road pixels recolored directly and original tiles used as fallback if processing fails.
 - 2026-06-29: Corrected the Lake Mead Boulevard / Las Vegas Boulevard seed point from the I-15/Lake Mead interchange to the North Las Vegas Boulevard crossing and added a seed validation guard for that QA case.
+- 2026-06-29: Replaced 0-100 distance scoring with nearest-intersection guess resolution. A click is correct when the requested intersection is the nearest known intersection within the snap radius; otherwise the reveal names the nearest known intersection instead of awarding granular points.
+- 2026-06-29: Added coarse 1-5 closeness points alongside correct/missed results, so near misses still feel rewarded without returning to exact coordinate scoring.
+- 2026-06-29: Deployed the built static app to the permanent here.now site at https://clever-grove-3t69.here.now/ and browser-verified the live result panel.
+- 2026-06-29: Corrected Lake Mead/Rampart and Lake Mead Parkway/Boulder Highway against OSM road geometry, added static guards for the corrected rows, and added `npm run verify:seed:coords` for network-backed OSM crossing verification.
+- 2026-06-29: Ran the OSM verifier across the full seed corpus and corrected additional coordinate offsets surfaced by it; remaining verifier failures point to likely invalid/non-crossing source pairs rather than simple marker drift.
+- 2026-06-29: Replaced the invalid/non-crossing `Flamingo/Lamb` and `Spring Mountain/Maryland` rows with OSM-verifiable `Flamingo/Pecos` and `Desert Inn/Maryland` rows.
+- 2026-06-30: Redeployed the coordinate QA fixes to the permanent here.now site and verified the live bundle references the fixed Lake Mead Parkway/Boulder Highway coordinate, not the old seed point.
+- 2026-07-01: Improved reveal readability by leaving CARTO label tiles unprocessed and adding a high-contrast answer-street callout sourced from the current intersection.
+- 2026-07-01: Added reveal-only learning labels generated from the seed corpus so zoomed-in review shows readable nearby street names, not just the answer streets.
+- 2026-07-01: Scoped learning labels to wrong reveals only. They now appear near the resolved wrong intersection, use fewer labels at low zoom, and carry subtle east-west / north-south hints.
+- 2026-07-01: Replaced learning-label direction badges with road-like placement: north-south labels rotate vertically and labels that would sit on the crossing nudge along their street axis.
+- 2026-07-04: Replaced generated learning labels with processed CARTO label tiles. Base tile processing now darkens thicker major-road bands while keeping smaller streets quieter, and reveal label tiles get darkened text plus a white halo without adaptive inversion.
+- 2026-07-04: Started area bucket support: normalized player-facing buckets, area-filtered deck/scoring, and a start/sidebar area chooser.
+- 2026-07-04: Completed area bucket support. Seed corpus is now 76 intersections with every exposed bucket at 10+; Henderson/Green Valley and North Las Vegas/Northwest top-up rows were OSM-verified, and the browser flow was checked on desktop and mobile.
+- 2026-07-04: Smoothed map zoom behavior: the default valley frame is now the zoom-out floor, wheel zoom is normalized and animation-frame batched, and the next zoom level's CARTO base/label tiles are preloaded after render to reduce first-zoom blanking.

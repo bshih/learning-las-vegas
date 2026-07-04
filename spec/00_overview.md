@@ -4,14 +4,14 @@
 
 Build a playable Las Vegas intersection-training web app.
 
-The V1 product is static-first: no live map/geocoding calls during gameplay. Ship a seed intersection corpus, render an unlabeled or low-label map, ask the player to locate intersections, score by distance, reveal the answer, and track local progress.
+The V1 product is static-first: no live map/geocoding calls during gameplay. Ship a seed intersection corpus, render an unlabeled or low-label map, ask the player to locate intersections, resolve guesses to the nearest known intersection, reveal the answer, and track local progress.
 
 ## Product Loop
 
 1. Prompt the player with an intersection, for example `Flamingo & Rainbow`.
 2. Player clicks the map.
-3. App computes distance from the true intersection.
-4. App shows score, correct marker, selected marker, and nearby teaching context.
+3. App resolves the click to the nearest known intersection and marks it correct when the requested intersection is the nearest plausible match.
+4. App shows correct/missed feedback, coarse 1-5 closeness points, correct marker, selected marker, and nearby teaching context.
 5. Player advances to the next question.
 
 ## V1 Scope
@@ -19,7 +19,7 @@ The V1 product is static-first: no live map/geocoding calls during gameplay. Shi
 - One main mode: click the intersection.
 - Static seed data: 100-250 curated Las Vegas intersections.
 - Local progress tracking with `localStorage`.
-- Functional map, scoring, reveal, next question, reset progress.
+- Functional map, nearest-intersection guess resolution, reveal, next question, reset progress.
 - Componentized app shell, game panel, map view, score/reveal view, progress state.
 - Themeable CSS with central tokens and simple component classes.
 
@@ -51,4 +51,3 @@ If MapLibre setup blocks a fast playable V1, use a lightweight SVG/canvas coordi
 3. Seed corpus and QA fixtures.
 
 Keep file ownership tight. Do not overwrite another thread's files without checking current contents first.
-

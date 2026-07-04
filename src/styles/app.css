@@ -48,7 +48,38 @@ textarea {
 }
 
 .game-panel-header {
+  display: grid;
+  gap: var(--space-4);
   border-bottom: 1px solid var(--color-border);
+}
+
+.area-chooser {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.area-chooser label {
+  color: var(--color-muted);
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.area-chooser select {
+  width: 100%;
+  min-height: 2.6rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 0 var(--space-3);
+  background: var(--color-surface-strong);
+  color: var(--color-text);
+  cursor: pointer;
+}
+
+.area-chooser p {
+  margin: 0;
+  color: var(--color-muted);
+  font-size: 0.9rem;
 }
 
 .game-panel-body {
@@ -286,6 +317,36 @@ textarea {
 
 .tile-map-marker-correct {
   background: #dc2626;
+}
+
+.tile-map-answer-callout {
+  position: absolute;
+  z-index: 5;
+  display: grid;
+  gap: 0.2rem;
+  border: 1px solid rgb(15 23 42 / 0.2);
+  border-left: 4px solid #dc2626;
+  border-radius: var(--radius-sm);
+  padding: 0.45rem 0.6rem;
+  background: rgb(255 255 255 / 0.97);
+  color: #111827;
+  box-shadow: 0 12px 26px rgb(15 23 42 / 0.28);
+  text-align: left;
+}
+
+.tile-map-answer-callout-above {
+  transform: translate(-50%, calc(-100% - 1.05rem));
+}
+
+.tile-map-answer-callout-below {
+  transform: translate(-50%, 1.05rem);
+}
+
+.tile-map-answer-street {
+  overflow-wrap: anywhere;
+  font-size: 0.9rem;
+  font-weight: 900;
+  line-height: 1.05;
 }
 
 .tile-map-marker-label {

@@ -17,7 +17,7 @@ Provide the map abstraction and static intersection data interface used by the g
 - Define TypeScript types for streets/intersections/questions.
 - Load static seed intersections from JSON or TS data.
 - Provide deterministic question selection.
-- Compute distance between coordinates.
+- Compute distance between coordinates and resolve clicks to the nearest known intersection.
 - Convert map clicks into lat/lon guesses.
 - Render true and guessed markers.
 - Keep road labels hidden or visually secondary during guessing when using a real map.
@@ -37,7 +37,6 @@ The map must remain playable on desktop and mobile widths.
 ## Acceptance
 
 - Guess coordinates are plausible Las Vegas lat/lon values.
-- Scoring uses real distance, not screen pixels.
+- Guess resolution uses real distance to known intersections, not screen pixels.
 - Map renders without external secrets.
 - No gameplay dependency on live geocoding APIs.
-

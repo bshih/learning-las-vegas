@@ -1,6 +1,7 @@
 export {
   LAS_VEGAS_BOUNDS,
   clampCoordinateToBounds,
+  findNearestIntersection,
   coordinateToUnitPoint,
   haversineDistanceMeters,
   isCoordinateInBounds,
