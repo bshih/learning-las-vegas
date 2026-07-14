@@ -89,7 +89,7 @@ export class MapLibreMapAdapter implements MapAdapter {
       maxZoom: 18,
       dragRotate: false,
       touchPitch: false,
-      attributionControl: { compact: true },
+      attributionControl: { compact: false },
       fadeDuration: 180,
     });
     this.map = map;
@@ -214,11 +214,13 @@ export class MapLibreMapAdapter implements MapAdapter {
 
     this.clearMarkers();
     const correctCoordinate = this.state.correctIntersection?.coordinate;
+    const correctGuess = Boolean(this.state.correctGuess);
     const guessMarker = this.state.markers?.find(
       (marker) => marker.kind === "guess",
     );
     const splitLabels = Boolean(
       this.state.revealed &&
+        !correctGuess &&
         guessMarker &&
         correctCoordinate &&
         this.areCoordinatesCloseOnScreen(
@@ -227,8 +229,10 @@ export class MapLibreMapAdapter implements MapAdapter {
         ),
     );
 
-    for (const marker of this.state.markers ?? []) {
-      this.addMarker(marker, splitLabels ? "left" : "right");
+    if (!correctGuess) {
+      for (const marker of this.state.markers ?? []) {
+        this.addMarker(marker, splitLabels ? "left" : "right");
+      }
     }
 
     if (this.state.revealed && correctCoordinate) {
@@ -237,7 +241,7 @@ export class MapLibreMapAdapter implements MapAdapter {
           id: `correct-${this.state.correctIntersection?.id}`,
           kind: "correct",
           coordinate: correctCoordinate,
-          label: "Correct",
+          label: correctGuess ? "Nailed it" : "Correct",
         },
         "right",
       );
@@ -251,6 +255,9 @@ export class MapLibreMapAdapter implements MapAdapter {
 
     const element = document.createElement("div");
     element.className = `tile-map-marker tile-map-marker-${marker.kind}`;
+    if (marker.kind === "correct" && this.state.correctGuess) {
+      element.classList.add("tile-map-marker-success");
+    }
     element.setAttribute("aria-label", marker.label ?? marker.kind);
 
     const dot = document.createElement("span");

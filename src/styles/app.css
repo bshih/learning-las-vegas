@@ -1,14 +1,27 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@600;700;800&family=Source+Sans+3:wght@400;600;700&display=swap");
+
 * {
   box-sizing: border-box;
+}
+
+html {
+  background: var(--color-background);
 }
 
 body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
-  background: var(--color-background);
+  background:
+    linear-gradient(rgb(25 51 74 / 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(25 51 74 / 0.035) 1px, transparent 1px),
+    var(--color-background);
+  background-size: 24px 24px;
   color: var(--color-text);
   font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.45;
+  -webkit-font-smoothing: antialiased;
 }
 
 button,
@@ -20,18 +33,70 @@ textarea {
 
 .app-shell {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 360px;
+  grid-template-columns: minmax(0, 1fr) 390px;
   min-height: 100vh;
+  border-top: 5px solid var(--color-accent);
 }
 
 .map-region {
   min-height: 100vh;
-  padding: var(--space-5);
+  padding: var(--space-4) var(--space-5) var(--space-5);
+}
+
+.atlas-masthead {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: var(--space-5);
+  min-height: 70px;
+  padding: 0.15rem 0 var(--space-3);
+}
+
+.atlas-kicker,
+.atlas-title,
+.atlas-edition {
+  margin: 0;
+}
+
+.atlas-kicker {
+  color: var(--color-accent-dark);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+.atlas-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.85rem, 3vw, 2.65rem);
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  line-height: 1;
+}
+
+.atlas-edition {
+  padding-left: var(--space-3);
+  border-left: 1px solid var(--color-border-strong);
+  color: var(--color-muted);
+  font-size: 0.72rem;
+  font-weight: 700;
+  line-height: 1.25;
+  text-align: right;
+  text-transform: uppercase;
+}
+
+.map-frame {
+  padding: 5px;
+  border: 1px solid var(--color-border-strong);
+  background: var(--color-paper);
+  box-shadow: 4px 4px 0 rgb(25 51 74 / 0.14);
 }
 
 .game-sidebar {
-  border-left: 1px solid var(--color-border);
-  background: var(--color-surface);
+  border-left: 2px solid var(--color-border-strong);
+  background:
+    linear-gradient(135deg, rgb(25 51 74 / 0.035) 25%, transparent 25%) 0 0 / 12px 12px,
+    var(--color-paper);
   min-height: 100vh;
 }
 
@@ -44,13 +109,13 @@ textarea {
 .game-panel-header,
 .game-panel-body,
 .game-panel-footer {
-  padding: var(--space-5);
+  padding: var(--space-6);
 }
 
 .game-panel-header {
   display: grid;
   gap: var(--space-4);
-  border-bottom: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border-strong);
 }
 
 .area-chooser {
@@ -59,21 +124,24 @@ textarea {
 }
 
 .area-chooser label {
-  color: var(--color-muted);
-  font-size: 0.78rem;
+  color: var(--color-accent-dark);
+  font-size: 0.76rem;
   font-weight: 700;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
 }
 
 .area-chooser select {
   width: 100%;
-  min-height: 2.6rem;
-  border: 1px solid var(--color-border);
+  min-height: 2.85rem;
+  border: 1px solid var(--color-border-strong);
   border-radius: var(--radius-sm);
   padding: 0 var(--space-3);
-  background: var(--color-surface-strong);
+  background: var(--color-surface);
   color: var(--color-text);
   cursor: pointer;
+  font-weight: 700;
+  box-shadow: 2px 2px 0 rgb(25 51 74 / 0.12);
 }
 
 .area-chooser p {
@@ -84,12 +152,13 @@ textarea {
 
 .game-panel-body {
   display: grid;
-  gap: var(--space-4);
+  align-content: start;
+  gap: var(--space-5);
 }
 
 .game-panel-footer {
   margin-top: auto;
-  border-top: 1px solid var(--color-border);
+  border-top: 1px solid var(--color-border-strong);
 }
 
 .question-prompt {
@@ -101,28 +170,38 @@ textarea {
 .prompt-meta {
   margin: 0;
   color: var(--color-muted);
-  font-size: 0.86rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.055em;
   text-transform: uppercase;
+}
+
+.prompt-label {
+  color: var(--color-accent-dark);
 }
 
 .question-prompt h1 {
   margin: 0;
-  font-size: clamp(2rem, 5vw, 3.25rem);
-  line-height: 1;
-  letter-spacing: 0;
+  max-width: 12ch;
+  font-family: var(--font-display);
+  font-size: clamp(1.9rem, 3.4vw, 2.75rem);
+  font-weight: 800;
+  line-height: 1.08;
+  letter-spacing: -0.035em;
 }
 
 .progress-card,
 .result-summary {
-  border: 1px solid var(--color-border);
+  border: 1px solid var(--color-border-strong);
   border-radius: var(--radius-md);
   padding: var(--space-4);
-  background: var(--color-surface-strong);
+  background: var(--color-surface);
+  box-shadow: 3px 3px 0 rgb(25 51 74 / 0.12);
 }
 
 .progress-stats {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: var(--space-3);
 }
 
@@ -132,7 +211,9 @@ textarea {
 }
 
 .progress-stats strong {
-  font-size: 1.4rem;
+  font-family: var(--font-display);
+  font-size: 1.45rem;
+  line-height: 1;
 }
 
 .progress-stats small {
@@ -140,10 +221,10 @@ textarea {
 }
 
 .progress-track {
-  height: 0.5rem;
+  height: 0.38rem;
   margin-top: var(--space-4);
   overflow: hidden;
-  border-radius: 999px;
+  border-radius: 0;
   background: var(--color-border);
 }
 
@@ -173,8 +254,9 @@ textarea {
 }
 
 .result-rating {
-  font-size: 1.5rem;
-  font-weight: 700;
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  font-weight: 800;
 }
 
 .result-distance,
@@ -184,7 +266,7 @@ textarea {
 }
 
 .road-feedback {
-  border-left: 3px solid var(--color-accent);
+  border-left: 4px solid var(--color-accent);
   padding-left: var(--space-3);
   font-weight: 700;
 }
@@ -204,6 +286,8 @@ textarea {
 .result-details dt {
   color: var(--color-muted);
   font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.045em;
   text-transform: uppercase;
 }
 
@@ -219,12 +303,14 @@ textarea {
 }
 
 .button {
-  min-height: 2.75rem;
-  border: 1px solid transparent;
+  min-height: 3rem;
+  border: 1px solid var(--color-border-strong);
   border-radius: var(--radius-sm);
   padding: 0 var(--space-4);
   cursor: pointer;
   font-weight: 700;
+  box-shadow: 2px 2px 0 rgb(25 51 74 / 0.18);
+  transition: background-color 120ms ease, color 120ms ease, transform 120ms ease, box-shadow 120ms ease;
 }
 
 .button:disabled {
@@ -234,23 +320,31 @@ textarea {
 
 .button-primary {
   background: var(--color-accent);
-  color: white;
+  color: #fff9e9;
 }
 
 .button-secondary {
-  border-color: var(--color-border);
   background: var(--color-surface);
   color: var(--color-text);
+}
+
+.button:not(:disabled):hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 3px 0 rgb(25 51 74 / 0.22);
+}
+
+.button-primary:not(:disabled):hover {
+  background: var(--color-accent-dark);
 }
 
 .map-stage {
   position: relative;
   width: 100%;
-  height: calc(100vh - var(--space-5) * 2);
+  height: calc(100vh - 104px);
   min-height: 520px;
   overflow: hidden;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border-strong);
+  border-radius: 0;
   background: var(--color-map-bg);
 }
 
@@ -287,10 +381,10 @@ textarea {
 
 .maplibre-map .maplibregl-ctrl-group {
   overflow: hidden;
-  border: 1px solid var(--color-border);
+  border: 1px solid var(--color-border-strong);
   border-radius: var(--radius-sm);
   background: color-mix(in srgb, var(--color-surface) 94%, transparent);
-  box-shadow: 0 8px 22px rgb(15 23 42 / 0.14);
+  box-shadow: 2px 2px 0 rgb(25 51 74 / 0.18);
 }
 
 .maplibre-map .maplibregl-ctrl-group button {
@@ -325,29 +419,41 @@ textarea {
 .tile-map-marker-dot {
   position: absolute;
   inset: 0;
-  border: 3px solid #ffffff;
+  border: 3px solid var(--color-paper);
   border-radius: 999px;
   box-shadow: 0 4px 14px rgb(15 23 42 / 0.28);
 }
 
 .tile-map-marker-guess .tile-map-marker-dot {
-  background: #2563eb;
+  background: var(--color-text);
 }
 
 .tile-map-marker-correct .tile-map-marker-dot {
-  background: #dc2626;
+  background: var(--color-accent);
+}
+
+.tile-map-marker-success {
+  width: 1.75rem;
+  height: 1.75rem;
+}
+
+.tile-map-marker-success .tile-map-marker-dot {
+  border-width: 4px;
+  box-shadow:
+    0 0 0 3px rgb(105 127 98 / 0.78),
+    0 5px 16px rgb(15 23 42 / 0.3);
 }
 
 .tile-map-answer-callout {
   display: grid;
   gap: 0.2rem;
   min-width: max-content;
-  border: 1px solid rgb(15 23 42 / 0.2);
-  border-left: 4px solid #dc2626;
+  border: 1px solid var(--color-border-strong);
+  border-left: 5px solid var(--color-accent);
   border-radius: var(--radius-sm);
   padding: 0.45rem 0.6rem;
-  background: rgb(255 255 255 / 0.97);
-  color: #111827;
+  background: rgb(247 241 223 / 0.97);
+  color: var(--color-text);
   box-shadow: 0 12px 26px rgb(15 23 42 / 0.28);
   text-align: left;
   pointer-events: none;
@@ -356,7 +462,8 @@ textarea {
 .tile-map-answer-callout > span {
   overflow-wrap: anywhere;
   font-size: 0.9rem;
-  font-weight: 900;
+  font-family: var(--font-display);
+  font-weight: 800;
   line-height: 1.05;
 }
 
@@ -365,10 +472,10 @@ textarea {
   left: calc(100% + 0.4rem);
   top: 50%;
   min-width: 4.7rem;
-  border: 1px solid rgb(15 23 42 / 0.28);
+  border: 1px solid var(--color-border-strong);
   border-radius: var(--radius-sm);
   padding: 0.28rem 0.5rem;
-  background: rgb(255 255 255 / 0.94);
+  background: rgb(247 241 223 / 0.95);
   color: var(--color-text);
   font-size: 0.88rem;
   font-weight: 800;
@@ -393,27 +500,38 @@ textarea {
   position: absolute;
   left: var(--space-4);
   bottom: 2.75rem;
-  border: 1px solid var(--color-border);
+  border: 1px solid var(--color-border-strong);
   border-radius: var(--radius-sm);
   padding: 0.55rem 0.75rem;
-  background: color-mix(in srgb, var(--color-surface) 88%, transparent);
-  color: var(--color-muted);
+  background: color-mix(in srgb, var(--color-paper) 92%, transparent);
+  color: var(--color-text);
   font-size: 0.9rem;
   font-weight: 700;
+  box-shadow: 2px 2px 0 rgb(25 51 74 / 0.16);
   pointer-events: none;
   z-index: 2;
 }
 
 .map-stage-status-action {
+  min-height: 2.75rem;
+  border: 2px solid var(--color-land);
+  padding: 0.6rem 0.9rem;
+  background: color-mix(in srgb, var(--color-land) 22%, var(--color-paper));
   color: var(--color-text);
   cursor: pointer;
+  font-family: var(--font-display);
+  font-weight: 800;
+  box-shadow: 3px 3px 0 rgb(25 51 74 / 0.22);
   pointer-events: auto;
+  transition: background-color 120ms ease, transform 120ms ease, box-shadow 120ms ease;
 }
 
 .map-stage-status-action:hover,
 .map-stage-status-action:focus-visible {
-  border-color: var(--color-accent);
-  background: var(--color-surface);
+  border-color: var(--color-land);
+  background: color-mix(in srgb, var(--color-land) 35%, var(--color-paper));
+  transform: translate(-1px, -1px);
+  box-shadow: 4px 4px 0 rgb(25 51 74 / 0.24);
 }
 
 .map-stage-status-action:focus-visible {
@@ -436,9 +554,17 @@ textarea {
     padding: var(--space-3);
   }
 
+  .atlas-masthead {
+    min-height: 60px;
+  }
+
+  .atlas-edition {
+    display: none;
+  }
+
   .game-sidebar {
     min-height: auto;
-    border-top: 1px solid var(--color-border);
+    border-top: 2px solid var(--color-border-strong);
     border-left: 0;
   }
 
@@ -449,5 +575,40 @@ textarea {
   .map-stage {
     height: 58vh;
     min-height: 360px;
+  }
+
+  .game-panel-header,
+  .game-panel-body,
+  .game-panel-footer {
+    padding: var(--space-5);
+  }
+}
+
+@media (max-width: 480px) {
+  .atlas-kicker {
+    font-size: 0.67rem;
+  }
+
+  .atlas-title {
+    font-size: 1.75rem;
+  }
+
+  .map-frame {
+    padding: 3px;
+    box-shadow: 3px 3px 0 rgb(25 51 74 / 0.14);
+  }
+
+  .map-stage {
+    height: 54vh;
+    min-height: 330px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
   }
 }

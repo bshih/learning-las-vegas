@@ -1,18 +1,24 @@
 :root {
-  --font-body: "Avenir Next", "Trebuchet MS", ui-sans-serif, system-ui, sans-serif;
-  --color-background: #f6f7f9;
-  --color-surface: #ffffff;
-  --color-surface-strong: #fbfcfe;
-  --color-text: #172033;
-  --color-muted: #657082;
-  --color-border: #d7dde7;
-  --color-accent: #265fbc;
-  --color-focus: #84a8ff;
-  --color-map-bg: #e8edf5;
-  --radius-sm: 6px;
-  --radius-md: 8px;
+  --font-display: "Roboto Slab", Rockwell, "Courier New", serif;
+  --font-body: "Source Sans 3", "Trebuchet MS", ui-sans-serif, system-ui, sans-serif;
+  --color-background: #d8d1bd;
+  --color-paper: #f2ecd9;
+  --color-surface: #f7f1df;
+  --color-surface-strong: #ece4ce;
+  --color-text: #19334a;
+  --color-muted: #5e675f;
+  --color-border: #9b927b;
+  --color-border-strong: #19334a;
+  --color-accent: #b54132;
+  --color-accent-dark: #843126;
+  --color-land: #697f62;
+  --color-focus: #f0b448;
+  --color-map-bg: #d8d8c8;
+  --radius-sm: 2px;
+  --radius-md: 3px;
   --space-2: 0.5rem;
   --space-3: 0.75rem;
   --space-4: 1rem;
   --space-5: 1.5rem;
+  --space-6: 2rem;
 }

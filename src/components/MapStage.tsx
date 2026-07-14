@@ -57,6 +57,7 @@ export function MapStage({
     adapterRef.current?.update({
       intersections,
       correctIntersection: question.answer,
+      correctGuess: Boolean(result?.isCorrect),
       revealed,
       markers: guess
         ? [
@@ -80,7 +81,7 @@ export function MapStage({
           className="map-stage-status map-stage-status-action"
           onClick={onNext}
         >
-          Answer shown. Next
+          Next intersection
         </button>
       ) : (
         <div className="map-stage-status" aria-live="polite">

@@ -8,6 +8,7 @@ export const LAS_VEGAS_BOUNDS: BoundingBox = {
 const EARTH_RADIUS_METERS = 6_371_000;
 const CORRECT_SNAP_RADIUS_METERS = 650;
 const NEAR_RADIUS_METERS = 1609.344;
+const LOST_IN_VALLEY_RADIUS_METERS = 12_000;
 
 const toRadians = (degrees: number) => (degrees * Math.PI) / 180;
 
@@ -26,12 +27,13 @@ export function haversineDistanceMeters(a: Coordinate, b: Coordinate): number {
   return 2 * EARTH_RADIUS_METERS * Math.atan2(Math.sqrt(h), Math.sqrt(1 - h));
 }
 
-export function scoreDistance(distanceMeters: number): 1 | 2 | 3 | 4 | 5 {
+export function scoreDistance(distanceMeters: number): 0 | 1 | 2 | 3 | 4 | 5 {
   if (distanceMeters <= CORRECT_SNAP_RADIUS_METERS) return 5;
   if (distanceMeters <= NEAR_RADIUS_METERS) return 4;
   if (distanceMeters <= 3_000) return 3;
   if (distanceMeters <= 6_000) return 2;
-  return 1;
+  if (distanceMeters <= LOST_IN_VALLEY_RADIUS_METERS) return 1;
+  return 0;
 }
 
 export function findNearestIntersection(

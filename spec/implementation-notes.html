@@ -36,7 +36,7 @@
       <li>The map renderer is MapLibre GL JS behind the original small <code>MapAdapter</code> contract, so gameplay and scoring remain independent from the rendering library.</li>
       <li>Question order is deterministic by seed and intersection id, which keeps QA repeatable while avoiding hardcoded array order as gameplay order.</li>
       <li>Guess resolution uses haversine distance between lat/lon coordinates; screen position is only used to convert a click into a guess coordinate.</li>
-      <li>Scoring is intentionally coarse. A click is correct when the requested intersection is the nearest known intersection within the snap radius; correct guesses display at the snapped intersection, while misses name the nearest known intersection and receive 1-5 closeness points instead of 0-100 coordinate points.</li>
+      <li>Scoring is intentionally coarse. A click is correct when the requested intersection is the nearest known intersection within the snap radius; correct guesses display at the snapped intersection, while misses name the nearest known intersection and receive 0-4 closeness points instead of 0-100 coordinate points. Guesses beyond 12 km receive zero.</li>
       <li>Seed corpus lives in <code>src/data/intersections.json</code>; <code>src/data/intersections.ts</code> adapts it into the map/data <code>Intersection</code> contract.</li>
       <li>Seed coordinates are playable approximate points, with uncertainty documented in <code>src/data/seed-notes.md</code>.</li>
       <li>App shell uses React + Vite + TypeScript with small components and a tokenized CSS layer for the later aesthetic pass.</li>
@@ -53,6 +53,13 @@
       <li>Reveal mode adds a high-contrast answer-street callout near the correct marker using the current intersection's primary and cross streets, so the exact answer remains distinct from surrounding vector labels.</li>
       <li>Wrong reveals do not render generated learning labels from the seed corpus. OpenFreeMap's native vector labels carry nearby street learning context, while the answer callout remains the explicit exact-answer anchor.</li>
       <li>The reveal-state instruction chip is a real Next button wired to the existing game-loop action, so players can advance without scrolling to the sidebar footer.</li>
+      <li>The reveal action now reads “Next intersection” and uses the atlas land green with a stronger border and offset shadow so it reads as clickable rather than informational.</li>
+      <li>Local progress now persists and displays cumulative points by adding each guess's 0-5 closeness score. Existing saved progress safely starts this new field at zero.</li>
+      <li>Feedback labels now follow distance evidence: Nailed it, Very close, Nearby, A few miles off, Across town, and Lost in the valley. Road-specific feedback appears only when the road-axis heuristic actually identifies one or both answer roads.</li>
+      <li>Correct reveals use one enlarged “Nailed it” marker at the answer instead of comparing overlapping Guess and Correct pins. Misses retain separate markers for learning context.</li>
+      <li>Map attribution is always expanded instead of using MapLibre's compact information toggle, avoiding the overlapping copyright popover while keeping required credits visible.</li>
+      <li>The visual system now takes its cues from mid-century road atlases: warm paper, cartographic navy, route-marker red, muted green, slab-serif wayfinding type, fine rules, and squared paper-like controls. The treatment is CSS-led and does not alter gameplay or map contracts.</li>
+      <li>The desktop layout keeps the map dominant with a compact 390px field-guide sidebar; mobile stacks the map first and preserves large touch targets, visible focus states, and readable metadata.</li>
       <li>Result feedback can call out when the guess appears close to one road but misses the cross street.</li>
       <li>The Lake Mead Boulevard / Las Vegas Boulevard North seed point is explicitly guarded in validation after QA found it had drifted west to the I-15/Lake Mead interchange.</li>
       <li>Area-specific play uses a normalized <code>area</code> bucket separate from the descriptive <code>region</code> field. This keeps the UI stable while preserving more granular seed notes.</li>
@@ -76,9 +83,10 @@
       <li>The basemap now depends on public OpenFreeMap style, vector-tile, glyph, and sprite availability. Self-hosted tiles or PMTiles remain future options if that dependency becomes unacceptable.</li>
       <li>Reveal no longer zooms in to expose labels because that removed too much location context; split labels and a small preserve-zoom pan are the current compromise.</li>
       <li>The answer-street callout duplicates information that may also exist in tile labels, but it keeps the reveal legible without forcing zoom or depending on third-party label density.</li>
-      <li>Native vector labels are geographically faithful and gain detail as the player zooms, but their density and typography remain governed by the external Positron style.</li>
+      <li>Native vector labels are geographically faithful and gain detail as the player zooms, but their density and typography remain governed by the external OpenFreeMap Bright style.</li>
       <li>Spot-check coordinate guards are intentionally narrow for now; broader corpus precision still needs a future ETL or review pass.</li>
       <li>The static build is deployed to the permanent here.now site at <code>https://clever-grove-3t69.here.now/</code>. The OpenFreeMap Bright release was browser-verified through guess, reveal, map-overlay Next, and reset-to-unrevealed flow.</li>
+      <li>The road-atlas visual release was deployed to the same permanent here.now site after responsive browser review. The production guess, reveal, and map-overlay Next path was re-verified after publish.</li>
       <li>Playable area buckets require at least 10 intersections before being shown. Henderson/Green Valley and North Las Vegas/Northwest are being topped up manually rather than splitting them into smaller sparse regions.</li>
       <li>The first area chooser is a native select in the sidebar instead of a full start screen; this preserves the fast first prompt while still letting the player choose All Areas or a specific bucket before guessing.</li>
       <li>The OSM verifier is intentionally separate from the normal build because it depends on public Overpass availability and live map data.</li>

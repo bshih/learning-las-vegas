@@ -17,6 +17,7 @@ function createInitialProgress(areaId: PlayAreaId = ALL_AREA_ID): ProgressState 
     areaId,
     answered: 0,
     missed: 0,
+    points: 0,
     streak: 0,
     questionIndex: 0
   };
@@ -71,6 +72,7 @@ export function useGameLoop(intersections: readonly Intersection[]) {
       ...current,
       answered: current.answered + 1,
       missed: current.missed + (missed ? 1 : 0),
+      points: current.points + guess.closenessScore,
       streak: missed ? 0 : current.streak + 1
     }));
   }
@@ -117,6 +119,7 @@ function loadProgress(): ProgressState {
       areaId,
       answered: typeof parsed.answered === "number" ? parsed.answered : 0,
       missed: typeof parsed.missed === "number" ? parsed.missed : 0,
+      points: typeof parsed.points === "number" ? parsed.points : 0,
       streak: typeof parsed.streak === "number" ? parsed.streak : 0,
       questionIndex: typeof parsed.questionIndex === "number" ? parsed.questionIndex : 0
     };

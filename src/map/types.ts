@@ -15,6 +15,7 @@ export type GuessEvent = {
 
 export type MapViewState = {
   bounds: BoundingBox;
+  correctGuess?: boolean;
   intersections?: readonly Intersection[];
   correctIntersection?: Intersection;
   markers?: readonly MapMarker[];

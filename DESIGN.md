@@ -2,37 +2,46 @@
 
 ## Reference
 
+- Product direction: a mid-century American road atlas or highway field guide—cream paper, dark blue cartographic ink, route-marker red, muted land green, slab-serif titles, fine rules, and squared utility controls.
 - Map reference: Google Maps road hierarchy and label behavior. Major roads should read first, local streets should stay quiet, and labels should appear progressively as the player zooms.
-- Product reference: the existing Melissa Map game shell. This renderer migration should not redesign the surrounding game UI.
+- Usability reference: the existing Melissa Map game loop. The atlas treatment must preserve the map-first layout, immediate prompt, obvious area selector, and high-contrast reveal actions.
 
 ## Typography
 
-- App UI uses the existing `Avenir Next`-led sans-serif stack with strong, compact headings and readable body text.
+- Display type uses Google Fonts `Roboto Slab` at 600-800 for the masthead, prompts, scores, and answer callouts.
+- UI and body type uses Google Fonts `Source Sans 3` at 400-700 for compact clarity.
 - Map labels come from the vector basemap style so placement, collision handling, and zoom-level detail stay geographically correct.
-- No decorative letter spacing or oversized type inside compact panels.
+- Display text uses tight natural spacing. Letter spacing is limited to small navigational metadata and labels, where atlas legends traditionally use it.
+- Body text stays near 16px with approximately 1.45 line height; compact metadata never drops below 0.67rem on mobile.
 
 ## Color
 
-- Background: `#f6f7f9`
-- Surface: `#ffffff`
-- Primary text: `#172033`
-- Muted text: `#657082`
-- Border: `#d7dde7`
-- Guess marker: `#2563eb`
-- Correct marker: `#dc2626`
+- Canvas: paper-board tan `#d8d1bd`
+- Paper: warm cream `#f2ecd9`
+- Surface: light atlas paper `#f7f1df`
+- Secondary surface: aged cream `#ece4ce`
+- Primary text and rules: cartographic navy `#19334a`
+- Muted text: gray-green `#5e675f`
+- Fine border: `#9b927b`
+- Route accent / correct marker: `#b54132`
+- Land accent: `#697f62`
+- Focus: high-visibility amber `#f0b448`
+- Guess marker: cartographic navy `#19334a`
 - Map: OpenFreeMap Bright, with clean road hierarchy and restrained land-use color.
 
 ## Spacing And Shape
 
-- Existing `0.5rem`, `0.75rem`, `1rem`, and `1.5rem` spacing scale.
-- Corners stay subtle: 6-8px for the existing shell and map frame.
-- Shadows are reserved for floating controls, markers, and the exact-answer callout.
+- `0.5rem`, `0.75rem`, `1rem`, `1.5rem`, and `2rem` spacing scale.
+- Corners are nearly square: 2-3px. The map itself has square corners.
+- Shadows are crisp 2-4px offsets, like stacked paper, rather than soft floating-card shadows.
+- The desktop shell keeps a dominant map and a fixed-width 390px field-guide sidebar. Mobile stacks map before controls.
 
 ## Map Behavior
 
 - Hide every text-bearing basemap symbol layer while the player is guessing, including roads, neighborhoods, POIs, and airport labels.
 - Restore native vector labels after reveal; do not generate separate learning tags.
 - Keep the exact-answer callout visually stronger than ordinary map labels.
+- Show one enlarged “Nailed it” marker for correct guesses; reserve separate Guess/Correct markers for misses.
 - Preserve pan and zoom during reveal; reset to the valley frame for a new question.
 - Maintain source attribution in the map viewport.
 
@@ -42,9 +51,12 @@
 - Keep local streets visible but subordinate to arterials and highways.
 - Use familiar map controls and retain a reset-to-valley command.
 - Make the reveal-state map overlay a direct Next action.
+- Use paper, ink, rules, and route-red accents consistently; decorative texture must stay low contrast.
 
 ## Don't
 
 - Do not process raster tiles or draw synthetic road-name tags.
 - Do not show POI clutter while guessing.
-- Do not change scoring, question order, or the surrounding game layout as part of map rendering work.
+- Do not use rounded pill cards, generic blue SaaS controls, distressed novelty fonts, or fake paper stains.
+- Do not let the atlas styling reduce map area, tap targets, focus visibility, or text contrast.
+- Do not change scoring or question order as part of visual design work.

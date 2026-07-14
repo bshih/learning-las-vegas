@@ -11,7 +11,7 @@ The V1 product is static-first: no live map/geocoding calls during gameplay. Shi
 1. Prompt the player with an intersection, for example `Flamingo & Rainbow`.
 2. Player clicks the map.
 3. App resolves the click to the nearest known intersection and marks it correct when the requested intersection is the nearest plausible match.
-4. App shows correct/missed feedback, coarse 1-5 closeness points, correct marker, selected marker, and nearby teaching context.
+4. App shows correct/missed feedback, coarse 0-5 closeness points, reveal markers, and nearby teaching context.
 5. Player advances to the next question.
 
 ## V1 Scope

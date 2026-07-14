@@ -13,7 +13,7 @@ Replace the custom CARTO raster-tile renderer with MapLibre GL JS using OpenFree
 - Preserve the existing `MapAdapter` contract used by `MapStage`.
 - Render the OpenFreeMap Bright style through MapLibre GL JS.
 - Convert map clicks to longitude/latitude guesses.
-- Render guess, correct, and exact-answer callout markers.
+- Render separate guess/correct markers for misses, one enlarged success marker for correct guesses, and the exact-answer callout.
 - Hide text-bearing vector symbol layers while guessing and restore their original visibility after reveal.
 - Let the reveal-state map overlay advance directly to the next question.
 - Preserve reveal zoom/pan and reset to the valley frame for a new question.

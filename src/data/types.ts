@@ -50,7 +50,7 @@ export type IntersectionQuestion = {
 export type Guess = {
   coordinate: Coordinate;
   distanceMeters: number;
-  closenessScore: 1 | 2 | 3 | 4 | 5;
+  closenessScore: 0 | 1 | 2 | 3 | 4 | 5;
   nearestIntersection: Intersection;
   nearestDistanceMeters: number;
   isCorrect: boolean;

@@ -17,7 +17,9 @@ export function ResultSummary({ intersections, question, result }: ResultSummary
     );
   }
 
-  const roadFeedback = getRoadFeedback(question.answer, result.coordinate, intersections);
+  const roadFeedback = result.isCorrect
+    ? null
+    : getRoadFeedback(question.answer, result.coordinate, intersections);
   const nearestPrompt = `${result.nearestIntersection.primaryStreet} & ${result.nearestIntersection.crossStreet}`;
   const areaLabel = question.answer.area
     ? getAreaBucketLabel(question.answer.area)
@@ -29,7 +31,7 @@ export function ResultSummary({ intersections, question, result }: ResultSummary
         <p className="result-rating">{getRating(result)}</p>
         <p className="result-distance">
           {result.isCorrect
-            ? `Snapped to: ${nearestPrompt}`
+            ? `Right intersection: ${nearestPrompt}`
             : `Resolved as: ${nearestPrompt}`}
         </p>
       </div>
@@ -54,9 +56,10 @@ export function ResultSummary({ intersections, question, result }: ResultSummary
 }
 
 function getRating(result: Guess) {
-  if (result.isCorrect) return "Correct";
-  if (result.closenessScore === 4) return "Close, but not that intersection";
-  if (result.closenessScore === 3) return "In the area";
-  if (result.closenessScore === 2) return "Farther out";
-  return "Try the road order again";
+  if (result.isCorrect) return "Nailed it";
+  if (result.closenessScore === 4) return "Very close";
+  if (result.closenessScore === 3) return "Nearby";
+  if (result.closenessScore === 2) return "A few miles off";
+  if (result.closenessScore === 1) return "Across town";
+  return "Lost in the valley";
 }

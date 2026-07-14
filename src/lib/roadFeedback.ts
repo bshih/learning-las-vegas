@@ -21,12 +21,12 @@ export function getRoadFeedback(
   if (answerDistance <= BULLSEYE_METERS) return null;
 
   if (closeRoads.length === 2) {
-    return "Road read: you had the right road pair; tighten the exact corner.";
+    return "You found both roads; aim for their crossing.";
   }
 
   if (closeRoads.length === 1) {
     const missedRoad = roads.find((road) => road.street !== closeRoads[0].street);
-    return `Road read: close to ${closeRoads[0].street}; ${missedRoad?.street ?? "the cross street"} was the miss.`;
+    return `You were near ${closeRoads[0].street}, but missed ${missedRoad?.street ?? "the cross street"}.`;
   }
 
   return null;

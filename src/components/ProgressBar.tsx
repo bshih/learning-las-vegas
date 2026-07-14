@@ -25,6 +25,10 @@ export function ProgressBar({ progress }: ProgressBarProps) {
           <strong>{accuracy}%</strong>
           <small>accuracy</small>
         </span>
+        <span>
+          <strong>{progress.points}</strong>
+          <small>points</small>
+        </span>
       </div>
       <div className="progress-track" aria-hidden="true">
         <span style={{ width: `${Math.min(progress.streak * 10, 100)}%` }} />
