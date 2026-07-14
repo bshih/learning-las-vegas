@@ -48,3 +48,4 @@
 - 2026-07-13: Started replacing the CARTO raster adapter with OpenFreeMap + MapLibre vector rendering. The accepted direction uses native zoom-dependent labels on reveal, no API key or billing, and no custom learning-label overlays.
 - 2026-07-13: Completed the OpenFreeMap + MapLibre migration. Road names and shields are hidden while guessing and restored on reveal; native vector LoD replaces CARTO raster processing, while existing answer/guess markers and the exact-answer callout remain.
 - 2026-07-13: Switched to OpenFreeMap Bright, expanded pre-guess hiding to every text label so neighborhood names cannot leak clues, and made the reveal overlay advance directly to the next question.
+- 2026-07-13: Deployed commit `52fbde5` to the permanent here.now site and browser-verified the live guess, reveal, map-overlay Next, and reset-to-unrevealed flow with no page errors.
