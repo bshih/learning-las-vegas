@@ -7,6 +7,7 @@
 - `02_map_data_layer.md`: done
 - `03_seed_corpus.md`: done
 - `04_area_buckets.md`: done
+- `05_openfreemap_maplibre.md`: done
 
 ## Blockers
 
@@ -18,7 +19,7 @@
 - Parallel threads should keep ownership boundaries tight.
 - Map/data layer shipped as pure TypeScript because no package scaffold exists yet: typed data contracts, geodesic scoring, deterministic question decks, and a DOM/SVG coordinate-map fallback adapter.
 - Workstream 3 added a 70-intersection static seed corpus, seed notes, and a dependency-free validation helper. App integration should prefer `intersections` from `src/data`.
-- App shell now uses the canonical `intersections` export plus `getQuestionAt`, `scoreGuess`, and `createCoordinateMapAdapter`.
+- App shell uses the canonical `intersections` export plus `getQuestionAt`, `scoreGuess`, and the renderer-neutral `MapAdapter` contract; the current implementation is MapLibre.
 - Browser dogfood covered 10 consecutive questions, reset, reload persistence, and console error check.
 - 2026-06-29: Replaced the placeholder SVG grid with dependency-free CARTO raster tiles. Guessing uses no-label tiles; reveal fades in label tiles plus the correct marker.
 - 2026-06-29: Tightened the default viewport to the developed valley, added map zoom/pan/reset controls, splits overlapping marker labels, and added a lightweight same-road feedback hint.
@@ -44,3 +45,6 @@
 - 2026-07-04: Started area bucket support: normalized player-facing buckets, area-filtered deck/scoring, and a start/sidebar area chooser.
 - 2026-07-04: Completed area bucket support. Seed corpus is now 76 intersections with every exposed bucket at 10+; Henderson/Green Valley and North Las Vegas/Northwest top-up rows were OSM-verified, and the browser flow was checked on desktop and mobile.
 - 2026-07-04: Smoothed map zoom behavior: the default valley frame is now the zoom-out floor, wheel zoom is normalized and animation-frame batched, and the next zoom level's CARTO base/label tiles are preloaded after render to reduce first-zoom blanking.
+- 2026-07-13: Started replacing the CARTO raster adapter with OpenFreeMap + MapLibre vector rendering. The accepted direction uses native zoom-dependent labels on reveal, no API key or billing, and no custom learning-label overlays.
+- 2026-07-13: Completed the OpenFreeMap + MapLibre migration. Road names and shields are hidden while guessing and restored on reveal; native vector LoD replaces CARTO raster processing, while existing answer/guess markers and the exact-answer callout remain.
+- 2026-07-13: Switched to OpenFreeMap Bright, expanded pre-guess hiding to every text label so neighborhood names cannot leak clues, and made the reveal overlay advance directly to the next question.

@@ -1,12 +1,13 @@
 import { useEffect, useRef } from "react";
 import type { Guess, Intersection, IntersectionQuestion } from "../data";
 import type { MapAdapter } from "../map";
-import { createCoordinateMapAdapter } from "../map";
+import { createMapLibreMapAdapter } from "../map";
 
 type MapStageProps = {
   guess: Guess | null;
   intersections: readonly Intersection[];
   onGuess: (coordinate: Guess["coordinate"]) => void;
+  onNext: () => void;
   question: IntersectionQuestion;
   result: Guess | null;
 };
@@ -15,6 +16,7 @@ export function MapStage({
   guess,
   intersections,
   onGuess,
+  onNext,
   question,
   result
 }: MapStageProps) {
@@ -35,7 +37,7 @@ export function MapStage({
   useEffect(() => {
     if (!containerRef.current) return;
 
-    const adapter = createCoordinateMapAdapter({
+    const adapter = createMapLibreMapAdapter({
       onGuess: ({ coordinate }) => {
         if (!revealedRef.current) {
           onGuessRef.current(coordinate);
@@ -72,9 +74,19 @@ export function MapStage({
   return (
     <div className="map-stage">
       <div ref={containerRef} className="map-stage-canvas" />
-      <div className="map-stage-status" aria-live="polite">
-        {revealed ? "Answer shown. Hit Next to continue." : "Click the map to guess."}
-      </div>
+      {revealed ? (
+        <button
+          type="button"
+          className="map-stage-status map-stage-status-action"
+          onClick={onNext}
+        >
+          Answer shown. Next
+        </button>
+      ) : (
+        <div className="map-stage-status" aria-live="polite">
+          Click the map to guess.
+        </div>
+      )}
     </div>
   );
 }

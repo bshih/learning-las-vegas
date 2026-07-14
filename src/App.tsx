@@ -69,6 +69,7 @@ export default function App() {
         guess={currentGuess}
         result={result}
         onGuess={guessIntersection}
+        onNext={nextQuestion}
       />
     </AppShell>
   );

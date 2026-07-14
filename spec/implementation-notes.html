@@ -33,7 +33,7 @@
       <li>V1 is static-first: no live geocoding or corpus-building calls during gameplay.</li>
       <li>Primary mode is click-the-intersection; other modes are deferred.</li>
       <li>CSS should be token-driven so a later aesthetic pass can reskin without rewriting game logic.</li>
-      <li>Map/data V1 uses a dependency-free coordinate-map adapter because the app scaffold and package file had not landed yet. The adapter API is intentionally small so a MapLibre implementation can satisfy the same contract later.</li>
+      <li>The map renderer is MapLibre GL JS behind the original small <code>MapAdapter</code> contract, so gameplay and scoring remain independent from the rendering library.</li>
       <li>Question order is deterministic by seed and intersection id, which keeps QA repeatable while avoiding hardcoded array order as gameplay order.</li>
       <li>Guess resolution uses haversine distance between lat/lon coordinates; screen position is only used to convert a click into a guess coordinate.</li>
       <li>Scoring is intentionally coarse. A click is correct when the requested intersection is the nearest known intersection within the snap radius; correct guesses display at the snapped intersection, while misses name the nearest known intersection and receive 1-5 closeness points instead of 0-100 coordinate points.</li>
@@ -41,19 +41,18 @@
       <li>Seed coordinates are playable approximate points, with uncertainty documented in <code>src/data/seed-notes.md</code>.</li>
       <li>App shell uses React + Vite + TypeScript with small components and a tokenized CSS layer for the later aesthetic pass.</li>
       <li>Game-loop state consumes the map/data workstream exports instead of duplicating question selection or scoring.</li>
-      <li>The placeholder SVG grid was replaced with dependency-free raster tiles from CARTO basemaps. The app renders no-label tiles while guessing and fades in label tiles after reveal.</li>
-      <li>The map uses actual CARTO Voyager no-label tiles while guessing. Each raster tile is post-processed in a canvas to quiet the yellow road palette while preserving real CARTO road geometry.</li>
-      <li>Base tile processing now uses a raster heuristic to darken only thicker yellow road bands, keeping smaller local streets quieter than the earlier broad yellow-road recolor.</li>
-      <li>Reveal mode processes CARTO label tiles separately: labels keep CARTO's native placement, but the raster text is darkened and given a white halo for readability. The adaptive white-text-on-dark-road experiment was rejected because it created artifacts on dark major-road labels.</li>
+      <li>The current basemap uses OpenFreeMap's Bright vector style. MapLibre supplies native road hierarchy, label collision handling, and zoom-dependent detail without an API key or billing account.</li>
+      <li>Every text-bearing symbol layer is hidden while guessing and restored to its style-defined visibility after reveal. This prevents neighborhood, POI, airport, and road labels from leaking answer clues.</li>
+      <li>The former CARTO raster renderer and its client-side tile recoloring were removed rather than retained as a fallback.</li>
       <li>The map default now focuses on the developed Las Vegas valley rather than the full Lake Mead / far desert extent, but starts slightly farther out than the first tuned pass so more valley context is visible.</li>
-      <li>Map controls support zoom in, zoom out, reset, drag-to-pan, and wheel zoom without adding MapLibre.</li>
-      <li>The starting valley frame is also the minimum zoom level for the current viewport. Wheel zoom uses normalized delta values batched through animation frames so mouse wheels and trackpads feel closer in speed.</li>
-      <li>After each map render, the adapter preloads a capped set of center-near CARTO base and label tiles for the next zoom level, including processed tile variants, to soften the first zoom-in.</li>
+      <li>MapLibre provides zoom, drag, touch, and wheel interaction; the adapter adds a valley-frame reset control and prevents rotation/pitch.</li>
+      <li>The starting valley frame is also the minimum zoom level for the current viewport.</li>
       <li>Reveal mode preserves the current zoom and only nudges the center when the guess or answer would be too close to the viewport edge.</li>
       <li>Starting a fresh unrevealed question restores the default valley frame so any reveal/inspection zoom does not carry forward.</li>
       <li>Close marker labels split left/right to avoid stacking when the guess is nearly correct.</li>
-      <li>Reveal mode adds a high-contrast answer-street callout near the correct marker using the current intersection's primary and cross streets, so the answer remains readable even when raster tile labels are small.</li>
-      <li>Wrong reveals no longer render generated learning labels from the seed corpus. The improved CARTO label layer now carries nearby street learning context, while the answer callout remains the explicit exact-answer anchor.</li>
+      <li>Reveal mode adds a high-contrast answer-street callout near the correct marker using the current intersection's primary and cross streets, so the exact answer remains distinct from surrounding vector labels.</li>
+      <li>Wrong reveals do not render generated learning labels from the seed corpus. OpenFreeMap's native vector labels carry nearby street learning context, while the answer callout remains the explicit exact-answer anchor.</li>
+      <li>The reveal-state instruction chip is a real Next button wired to the existing game-loop action, so players can advance without scrolling to the sidebar footer.</li>
       <li>Result feedback can call out when the guess appears close to one road but misses the cross street.</li>
       <li>The Lake Mead Boulevard / Las Vegas Boulevard North seed point is explicitly guarded in validation after QA found it had drifted west to the I-15/Lake Mead interchange.</li>
       <li>Area-specific play uses a normalized <code>area</code> bucket separate from the descriptive <code>region</code> field. This keeps the UI stable while preserving more granular seed notes.</li>
@@ -65,23 +64,19 @@
 
     <h2>Deviations</h2>
     <ul>
-      <li>MapLibre is still not installed. The current V1 map is a custom lightweight tile adapter using Web Mercator tile math, which keeps the app dependency-light while showing a real Vegas basemap.</li>
       <li>The road-read feedback is heuristic. It infers street orientation from the seed corpus and should be reviewed as more intersections are added.</li>
     </ul>
 
     <h2>Tradeoffs</h2>
     <ul>
       <li>Manual seed corpus is faster and safer for V1 than building the full OSM/Clark County ETL immediately.</li>
-      <li>MapLibre is preferred, but a coordinate-map fallback is acceptable if it keeps V1 playable quickly.</li>
+      <li>OpenFreeMap is intentionally used without a CARTO fallback because service reliability is not critical for this version.</li>
       <li>The sample corpus remains available for tiny fixtures, but app gameplay should use the 76-item <code>intersections</code> export.</li>
       <li>The first corpus started at 70 intersections and was expanded to 76 to give every exposed area bucket at least 10 playable prompts.</li>
-      <li>The basemap now depends on public CARTO tile availability. A future production pass should decide whether to self-host tiles, use PMTiles, or move to MapLibre with a managed style.</li>
-      <li>Zoom/pan is intentionally modest for V1. It is enough for reading the local road grid, not a full slippy-map replacement.</li>
-      <li>Tile preloading is capped per layer and only looks one tile-zoom level ahead. This avoids large background fetches while improving the jarring first zoom-in case.</li>
+      <li>The basemap now depends on public OpenFreeMap style, vector-tile, glyph, and sprite availability. Self-hosted tiles or PMTiles remain future options if that dependency becomes unacceptable.</li>
       <li>Reveal no longer zooms in to expose labels because that removed too much location context; split labels and a small preserve-zoom pan are the current compromise.</li>
       <li>The answer-street callout duplicates information that may also exist in tile labels, but it keeps the reveal legible without forcing zoom or depending on third-party label density.</li>
-      <li>The processed CARTO labels are more geographically faithful than generated DOM labels, but the halo is still raster-based rather than true vector text styling.</li>
-      <li>Tile post-processing depends on CARTO returning CORS-enabled PNGs. If base or label processing fails, the image falls back to the original CARTO tile instead of blanking the map.</li>
+      <li>Native vector labels are geographically faithful and gain detail as the player zooms, but their density and typography remain governed by the external Positron style.</li>
       <li>Spot-check coordinate guards are intentionally narrow for now; broader corpus precision still needs a future ETL or review pass.</li>
       <li>The static build is deployed to the permanent here.now site at <code>https://clever-grove-3t69.here.now/</code>. The live app was browser-verified after the 1-5 closeness scoring change.</li>
       <li>Playable area buckets require at least 10 intersections before being shown. Henderson/Green Valley and North Las Vegas/Northwest are being topped up manually rather than splitting them into smaller sparse regions.</li>
@@ -94,7 +89,6 @@
     <h2>Open Questions</h2>
     <ul>
       <li>Future QA should tune the snap radius as the corpus grows denser, especially in areas with closely spaced intersections.</li>
-      <li>Integration follow-up: replace the coordinate-map adapter with MapLibre behind the same adapter contract when the aesthetic/map pass is ready.</li>
     </ul>
   </body>
 </html>

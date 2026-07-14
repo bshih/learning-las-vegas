@@ -1,4 +1,4 @@
-export { createCoordinateMapAdapter, CoordinateMapAdapter } from "./coordinateMap";
+export { createMapLibreMapAdapter, MapLibreMapAdapter } from "./mapLibreMap";
 export type {
   GuessEvent,
   MapAdapter,
