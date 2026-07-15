@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@600;700;800&family=Source+Sans+3:wght@400;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Jost:wght@500;600;700;800&family=Source+Sans+3:wght@400;600;700&display=swap");
 
 * {
   box-sizing: border-box;
@@ -60,26 +60,51 @@ textarea {
 
 .atlas-kicker {
   color: var(--color-accent-dark);
+  font-family: var(--font-road);
   font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.07em;
+  font-weight: 600;
+  letter-spacing: 0.095em;
   text-transform: uppercase;
+}
+
+.atlas-title-row {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  margin-top: 0.15rem;
+}
+
+.atlas-route-shield {
+  display: grid;
+  width: 2.2rem;
+  height: 2.45rem;
+  place-items: center;
+  clip-path: polygon(50% 0, 94% 17%, 86% 73%, 50% 100%, 14% 73%, 6% 17%);
+  background: var(--color-accent);
+  color: var(--color-paper);
+  font-family: var(--font-road);
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  line-height: 1;
 }
 
 .atlas-title {
   font-family: var(--font-display);
-  font-size: clamp(1.85rem, 3vw, 2.65rem);
+  font-size: clamp(1.75rem, 3vw, 2.5rem);
   font-weight: 800;
-  letter-spacing: -0.035em;
-  line-height: 1;
+  letter-spacing: -0.055em;
+  line-height: 0.95;
 }
 
 .atlas-edition {
   padding-left: var(--space-3);
   border-left: 1px solid var(--color-border-strong);
   color: var(--color-muted);
+  font-family: var(--font-road);
   font-size: 0.72rem;
-  font-weight: 700;
+  font-weight: 600;
+  letter-spacing: 0.045em;
   line-height: 1.25;
   text-align: right;
   text-transform: uppercase;
@@ -125,9 +150,10 @@ textarea {
 
 .area-chooser label {
   color: var(--color-accent-dark);
+  font-family: var(--font-road);
   font-size: 0.76rem;
-  font-weight: 700;
-  letter-spacing: 0.06em;
+  font-weight: 600;
+  letter-spacing: 0.09em;
   text-transform: uppercase;
 }
 
@@ -170,9 +196,10 @@ textarea {
 .prompt-meta {
   margin: 0;
   color: var(--color-muted);
+  font-family: var(--font-road);
   font-size: 0.78rem;
-  font-weight: 700;
-  letter-spacing: 0.055em;
+  font-weight: 600;
+  letter-spacing: 0.075em;
   text-transform: uppercase;
 }
 
@@ -184,10 +211,10 @@ textarea {
   margin: 0;
   max-width: 12ch;
   font-family: var(--font-display);
-  font-size: clamp(1.9rem, 3.4vw, 2.75rem);
-  font-weight: 800;
-  line-height: 1.08;
-  letter-spacing: -0.035em;
+  font-size: clamp(1.85rem, 3.4vw, 2.65rem);
+  font-weight: 700;
+  line-height: 1.02;
+  letter-spacing: -0.045em;
 }
 
 .progress-card,
@@ -218,6 +245,10 @@ textarea {
 
 .progress-stats small {
   color: var(--color-muted);
+  font-family: var(--font-road);
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.025em;
 }
 
 .progress-track {
@@ -285,9 +316,10 @@ textarea {
 
 .result-details dt {
   color: var(--color-muted);
+  font-family: var(--font-road);
   font-size: 0.78rem;
-  font-weight: 700;
-  letter-spacing: 0.045em;
+  font-weight: 600;
+  letter-spacing: 0.075em;
   text-transform: uppercase;
 }
 
@@ -505,8 +537,10 @@ textarea {
   padding: 0.55rem 0.75rem;
   background: color-mix(in srgb, var(--color-paper) 92%, transparent);
   color: var(--color-text);
+  font-family: var(--font-road);
   font-size: 0.9rem;
-  font-weight: 700;
+  font-weight: 600;
+  letter-spacing: 0.015em;
   box-shadow: 2px 2px 0 rgb(25 51 74 / 0.16);
   pointer-events: none;
   z-index: 2;
@@ -519,8 +553,10 @@ textarea {
   background: color-mix(in srgb, var(--color-land) 22%, var(--color-paper));
   color: var(--color-text);
   cursor: pointer;
-  font-family: var(--font-display);
-  font-weight: 800;
+  font-family: var(--font-road);
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
   box-shadow: 3px 3px 0 rgb(25 51 74 / 0.22);
   pointer-events: auto;
   transition: background-color 120ms ease, transform 120ms ease, box-shadow 120ms ease;

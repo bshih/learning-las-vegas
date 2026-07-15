@@ -11,8 +11,11 @@ export function AppShell({ children, sidebar }: AppShellProps) {
       <section className="map-region" aria-label="Las Vegas guessing map">
         <header className="atlas-masthead">
           <div>
-            <p className="atlas-kicker">Las Vegas Valley · Field Guide No. 01</p>
-            <p className="atlas-title">Melissa Map</p>
+            <p className="atlas-kicker">Las Vegas Valley · Road Atlas No. 01</p>
+            <div className="atlas-title-row">
+              <span className="atlas-route-shield" aria-hidden="true">LV</span>
+              <p className="atlas-title">Melissa Map</p>
+            </div>
           </div>
           <p className="atlas-edition">Intersection trainer<br />2026 edition</p>
         </header>

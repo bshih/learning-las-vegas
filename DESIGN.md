@@ -2,15 +2,16 @@
 
 ## Reference
 
-- Product direction: a mid-century American road atlas or highway field guide—cream paper, dark blue cartographic ink, route-marker red, muted land green, slab-serif titles, fine rules, and squared utility controls.
+- Product direction: a late-1950s American glovebox road atlas—cream paper, dark blue cartographic ink, route-marker red, muted land green, geometric sans titles, condensed road lettering, fine rules, and squared utility controls.
 - Map reference: Google Maps road hierarchy and label behavior. Major roads should read first, local streets should stay quiet, and labels should appear progressively as the player zooms.
 - Usability reference: the existing Melissa Map game loop. The atlas treatment must preserve the map-first layout, immediate prompt, obvious area selector, and high-contrast reveal actions.
 
 ## Typography
 
-- Display type uses Google Fonts `Roboto Slab` at 600-800 for the masthead, prompts, scores, and answer callouts.
+- Display type uses Google Fonts `Jost` at 500-800 as a practical Futura-adjacent geometric sans for the masthead, prompts, scores, and answer callouts.
+- Road, legend, metadata, and map-label language uses Google Fonts `Barlow Condensed` at 400-700 for a narrower highway-sign character.
 - UI and body type uses Google Fonts `Source Sans 3` at 400-700 for compact clarity.
-- Map labels come from the vector basemap style so placement, collision handling, and zoom-level detail stay geographically correct.
+- Map labels retain OpenFreeMap's vector placement, collision handling, and zoom-level detail, but the style is transformed at load time to use locally rendered Jost and Barlow Condensed glyphs.
 - Display text uses tight natural spacing. Letter spacing is limited to small navigational metadata and labels, where atlas legends traditionally use it.
 - Body text stays near 16px with approximately 1.45 line height; compact metadata never drops below 0.67rem on mobile.
 
@@ -52,11 +53,12 @@
 - Use familiar map controls and retain a reset-to-valley command.
 - Make the reveal-state map overlay a direct Next action.
 - Use paper, ink, rules, and route-red accents consistently; decorative texture must stay low contrast.
+- Use geometric display type for identity and prompts, condensed sans for road/legend language, and the body sans for explanations.
 
 ## Don't
 
 - Do not process raster tiles or draw synthetic road-name tags.
 - Do not show POI clutter while guessing.
-- Do not use rounded pill cards, generic blue SaaS controls, distressed novelty fonts, or fake paper stains.
+- Do not use rounded pill cards, generic blue SaaS controls, slab-serif nostalgia, distressed novelty fonts, or fake paper stains.
 - Do not let the atlas styling reduce map area, tap targets, focus visibility, or text contrast.
 - Do not change scoring or question order as part of visual design work.

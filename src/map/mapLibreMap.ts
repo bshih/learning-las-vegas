@@ -2,6 +2,7 @@ import maplibregl, {
   type IControl,
   type Map as MapLibreMap,
   type Marker,
+  type StyleSpecification,
 } from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 
@@ -14,6 +15,12 @@ import type {
 } from "./types";
 
 const OPENFREEMAP_STYLE = "https://tiles.openfreemap.org/styles/bright";
+const ATLAS_FONT_REQUESTS = [
+  '500 16px "Barlow Condensed"',
+  '600 16px "Barlow Condensed"',
+  '500 16px "Jost"',
+  '700 16px "Jost"',
+];
 const DEFAULT_VIEW_BOUNDS: BoundingBox = {
   southwest: { lat: 35.96, lon: -115.38 },
   northeast: { lat: 36.31, lon: -114.96 },
@@ -82,7 +89,6 @@ export class MapLibreMapAdapter implements MapAdapter {
 
     const map = new maplibregl.Map({
       container,
-      style: OPENFREEMAP_STYLE,
       bounds: toMapLibreBounds(this.state.bounds),
       fitBoundsOptions: { padding: 16 },
       maxBounds: toMapLibreBounds(PAN_LIMIT_BOUNDS),
@@ -103,6 +109,8 @@ export class MapLibreMapAdapter implements MapAdapter {
       "top-left",
     );
     map.addControl(new ResetMapControl(() => this.resetView()), "top-left");
+
+    void this.loadAtlasStyle(map);
 
     map.on("click", (event) => {
       if (this.state.revealed) return;
@@ -130,6 +138,20 @@ export class MapLibreMapAdapter implements MapAdapter {
 
     this.resizeObserver = new ResizeObserver(() => map.resize());
     this.resizeObserver.observe(container);
+  }
+
+  private async loadAtlasStyle(map: MapLibreMap): Promise<void> {
+    try {
+      await Promise.all(ATLAS_FONT_REQUESTS.map((font) => document.fonts.load(font)));
+    } catch {
+      // The style includes durable platform fallbacks if the web fonts are unavailable.
+    }
+
+    if (this.map !== map) return;
+
+    map.setStyle(OPENFREEMAP_STYLE, {
+      transformStyle: (_previousStyle, nextStyle) => applyAtlasMapTypography(nextStyle),
+    });
   }
 
   update(state: Partial<MapViewState>): void {
@@ -327,6 +349,56 @@ export class MapLibreMapAdapter implements MapAdapter {
     for (const marker of this.markers) marker.remove();
     this.markers = [];
   }
+}
+
+function applyAtlasMapTypography(style: StyleSpecification): StyleSpecification {
+  const { glyphs: _glyphs, ...styleWithoutHostedGlyphs } = style;
+
+  return {
+    ...styleWithoutHostedGlyphs,
+    layers: style.layers.map((layer) => {
+      if (
+        layer.type !== "symbol" ||
+        !layer.layout ||
+        !("text-field" in layer.layout)
+      ) {
+        return layer;
+      }
+
+      const isRoadLabel =
+        layer.id.startsWith("highway-name") ||
+        layer.id.includes("shield");
+      const isPlaceLabel = layer.id.startsWith("label_");
+      const isProminentPlace =
+        layer.id.includes("capital") || layer.id.includes("country");
+      const isItalicLabel =
+        layer.id.startsWith("water") ||
+        layer.id.startsWith("poi_") ||
+        layer.id === "label_other" ||
+        layer.id === "label_state";
+
+      const textFont = isRoadLabel
+        ? ["Barlow Condensed Medium", "Barlow Condensed", "Arial Narrow"]
+        : isPlaceLabel
+          ? [
+              isProminentPlace ? "Jost Bold" : "Jost Medium",
+              "Jost",
+              "Century Gothic",
+            ]
+          : isItalicLabel
+            ? ["Barlow Condensed Italic", "Barlow Condensed", "Arial Narrow"]
+            : ["Barlow Condensed Regular", "Barlow Condensed", "Arial Narrow"];
+
+      return {
+        ...layer,
+        layout: {
+          ...layer.layout,
+          "text-font": textFont,
+          ...(isRoadLabel ? { "text-letter-spacing": 0.035 } : {}),
+        },
+      };
+    }),
+  };
 }
 
 export function createMapLibreMapAdapter(
