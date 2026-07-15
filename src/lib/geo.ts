@@ -1,4 +1,13 @@
 import type { BoundingBox, Coordinate, Guess, Intersection } from "../data/types";
+import {
+  SCORE_THRESHOLDS_METERS,
+  scorePartialDistance,
+  type LearningScore,
+} from "./streetScoring";
+
+export type IntersectionScoreResult = Omit<Guess, "closenessScore"> & {
+  closenessScore: LearningScore;
+};
 
 export const LAS_VEGAS_BOUNDS: BoundingBox = {
   southwest: { lat: 35.9, lon: -115.45 },
@@ -6,9 +15,6 @@ export const LAS_VEGAS_BOUNDS: BoundingBox = {
 };
 
 const EARTH_RADIUS_METERS = 6_371_000;
-const CORRECT_SNAP_RADIUS_METERS = 650;
-const NEAR_RADIUS_METERS = 1609.344;
-const LOST_IN_VALLEY_RADIUS_METERS = 12_000;
 
 const toRadians = (degrees: number) => (degrees * Math.PI) / 180;
 
@@ -27,13 +33,8 @@ export function haversineDistanceMeters(a: Coordinate, b: Coordinate): number {
   return 2 * EARTH_RADIUS_METERS * Math.atan2(Math.sqrt(h), Math.sqrt(1 - h));
 }
 
-export function scoreDistance(distanceMeters: number): 0 | 1 | 2 | 3 | 4 | 5 {
-  if (distanceMeters <= CORRECT_SNAP_RADIUS_METERS) return 5;
-  if (distanceMeters <= NEAR_RADIUS_METERS) return 4;
-  if (distanceMeters <= 3_000) return 3;
-  if (distanceMeters <= 6_000) return 2;
-  if (distanceMeters <= LOST_IN_VALLEY_RADIUS_METERS) return 1;
-  return 0;
+export function scoreDistance(distanceMeters: number): Exclude<LearningScore, 4> {
+  return scorePartialDistance(distanceMeters);
 }
 
 export function findNearestIntersection(
@@ -56,7 +57,7 @@ export function scoreGuess(
   answer: Intersection,
   coordinate: Coordinate,
   intersections: readonly Intersection[] = [answer],
-): Guess {
+): IntersectionScoreResult {
   const distanceMeters = haversineDistanceMeters(answer.coordinate, coordinate);
   const nearest = findNearestIntersection(coordinate, intersections) ?? {
     intersection: answer,
@@ -64,13 +65,8 @@ export function scoreGuess(
   };
   const isCorrect =
     nearest.intersection.id === answer.id &&
-    nearest.distanceMeters <= CORRECT_SNAP_RADIUS_METERS;
-  const rawClosenessScore = scoreDistance(distanceMeters);
-  const closenessScore = isCorrect
-    ? 5
-    : rawClosenessScore === 5
-      ? 4
-      : rawClosenessScore;
+    nearest.distanceMeters <= SCORE_THRESHOLDS_METERS.correct;
+  const closenessScore = isCorrect ? 4 : scoreDistance(distanceMeters);
 
   return {
     coordinate: isCorrect ? answer.coordinate : coordinate,
@@ -79,7 +75,12 @@ export function scoreGuess(
     nearestIntersection: nearest.intersection,
     nearestDistanceMeters: nearest.distanceMeters,
     isCorrect,
-    result: isCorrect ? "correct" : distanceMeters <= NEAR_RADIUS_METERS ? "near" : "miss",
+    result:
+      isCorrect
+        ? "correct"
+        : distanceMeters <= SCORE_THRESHOLDS_METERS.veryClose
+          ? "near"
+          : "miss",
   };
 }
 
