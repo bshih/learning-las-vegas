@@ -95,12 +95,13 @@
       <li>The first area chooser is a native select in the sidebar instead of a full start screen; this preserves the fast first prompt while still letting the player choose All Areas or a specific bucket before guessing.</li>
       <li>The OSM verifier is intentionally separate from the normal build because it depends on public Overpass availability and live map data.</li>
       <li>Rows that do not produce an OSM road crossing should be treated as content QA failures, not just coordinate misses; the verifier exposes those instead of hiding them behind approximate points.</li>
-      <li>The learning release uses two explicit modes. Street sessions teach five roads with a labeled briefing, five first attempts, and five same-session repeats ordered from stronger to weaker recall. Intersection sessions use eight distinct prompts followed by the two weakest repeats.</li>
+      <li>The learning release uses two explicit modes. Street sessions draw 10 distinct roads from the full 28-road pool and rotate coverage across sessions; only the explicit Practice misses action seeds later repetition. Intersection sessions use eight distinct prompts followed by the two weakest repeats.</li>
       <li>Every learning session is exactly 10 prompts and 40 possible points. Both street and intersection scoring use the shared 0-4 distance bands; four points requires resolving to the requested eligible item within the 650 m snap radius.</li>
       <li>Street learning is grouped by comparable geography: three ordered grid lessons and one special-shape lesson containing Rampart, Spring Mountain, Paradise, Green Valley Parkway, and Boulder Highway. Shape streets compare against the whole shape lesson without claiming a false cardinal ordering.</li>
       <li>Progress remains browser-local under <code>melissa-map-progress-v2</code>. It stores lesson selection, active-session recovery, completed-session count, best score, and the last session's misses; the old selected area is migrated from the V1 key.</li>
       <li>Coarse pointers stage a map coordinate before scoring and require a separate Confirm guess action. Fine pointers keep the one-click flow, and street mode also exposes a keyboard-accessible list of eligible roads.</li>
       <li>The MapLibre adapter owns the street GeoJSON source and line layers. Updates before the external style is ready are retained in adapter state and rendered from the <code>style.load</code> boundary instead of touching an uninitialized style.</li>
+      <li>The visible eligible-street button list and pre-session five-road briefing were removed after playtesting. The list allowed the requested answer to be selected directly for full points, while the five-road repeat loop made the mode too constrained to teach the broader valley.</li>
     </ul>
 
     <h2>Open Questions</h2>

@@ -8,6 +8,7 @@ import {
   getStreetDefinition,
   intersections,
   isPlayAreaId,
+  streetDefinitions,
 } from "./data";
 import type { Intersection } from "./data";
 import type { HighlightedStreet } from "./map";
@@ -39,7 +40,11 @@ export default function App() {
                 onAreaChange={game.selectArea}
               />
             ) : (
-              <StreetGroupChooser game={game} />
+              <section className="street-pool-card">
+                <span>Street pool</span>
+                <strong>{streetDefinitions.length} major roads</strong>
+                <p>Every session draws 10 distinct streets from the full valley set.</p>
+              </section>
             )}
             <LessonCard mode={progress.selectedMode} />
           </GamePanel>
@@ -78,7 +83,7 @@ export default function App() {
             }
           >
             <section className="summary-card">
-              <p className="summary-label">Roads to revisit</p>
+              <p className="summary-label">{game.lastSession.mode === "streets" ? "Roads" : "Intersections"} to revisit</p>
               {missedNames.length ? (
                 <ul className="miss-list">{missedNames.map((name) => <li key={name}>{name}</li>)}</ul>
               ) : (
@@ -96,48 +101,6 @@ export default function App() {
   if (!activeSession) return null;
 
   const promptId = `${activeSession.id}:${activeSession.currentIndex}`;
-  const focusStreets = activeSession.focusItemIds.flatMap((id) => {
-    const street = getStreetDefinition(id);
-    return street ? [street] : [];
-  });
-
-  if (progress.screen === "briefing") {
-    return (
-      <AppShell
-        sidebar={
-          <GamePanel
-            header={
-              <>
-                <p className="panel-kicker">Study these five</p>
-                <h1 className="panel-title">See the roads before you place them.</h1>
-                <p className="panel-lede">The same five return later in a harder order.</p>
-              </>
-            }
-            footer={<Button onClick={game.startPractice}>Hide labels &amp; start</Button>}
-          >
-            <ol className="briefing-list">
-              {focusStreets.map((street) => (
-                <li key={street.id}><strong>{street.name}</strong><span>{street.teachingNote}</span></li>
-              ))}
-            </ol>
-          </GamePanel>
-        }
-      >
-        <MapStage
-          guess={null}
-          onGuess={() => undefined}
-          onNext={game.startPractice}
-          question={{ id: promptId }}
-          result={{ isCorrect: true }}
-          resultDescription="Five lesson streets are highlighted for study."
-          nextLabel="Hide labels & start"
-          streetGeometry={game.streetGeometry}
-          highlightedStreets={focusStreets.map((street) => ({ id: street.id, kind: "neighbor", label: street.name }))}
-        />
-      </AppShell>
-    );
-  }
-
   const attempts = activeSession.attempts;
   const score = attempts.reduce((total, attempt) => total + attempt.score, 0);
   const modeLabel = activeSession.mode === "streets" ? "Place the street" : "Find the intersection";
@@ -186,8 +149,6 @@ export default function App() {
         question={{ id: promptId, answer: currentIntersection }}
         result={currentResult ? { isCorrect: currentResult.mode === "streets" ? currentResult.result.correct : currentResult.result.isCorrect } : null}
         highlightedStreets={highlights}
-        keyboardAnswers={activeSession.mode === "streets" ? focusStreets.map((street) => ({ id: street.id, label: street.name })) : undefined}
-        onKeyboardAnswer={game.submitKeyboardStreet}
         pendingGuess={activeSession.pendingGuess}
         onPendingGuessChange={game.setPendingGuess}
         resultDescription={resultDescription}
@@ -210,23 +171,11 @@ function ModeChooser({ selected, onChange }: { selected: "intersections" | "stre
   );
 }
 
-function StreetGroupChooser({ game }: { game: ReturnType<typeof useLearningGame> }) {
-  return (
-    <section className="area-chooser">
-      <label htmlFor="street-group-select">Street lesson</label>
-      <select id="street-group-select" value={game.selectedStreetGroupId} onChange={(event) => game.selectStreetGroup(event.target.value)}>
-        {game.streetGroups.map((group) => <option key={group.id} value={group.id}>{group.label} ({group.streetIds.length})</option>)}
-      </select>
-      <p>{game.selectedStreetGroup?.kind === "shape" ? "Curving and diagonal exceptions" : "Learn the roads in geographic order"}</p>
-    </section>
-  );
-}
-
 function LessonCard({ mode }: { mode: "intersections" | "streets" }) {
   return (
     <section className="lesson-card">
       <strong>10 questions · 40 points</strong>
-      <p>{mode === "streets" ? "Study five roads, place each one, then see them again in a tougher order." : "Locate eight intersections, then finish with two targeted repeats."}</p>
+      <p>{mode === "streets" ? "Place 10 different roads. Later sessions keep rotating through the full pool before recycling them." : "Locate eight intersections, then finish with two targeted repeats."}</p>
       <small>Progress stays in this browser. No account needed.</small>
     </section>
   );

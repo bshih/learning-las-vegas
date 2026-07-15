@@ -13,7 +13,7 @@ export type ScopeSelectionOptions = {
   seed?: string;
 };
 
-const STREET_FOCUS_COUNT = 5;
+const STREET_SESSION_COUNT = 10;
 const INTERSECTION_FOCUS_COUNT = 8;
 
 function seededRank(input: string): number {
@@ -75,7 +75,7 @@ export function selectStreetFocusItems(
   streetIds: readonly string[],
   options: ScopeSelectionOptions,
 ): string[] {
-  return selectScopeItems(streetIds, STREET_FOCUS_COUNT, options);
+  return selectScopeItems(streetIds, STREET_SESSION_COUNT, options);
 }
 
 export function selectIntersectionFocusItems(
@@ -93,41 +93,6 @@ function firstAttemptByItem(
     if (!indexed.has(attempt.itemId)) indexed.set(attempt.itemId, { attempt, index });
   });
   return indexed;
-}
-
-export function orderStreetRepeatItems(
-  focusItemIds: readonly string[],
-  firstAttempts: readonly SessionAttempt[],
-): string[] {
-  if (focusItemIds.length !== STREET_FOCUS_COUNT) {
-    throw new RangeError("Street sessions require exactly 5 focus items");
-  }
-  const attempts = firstAttemptByItem(firstAttempts);
-
-  return [...focusItemIds].sort((left, right) => {
-    const leftAttempt = attempts.get(left);
-    const rightAttempt = attempts.get(right);
-    if (!leftAttempt && !rightAttempt) return focusItemIds.indexOf(left) - focusItemIds.indexOf(right);
-    if (!leftAttempt) return -1;
-    if (!rightAttempt) return 1;
-    if (leftAttempt.attempt.correct !== rightAttempt.attempt.correct) {
-      return leftAttempt.attempt.correct ? -1 : 1;
-    }
-    return (
-      rightAttempt.attempt.score - leftAttempt.attempt.score ||
-      leftAttempt.index - rightAttempt.index
-    );
-  });
-}
-
-export function buildStreetSessionItemIds(
-  focusItemIds: readonly string[],
-  firstAttempts: readonly SessionAttempt[] = [],
-): string[] {
-  return [
-    ...focusItemIds,
-    ...orderStreetRepeatItems(focusItemIds, firstAttempts),
-  ];
 }
 
 export function chooseWeakestIntersectionRepeats(

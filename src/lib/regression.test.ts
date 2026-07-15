@@ -11,7 +11,6 @@ import {
 import { scoreGuess } from "./geo.ts";
 import {
   buildIntersectionSessionItemIds,
-  buildStreetSessionItemIds,
   selectIntersectionFocusItems,
   selectStreetFocusItems,
   type SessionAttempt,
@@ -147,39 +146,30 @@ assertEqual(
   "Correct intersection receives four points",
 );
 
-const streetIds = ["a", "b", "c", "d", "e", "f", "g"];
+const streetIds = Array.from({ length: 28 }, (_, index) => `street-${index}`);
 const firstStreetFocus = selectStreetFocusItems(streetIds, {
-  scopeId: "west-grid",
+  scopeId: "all-streets",
   completedSessionCount: 0,
 });
 const nextStreetFocus = selectStreetFocusItems(streetIds, {
-  scopeId: "west-grid",
+  scopeId: "all-streets",
   completedSessionCount: 1,
 });
-assertEqual(firstStreetFocus.length, 5, "Street focus has five distinct items");
-assert(
-  firstStreetFocus.join(",") !== nextStreetFocus.join(","),
-  "Completed-session count rotates a street scope",
-);
-
-const streetAttempts: SessionAttempt[] = firstStreetFocus.map((itemId, index) => ({
-  itemId,
-  correct: index < 2,
-  score: (index < 2 ? 4 : index - 2) as 0 | 1 | 2 | 3 | 4,
-}));
-const streetSession = buildStreetSessionItemIds(firstStreetFocus, streetAttempts);
-assertEqual(streetSession.length, 10, "Street session has ten prompts");
-assertEqual(new Set(streetSession.slice(0, 5)).size, 5, "Street first half is distinct");
-assertEqual(
-  new Set(streetSession.slice(5)).size,
-  5,
-  "Street second half repeats every focus item once",
-);
-assertEqual(
-  streetSession[9],
-  firstStreetFocus[2],
-  "Weakest first attempt appears latest in repeat half",
-);
+const thirdStreetFocus = selectStreetFocusItems(streetIds, {
+  scopeId: "all-streets",
+  completedSessionCount: 2,
+});
+assertEqual(firstStreetFocus.length, 10, "Street session has ten items");
+assertEqual(new Set(firstStreetFocus).size, 10, "Street session items are distinct");
+assertEqual(new Set([...firstStreetFocus, ...nextStreetFocus, ...thirdStreetFocus]).size, 28, "Three sessions cover the full pool before recycling");
+const retriedStreetFocus = selectStreetFocusItems(streetIds, {
+  scopeId: "all-streets",
+  completedSessionCount: 3,
+  retryMissItemIds: [firstStreetFocus[3], firstStreetFocus[7]],
+});
+assertEqual(retriedStreetFocus[0], firstStreetFocus[3], "Street retry misses come first");
+assertEqual(retriedStreetFocus[1], firstStreetFocus[7], "Street retry miss order is stable");
+assertEqual(new Set(retriedStreetFocus).size, 10, "Retry sessions remain distinct");
 
 const intersectionIds = ["i0", "i1", "i2", "i3", "i4", "i5", "i6", "i7", "i8", "i9"];
 const intersectionFocus = selectIntersectionFocusItems(intersectionIds, {

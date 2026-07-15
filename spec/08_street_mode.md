@@ -2,7 +2,7 @@
 
 ## Status
 
-Pending review.
+Implemented; full-pool session model adopted on 2026-07-14.
 
 ## Objective
 
@@ -107,11 +107,12 @@ Never invent ordered-neighbor counts for special-shape streets.
 
 ## Session Composition
 
-- Select 5 focus streets from the chosen group using deterministic rotation by that scope's completed-session count.
-- Prompts 1-5 present each focus street once.
-- Prompts 6-10 present each focus street again.
-- Order second appearances by first-attempt weakness while preserving spacing.
-- The pre-session briefing displays exactly these 5 streets.
+- Select 10 distinct streets from the full 28-street pool using deterministic rotation by completed-session count.
+- Continue the rotation across sessions so the full pool appears before recycled streets fill later sessions.
+- Normal sessions contain no same-session street repeats.
+- `Practice misses` seeds the next 10-distinct-street session with the immediately previous street misses, then fills from the normal rotation.
+- Ordered and special-shape streets share the question pool. Scoring still compares only geometrically compatible candidates.
+- Do not show a pre-session answer briefing.
 
 There is no cross-session street mastery or SRS scheduling in V1.
 
@@ -140,11 +141,11 @@ The adapter renders geometry and pending state. Scoring and session behavior rem
 - Color is not the only distinction between answer, guess, and neighbor lines.
 - Map highlights have equivalent result text.
 - Respect `prefers-reduced-motion` for any line reveal.
-- Keyboard-only players receive a simple eligible-street answer list for the current group.
+- V1 does not provide an alternate multiple-choice answer list; it made the requested answer directly selectable and undermined the map task.
 
 ## Acceptance
 
-- Player can complete a 10-prompt session with ordered and shape-group streets.
+- Player can complete a 10-prompt session of 10 distinct roads drawn from the full ordered and shape-street pool.
 - Street scoring is invariant to zoom level.
 - Perpendicular roads do not steal correctness.
 - Coarse-pointer taps stage a guess and only `Confirm guess` submits it.

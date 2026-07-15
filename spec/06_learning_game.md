@@ -2,7 +2,7 @@
 
 ## Status
 
-Pending review.
+Implemented; revised after playtesting on 2026-07-14.
 
 ## Objective
 
@@ -11,7 +11,7 @@ Turn Melissa Map from an endless intersection quiz into a small, replayable lear
 ## Product Principles
 
 - Teach a mental model of the valley, not isolated coordinates.
-- Let street mode show a player what a road looks like before repeating it.
+- Build broad street coverage across sessions rather than drilling a tiny set twice.
 - Make every useful miss explain a spatial relationship.
 - Use short sessions with an ending instead of lifetime-stat accumulation.
 - Keep the game private, local, and low-pressure.
@@ -42,10 +42,10 @@ The modes are independent. Neither mode is gated behind the other.
 
 ### Learn Streets
 
-- Select 5 focus streets.
-- Prompts 1-5 show each focus street once.
-- Prompts 6-10 repeat each focus street once.
-- Weaker first attempts appear later in the repeat half where spacing permits.
+- Select 10 distinct streets from the full playable pool.
+- Rotate through all playable streets across sessions before recycling them.
+- Do not repeat a street within a normal session.
+- `Practice misses` may seed the next session with streets missed in the immediately previous session.
 
 ### Find Intersections
 
@@ -55,21 +55,9 @@ The modes are independent. Neither mode is gated behind the other.
 
 For both modes:
 
-- Avoid immediate repeats and keep at least 2 intervening prompts where possible.
 - Reloading restores an unfinished session at its current prompt.
 - Prompt 10 opens a summary rather than continuing into an endless deck.
 - The summary can replay the same scope, retry the last misses, or change mode/scope.
-
-## Street Briefing
-
-Before a Learn Streets session, show the same 5 focus streets highlighted and labeled on the map:
-
-- Ordered grid groups show west-to-east or north-to-south order.
-- Special-shape groups show each road's path and primary area without claiming a total order.
-- One short, concrete note appears per street.
-- The player controls when to begin with `Start practice`; there is no timer.
-
-This briefing is part of the learning activity, not a first-visit onboarding system.
 
 ## Navigation
 
@@ -77,7 +65,7 @@ Keep navigation minimal:
 
 - A mode control for `Learn streets` and `Find intersections`.
 - The existing area selector for intersection scope.
-- A street-group selector for street scope.
+- A single full-valley street pool; no street-group selector.
 - A single `Start 10-question session` action.
 
 Do not build a home dashboard, onboarding carousel, recommendation engine, or locked progression for V1.
@@ -116,7 +104,7 @@ Do not build a home dashboard, onboarding carousel, recommendation engine, or lo
 
 - A player can complete and resume a 10-prompt session in either mode.
 - Street mode includes both ordered grid streets and important special-shape streets.
-- Every session repeats relevant material before it ends.
+- Street sessions broaden coverage; explicit miss practice supplies repetition when requested.
 - Intersection misses explain a supported spatial relationship when one exists.
 - The summary shows score, last-session misses, and clear replay choices.
 - The full experience remains a static here.now deployment.

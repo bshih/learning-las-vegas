@@ -9,6 +9,7 @@ import {
   getStreetGeometry,
   getStreetGroup,
   isPlayAreaId,
+  streetDefinitions,
   streetGeometry,
   streetGroups,
 } from "../data";
@@ -20,7 +21,6 @@ import type {
 } from "../data";
 import {
   buildIntersectionSessionItemIds,
-  buildStreetSessionItemIds,
   scoreGuess,
   scoreStreetGuess,
   selectIntersectionFeedback,
@@ -43,7 +43,7 @@ const STORAGE_KEY = "melissa-map-progress-v2";
 const LEGACY_STORAGE_KEY = "melissa-map-progress-v1";
 
 export type GameMode = "intersections" | "streets";
-export type GameScreen = "setup" | "briefing" | "playing" | "summary";
+export type GameScreen = "setup" | "playing" | "summary";
 
 type StoredAttempt = SessionAttempt & { coordinate: Coordinate };
 
@@ -77,7 +77,6 @@ type LocalProgress = {
   screen: GameScreen;
   selectedMode: GameMode;
   selectedAreaId: PlayAreaId;
-  selectedStreetGroupId: string;
   scopes: Record<string, ScopeSummary>;
   activeSession?: ActiveSession;
   lastSession?: LastSession;
@@ -97,19 +96,17 @@ export type StreetRoundResult = {
 
 export type RoundResult = IntersectionRoundResult | StreetRoundResult;
 
-const DEFAULT_STREET_GROUP_ID = streetGroups[0]?.id ?? "special-shapes";
+const ALL_STREETS_SCOPE_ID = "all-streets";
 
 export function useLearningGame(intersections: readonly Intersection[]) {
   const [progress, setProgress] = useState<LocalProgress>(() => loadProgress());
   const activeSession = progress.activeSession;
   const selectedAreaId = progress.selectedAreaId;
-  const selectedStreetGroupId = progress.selectedStreetGroupId;
   const areaOptions = useMemo(() => getAreaOptions(intersections), [intersections]);
   const activeIntersections = useMemo(
     () => filterIntersectionsByArea(intersections, selectedAreaId),
     [intersections, selectedAreaId],
   );
-  const selectedStreetGroup = getStreetGroup(selectedStreetGroupId) ?? streetGroups[0];
   const schedule = activeSession
     ? [...activeSession.focusItemIds, ...activeSession.repeatItemIds]
     : [];
@@ -140,14 +137,9 @@ export function useLearningGame(intersections: readonly Intersection[]) {
     setProgress((current) => ({ ...current, selectedAreaId: areaId }));
   }
 
-  function selectStreetGroup(groupId: string) {
-    if (!getStreetGroup(groupId)) return;
-    setProgress((current) => ({ ...current, selectedStreetGroupId: groupId }));
-  }
-
   function startSession(options: { retryMisses?: boolean } = {}) {
     const mode = progress.selectedMode;
-    const scopeId = mode === "streets" ? selectedStreetGroupId : selectedAreaId;
+    const scopeId = mode === "streets" ? ALL_STREETS_SCOPE_ID : selectedAreaId;
     const scopeKey = getScopeKey(mode, scopeId);
     const summary = progress.scopes[scopeKey] ?? { sessionsCompleted: 0, bestScore: 0 };
     const retryMissItemIds =
@@ -158,7 +150,7 @@ export function useLearningGame(intersections: readonly Intersection[]) {
         : [];
     const focusItemIds =
       mode === "streets"
-        ? selectStreetFocusItems(selectedStreetGroup?.streetIds ?? [], {
+        ? selectStreetFocusItems(streetDefinitions.map((street) => street.id), {
             scopeId,
             completedSessionCount: summary.sessionsCompleted,
             retryMissItemIds,
@@ -173,7 +165,7 @@ export function useLearningGame(intersections: readonly Intersection[]) {
       mode,
       scopeId,
       focusItemIds,
-      repeatItemIds: mode === "streets" ? [...focusItemIds] : [],
+      repeatItemIds: [],
       currentIndex: 0,
       attempts: [],
       pendingGuess: null,
@@ -182,12 +174,8 @@ export function useLearningGame(intersections: readonly Intersection[]) {
       ...current,
       activeSession: session,
       lastSession: undefined,
-      screen: mode === "streets" ? "briefing" : "playing",
+      screen: "playing",
     }));
-  }
-
-  function startPractice() {
-    setProgress((current) => ({ ...current, screen: "playing" }));
   }
 
   function setPendingGuess(coordinate: Coordinate | null) {
@@ -209,9 +197,6 @@ export function useLearningGame(intersections: readonly Intersection[]) {
       if (!session || session.attempts[session.currentIndex]) return current;
       const attempts = [...session.attempts, { ...scored, coordinate }];
       let repeatItemIds = session.repeatItemIds;
-      if (session.mode === "streets" && session.currentIndex === 4) {
-        repeatItemIds = buildStreetSessionItemIds(session.focusItemIds, attempts).slice(5);
-      }
       if (session.mode === "intersections" && session.currentIndex === 7) {
         repeatItemIds = buildIntersectionSessionItemIds(session.focusItemIds, attempts).slice(8);
       }
@@ -220,18 +205,6 @@ export function useLearningGame(intersections: readonly Intersection[]) {
         activeSession: { ...session, attempts, repeatItemIds, pendingGuess: null },
       };
     });
-  }
-
-  function submitKeyboardStreet(streetId: string) {
-    const feature = getStreetGeometry(streetId);
-    if (!feature) return;
-    const position =
-      feature.geometry.type === "LineString"
-        ? feature.geometry.coordinates[Math.floor(feature.geometry.coordinates.length / 2)]
-        : feature.geometry.coordinates[0]?.[
-            Math.floor((feature.geometry.coordinates[0]?.length ?? 1) / 2)
-          ];
-    if (position) submitCoordinate({ lon: position[0], lat: position[1] });
   }
 
   function nextPrompt() {
@@ -305,20 +278,14 @@ export function useLearningGame(intersections: readonly Intersection[]) {
     schedule,
     selectedAreaId,
     selectedAreaLabel: getAreaBucketLabel(selectedAreaId),
-    selectedStreetGroup,
-    selectedStreetGroupId,
     streetGeometry,
-    streetGroups,
     nextPrompt,
     returnToSetup,
     selectArea,
     selectMode,
-    selectStreetGroup,
     setPendingGuess,
-    startPractice,
     startSession,
     submitCoordinate,
-    submitKeyboardStreet,
   };
 }
 
@@ -362,7 +329,7 @@ function deriveResult(
   }
   if (session.mode === "streets" && street) {
     const result = scoreStreetGuess(street.id, attempt.coordinate, getStreetPool(session.scopeId));
-    const group = getStreetGroup(session.scopeId);
+    const group = getStreetGroupForStreet(street.id);
     if (!group) return null;
     const feedback = selectStreetFeedback({
       correct: result.correct,
@@ -378,21 +345,25 @@ function deriveResult(
   return null;
 }
 
-function getStreetPool(groupId: string): ScorableStreet[] {
-  const group = getStreetGroup(groupId);
-  if (!group) return [];
-  return group.streetIds.flatMap((streetId) => {
+function getStreetPool(_scopeId: string): ScorableStreet[] {
+  return streetDefinitions.flatMap((street) => {
+    const streetId = street.id;
     const definition = getStreetDefinition(streetId);
     const feature = getStreetGeometry(streetId);
+    const group = getStreetGroupForStreet(streetId);
     return definition && feature
       ? [{
           id: streetId,
           name: definition.name,
-          axis: group.kind === "shape" ? "regional" as const : definition.axis,
+          axis: group?.kind === "shape" ? "regional" as const : definition.axis,
           geometry: feature.geometry,
         }]
       : [];
   });
+}
+
+function getStreetGroupForStreet(streetId: string) {
+  return streetGroups.find((group) => group.streetIds.includes(streetId));
 }
 
 function toFeedbackIntersection(intersection: Intersection): FeedbackIntersection {
@@ -417,26 +388,38 @@ function loadProgress(): LocalProgress {
     screen: "setup",
     selectedMode: "intersections",
     selectedAreaId: loadLegacyArea(),
-    selectedStreetGroupId: DEFAULT_STREET_GROUP_ID,
     scopes: {},
   };
   try {
     const stored = window.localStorage.getItem(STORAGE_KEY);
     if (!stored) return fallback;
     const parsed = JSON.parse(stored) as Partial<LocalProgress>;
+    const activeSession = normalizeActiveSession(parsed.activeSession);
+    const lastSession = parsed.lastSession;
     return {
-      ...fallback,
-      ...parsed,
       version: 2,
+      screen: activeSession
+        ? "playing"
+        : parsed.screen === "summary" && lastSession
+          ? "summary"
+          : "setup",
+      selectedMode: parsed.selectedMode === "streets" ? "streets" : "intersections",
+      activeSession,
+      lastSession,
       selectedAreaId: isPlayAreaId(parsed.selectedAreaId) ? parsed.selectedAreaId : fallback.selectedAreaId,
-      selectedStreetGroupId: getStreetGroup(parsed.selectedStreetGroupId ?? "")
-        ? parsed.selectedStreetGroupId!
-        : fallback.selectedStreetGroupId,
       scopes: parsed.scopes ?? {},
     };
   } catch {
     return fallback;
   }
+}
+
+function normalizeActiveSession(session: ActiveSession | undefined): ActiveSession | undefined {
+  if (!session) return undefined;
+  if (session.mode === "streets" && (session.scopeId !== ALL_STREETS_SCOPE_ID || session.focusItemIds.length !== 10)) {
+    return undefined;
+  }
+  return session;
 }
 
 function loadLegacyArea(): PlayAreaId {

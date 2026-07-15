@@ -18,12 +18,7 @@ export type MapStageProps = {
   };
   result: { isCorrect?: boolean } | null;
   highlightedStreets?: readonly HighlightedStreet[];
-  keyboardAnswers?: readonly {
-    id: string;
-    label: string;
-  }[];
   nextLabel?: string;
-  onKeyboardAnswer?: (streetId: string) => void;
   pendingGuess?: Coordinate | null;
   onPendingGuessChange?: (coordinate: Coordinate | null) => void;
   resultDescription?: string;
@@ -38,9 +33,7 @@ export function MapStage({
   question,
   result,
   highlightedStreets,
-  keyboardAnswers,
   nextLabel = "Next intersection",
-  onKeyboardAnswer,
   pendingGuess: restoredPendingGuess,
   onPendingGuessChange,
   resultDescription,
@@ -187,20 +180,6 @@ export function MapStage({
         >
           Confirm guess
         </button>
-      ) : null}
-      {!revealed && keyboardAnswers?.length && onKeyboardAnswer ? (
-        <fieldset className="map-stage-keyboard-answers">
-          <legend>Choose an eligible street</legend>
-          {keyboardAnswers.map((answer) => (
-            <button
-              key={answer.id}
-              type="button"
-              onClick={() => onKeyboardAnswer(answer.id)}
-            >
-              {answer.label}
-            </button>
-          ))}
-        </fieldset>
       ) : null}
     </div>
   );

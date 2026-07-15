@@ -2,7 +2,7 @@
 
 ## Status
 
-Pending review.
+Implemented; street-session policy revised on 2026-07-14.
 
 ## Objective
 
@@ -12,10 +12,10 @@ Replace endless deterministic progression and lifetime counters with fixed 10-pr
 
 ### Learn Streets
 
-- Choose 5 focus streets from the selected group.
-- Rotate deterministically through the group using completed-session count for that scope.
-- Present each focus street once, then repeat all 5 once.
-- Use first-attempt performance only to order the repeat half.
+- Choose 10 distinct streets from the full playable street pool.
+- Rotate deterministically through the pool using completed-session count for the all-streets scope.
+- Continue from the prior 10-item window so all streets receive coverage before recycling.
+- Do not repeat streets within a normal session.
 
 ### Find Intersections
 
@@ -72,7 +72,6 @@ type LocalProgressV2 = {
   version: 2;
   selectedMode: "streets" | "intersections";
   selectedAreaId: PlayAreaId;
-  selectedStreetGroupId?: string;
   scopes: Record<string, ScopeSummary>;
   activeSession?: ActiveSession;
   lastSession?: LastSession;
@@ -114,7 +113,7 @@ Implementation may normalize the shape but must preserve these semantics. Do not
 Cover:
 
 - 10-prompt fixed length.
-- Street focus selection and second-half repetition.
+- Ten-distinct-street selection and full-pool rotation.
 - Intersection weakest-two repetition.
 - Deterministic scope rotation.
 - Retry-misses seeding.
@@ -126,7 +125,7 @@ Check current official documentation and package health before adding any test d
 ## Acceptance
 
 - Every session ends after exactly 10 prompts and a maximum of 40 points.
-- Street sessions repeat all 5 focus streets.
+- Street sessions contain 10 distinct streets from the full pool.
 - Intersection sessions repeat the 2 weakest of the first 8.
 - No mastery, SRS, daily, or streak state exists.
 - Refresh restores the exact session and prompt.
