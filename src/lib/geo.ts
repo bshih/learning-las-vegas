@@ -1,9 +1,9 @@
-import type { BoundingBox, Coordinate, Guess, Intersection } from "../data/types";
+import type { BoundingBox, Coordinate, Guess, Intersection } from "../data/types.ts";
 import {
   SCORE_THRESHOLDS_METERS,
   scorePartialDistance,
   type LearningScore,
-} from "./streetScoring";
+} from "./streetScoring.ts";
 
 export type IntersectionScoreResult = Omit<Guess, "closenessScore"> & {
   closenessScore: LearningScore;

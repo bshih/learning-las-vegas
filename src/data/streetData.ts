@@ -1,4 +1,4 @@
-import rawStreetGeometry from "./streets.geojson";
+import rawStreetGeometry from "./streets.geojson?raw";
 import rawStreetCatalog from "./streetGroups.json";
 import type {
   StreetDataCatalog,
@@ -27,7 +27,7 @@ export type {
 export const streetDataCatalog = rawStreetCatalog as StreetDataCatalog;
 export const streetDefinitions = streetDataCatalog.streets;
 export const streetGroups = streetDataCatalog.groups;
-export const streetGeometry = rawStreetGeometry as StreetFeatureCollection;
+export const streetGeometry = JSON.parse(rawStreetGeometry) as StreetFeatureCollection;
 
 const definitionsById = new Map(streetDefinitions.map((street) => [street.id, street]));
 const groupsById = new Map(streetGroups.map((group) => [group.id, group]));

@@ -11,11 +11,11 @@
 
 ## 2026-07-14 Learning-game specifications
 
-- `06_learning_game.md`: approved; implementation queued
-- `07_street_geometry_data.md`: approved; phase 1 starting
-- `08_street_mode.md`: approved; phase 1 starting
-- `09_sessions_and_progress.md`: approved; phase 1 starting
-- `10_feedback_and_rewards.md`: approved; phase 1 starting
+- `06_learning_game.md`: done
+- `07_street_geometry_data.md`: done
+- `08_street_mode.md`: done
+- `09_sessions_and_progress.md`: done
+- `10_feedback_and_rewards.md`: done
 
 ## Blockers
 
@@ -63,3 +63,6 @@
 - 2026-07-14: Deployed commit `a92d69b` to the permanent here.now site and browser-verified live zero-point and exact-hit cases: Lost in the valley awarded 0/5 with no road advice, while Nailed it awarded 5/5 with one enlarged success marker and no page errors.
 - 2026-07-14: Revised pending learning-game specs after product review: 0-4 scoring, 10-prompt/40-point sessions, fully playable special-shape streets, session-local repetition instead of SRS/mastery, no V1 hints or onboarding system, and confirm-before-submit for coarse pointers.
 - 2026-07-14: Pushed the visual system toward a late-1950s glovebox atlas with Futura-adjacent Jost display type, Barlow Condensed road/legend typography, a route-shield masthead mark, and locally rendered matching MapLibre labels. Deployed to the permanent here.now site after desktop/mobile and reveal-state browser verification.
+- 2026-07-14: Integrated the approved learning-game release: separate street and intersection lessons, 10-prompt/40-point sessions, five-road study briefings, session-local repeats, coarse-pointer confirmation, richer contextual feedback, local best scores, and retry-misses sessions.
+- 2026-07-14: Added 28 validated street geometries in four teaching groups, including the special-shape Rampart, Spring Mountain, Paradise, Green Valley Parkway, and Boulder Highway lesson.
+- 2026-07-14: Browser-dogfooded a complete 40/40 street session, street briefing/highlights, intersection miss feedback, and the 390px responsive layout. Fixed an overlay lifecycle crash found during the pass by deferring MapLibre source access until the style is ready.

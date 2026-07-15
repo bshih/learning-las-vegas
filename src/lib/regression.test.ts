@@ -2,25 +2,25 @@ import type { Intersection } from "../data/types";
 import {
   pointToLineStringDistanceMeters,
   pointToStreetGeometryDistanceMeters,
-} from "./streetGeometry";
+} from "./streetGeometry.ts";
 import {
   scorePartialDistance,
   scoreStreetGuess,
   type ScorableStreet,
-} from "./streetScoring";
-import { scoreGuess } from "./geo";
+} from "./streetScoring.ts";
+import { scoreGuess } from "./geo.ts";
 import {
   buildIntersectionSessionItemIds,
   buildStreetSessionItemIds,
   selectIntersectionFocusItems,
   selectStreetFocusItems,
   type SessionAttempt,
-} from "./sessionDeck";
+} from "./sessionDeck.ts";
 import {
   selectIntersectionFeedback,
   selectStreetFeedback,
   type OrderedFeedbackGroup,
-} from "./feedback";
+} from "./feedback.ts";
 
 function assert(condition: unknown, message: string): asserts condition {
   if (!condition) throw new Error(message);

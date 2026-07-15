@@ -1,5 +1,5 @@
-import type { Coordinate } from "../data/types";
-import type { LearningScore } from "./streetScoring";
+import type { Coordinate } from "../data/types.ts";
+import type { LearningScore } from "./streetScoring.ts";
 
 export type StreetAxis = "north-south" | "east-west" | "regional";
 export type CardinalDirection = "north" | "south" | "east" | "west";

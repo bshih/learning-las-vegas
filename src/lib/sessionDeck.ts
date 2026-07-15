@@ -1,4 +1,4 @@
-import type { LearningScore } from "./streetScoring";
+import type { LearningScore } from "./streetScoring.ts";
 
 export type SessionAttempt = {
   itemId: string;

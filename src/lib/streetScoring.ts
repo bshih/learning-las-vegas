@@ -1,9 +1,9 @@
-import type { Coordinate } from "../data/types";
-import type { StreetAxis } from "./feedback";
+import type { Coordinate } from "../data/types.ts";
+import type { StreetAxis } from "./feedback.ts";
 import {
   pointToStreetGeometryDistanceMeters,
   type StreetGeometry,
-} from "./streetGeometry";
+} from "./streetGeometry.ts";
 
 export type LearningScore = 0 | 1 | 2 | 3 | 4;
 

@@ -17,7 +17,7 @@ export function AppShell({ children, sidebar }: AppShellProps) {
               <p className="atlas-title">Melissa Map</p>
             </div>
           </div>
-          <p className="atlas-edition">Intersection trainer<br />2026 edition</p>
+          <p className="atlas-edition">Street &amp; intersection atlas<br />2026 edition</p>
         </header>
         <div className="map-frame">{children}</div>
       </section>

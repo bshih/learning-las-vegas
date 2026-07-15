@@ -1,4 +1,4 @@
-import type { Coordinate } from "../data/types";
+import type { Coordinate } from "../data/types.ts";
 
 export type GeoJsonPosition = readonly [longitude: number, latitude: number];
 

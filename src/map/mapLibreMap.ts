@@ -83,6 +83,7 @@ export class MapLibreMapAdapter implements MapAdapter {
     visibility: LabelVisibility;
   }> = [];
   private minimumZoom?: number;
+  private styleReady = false;
   private state: MapViewState;
 
   constructor(private readonly options: MapAdapterOptions) {
@@ -138,6 +139,7 @@ export class MapLibreMapAdapter implements MapAdapter {
     });
 
     map.on("style.load", () => {
+      this.styleReady = true;
       this.captureSymbolLayers();
       this.ensureStreetLayers();
       this.renderStreetGeometry();
@@ -210,11 +212,12 @@ export class MapLibreMapAdapter implements MapAdapter {
     this.resizeObserver = undefined;
     this.symbolLayers = [];
     this.minimumZoom = undefined;
+    this.styleReady = false;
   }
 
   private captureSymbolLayers(): void {
     const map = this.map;
-    if (!map) return;
+    if (!map || !this.styleReady) return;
 
     this.symbolLayers = map
       .getStyle()
@@ -228,7 +231,7 @@ export class MapLibreMapAdapter implements MapAdapter {
 
   private applyLabelVisibility(): void {
     const map = this.map;
-    if (!map || this.symbolLayers.length === 0) return;
+    if (!map || !this.styleReady || this.symbolLayers.length === 0) return;
 
     for (const layer of this.symbolLayers) {
       map.setLayoutProperty(
@@ -254,7 +257,7 @@ export class MapLibreMapAdapter implements MapAdapter {
 
   private ensureStreetLayers(): void {
     const map = this.map;
-    if (!map || map.getSource(STREET_SOURCE_ID)) return;
+    if (!map || !this.styleReady || map.getSource(STREET_SOURCE_ID)) return;
 
     map.addSource(STREET_SOURCE_ID, {
       type: "geojson",
@@ -327,7 +330,7 @@ export class MapLibreMapAdapter implements MapAdapter {
 
   private renderStreetGeometry(): void {
     const map = this.map;
-    if (!map) return;
+    if (!map || !this.styleReady) return;
 
     const source = map.getSource(STREET_SOURCE_ID) as GeoJSONSource | undefined;
     if (!source) return;
