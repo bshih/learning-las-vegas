@@ -9,9 +9,17 @@
 - `04_area_buckets.md`: done
 - `05_openfreemap_maplibre.md`: done
 
+## 2026-07-14 Learning-game specifications
+
+- `06_learning_game.md`: approved; implementation queued
+- `07_street_geometry_data.md`: approved; phase 1 starting
+- `08_street_mode.md`: approved; phase 1 starting
+- `09_sessions_and_progress.md`: approved; phase 1 starting
+- `10_feedback_and_rewards.md`: approved; phase 1 starting
+
 ## Blockers
 
-- No blockers yet.
+- No learning-game product blocker; specs 06-10 were approved for implementation on 2026-07-14.
 
 ## Notes
 
@@ -53,3 +61,4 @@
 - 2026-07-14: Clarified the map-overlay “Next intersection” action with a subtle green button treatment, replaced compact attribution with always-visible credits, and added persisted cumulative closeness points to the progress stats.
 - 2026-07-14: Recalibrated scoring to 0-5 with a zero-point “Lost in the valley” tier beyond 12 km, replaced generic road-order language with evidence-based distance/road feedback, and simplified correct reveals to one enlarged “Nailed it” marker.
 - 2026-07-14: Deployed commit `a92d69b` to the permanent here.now site and browser-verified live zero-point and exact-hit cases: Lost in the valley awarded 0/5 with no road advice, while Nailed it awarded 5/5 with one enlarged success marker and no page errors.
+- 2026-07-14: Revised pending learning-game specs after product review: 0-4 scoring, 10-prompt/40-point sessions, fully playable special-shape streets, session-local repetition instead of SRS/mastery, no V1 hints or onboarding system, and confirm-before-submit for coarse pointers.
