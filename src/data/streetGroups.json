@@ -1,0 +1,321 @@
+{
+  "streets": [
+    {
+      "id": "hualapai-way",
+      "name": "Hualapai Way",
+      "aliases": [],
+      "axis": "north-south",
+      "areaIds": ["summerlin-west", "spring-valley-southwest", "north-las-vegas-northwest"],
+      "difficulty": "medium",
+      "teachingNote": "Hualapai is the westernmost road in the west-valley practice set."
+    },
+    {
+      "id": "fort-apache-road",
+      "name": "Fort Apache Road",
+      "aliases": ["Fort Apache Rd"],
+      "axis": "north-south",
+      "areaIds": ["summerlin-west", "spring-valley-southwest", "north-las-vegas-northwest"],
+      "difficulty": "medium",
+      "teachingNote": "Fort Apache runs one position east of Hualapai in the west-valley set."
+    },
+    {
+      "id": "durango-drive",
+      "name": "Durango Drive",
+      "aliases": ["Durango Dr"],
+      "axis": "north-south",
+      "areaIds": ["summerlin-west", "spring-valley-southwest", "north-las-vegas-northwest"],
+      "difficulty": "easy",
+      "teachingNote": "Durango sits between Fort Apache and Buffalo across the west valley."
+    },
+    {
+      "id": "buffalo-drive",
+      "name": "Buffalo Drive",
+      "aliases": ["Buffalo Dr"],
+      "axis": "north-south",
+      "areaIds": ["summerlin-west", "spring-valley-southwest", "north-las-vegas-northwest"],
+      "difficulty": "easy",
+      "teachingNote": "Buffalo runs between Durango and Rainbow in the west-valley grid."
+    },
+    {
+      "id": "rainbow-boulevard",
+      "name": "Rainbow Boulevard",
+      "aliases": ["Rainbow Blvd"],
+      "axis": "north-south",
+      "areaIds": ["summerlin-west", "spring-valley-southwest", "north-las-vegas-northwest"],
+      "difficulty": "easy",
+      "teachingNote": "Rainbow is the middle landmark between Buffalo and Jones."
+    },
+    {
+      "id": "jones-boulevard",
+      "name": "Jones Boulevard",
+      "aliases": ["Jones Blvd"],
+      "axis": "north-south",
+      "areaIds": ["summerlin-west", "spring-valley-southwest", "north-las-vegas-northwest"],
+      "difficulty": "easy",
+      "teachingNote": "Jones runs east of Rainbow and west of Decatur."
+    },
+    {
+      "id": "decatur-boulevard",
+      "name": "Decatur Boulevard",
+      "aliases": ["Decatur Blvd"],
+      "axis": "north-south",
+      "areaIds": ["summerlin-west", "spring-valley-southwest", "north-las-vegas-northwest", "downtown-central-east"],
+      "difficulty": "easy",
+      "teachingNote": "Decatur is the eastern edge of the west-valley practice set."
+    },
+    {
+      "id": "las-vegas-boulevard",
+      "name": "Las Vegas Boulevard",
+      "aliases": ["Las Vegas Blvd"],
+      "axis": "north-south",
+      "areaIds": ["strip-paradise", "downtown-central-east", "north-las-vegas-northwest"],
+      "difficulty": "easy",
+      "teachingNote": "Las Vegas Boulevard anchors the Strip and continues north through downtown."
+    },
+    {
+      "id": "maryland-parkway",
+      "name": "Maryland Parkway",
+      "aliases": ["Maryland Pkwy"],
+      "axis": "north-south",
+      "areaIds": ["strip-paradise", "downtown-central-east"],
+      "difficulty": "easy",
+      "teachingNote": "Maryland runs east of Las Vegas Boulevard beside UNLV."
+    },
+    {
+      "id": "eastern-avenue",
+      "name": "Eastern Avenue",
+      "aliases": ["Eastern Ave"],
+      "axis": "north-south",
+      "areaIds": ["strip-paradise", "downtown-central-east", "henderson-green-valley", "north-las-vegas-northwest"],
+      "difficulty": "easy",
+      "teachingNote": "Eastern is the next major north-south anchor east of Maryland."
+    },
+    {
+      "id": "pecos-road",
+      "name": "Pecos Road",
+      "aliases": ["Pecos Rd"],
+      "axis": "north-south",
+      "areaIds": ["downtown-central-east", "henderson-green-valley", "north-las-vegas-northwest"],
+      "difficulty": "medium",
+      "teachingNote": "Pecos runs east of Eastern and west of Lamb in the curated order."
+    },
+    {
+      "id": "lamb-boulevard",
+      "name": "Lamb Boulevard",
+      "aliases": ["Lamb Blvd"],
+      "axis": "north-south",
+      "areaIds": ["downtown-central-east", "north-las-vegas-northwest"],
+      "difficulty": "medium",
+      "teachingNote": "Lamb sits between Pecos and Nellis on the east side."
+    },
+    {
+      "id": "nellis-boulevard",
+      "name": "Nellis Boulevard",
+      "aliases": ["Nellis Blvd"],
+      "axis": "north-south",
+      "areaIds": ["downtown-central-east", "north-las-vegas-northwest"],
+      "difficulty": "easy",
+      "teachingNote": "Nellis is the easternmost road in the central-east practice set."
+    },
+    {
+      "id": "ann-road",
+      "name": "Ann Road",
+      "aliases": ["Ann Rd"],
+      "axis": "east-west",
+      "areaIds": ["north-las-vegas-northwest", "summerlin-west", "downtown-central-east"],
+      "difficulty": "medium",
+      "teachingNote": "Ann is the northernmost road in the valley-wide east-west set."
+    },
+    {
+      "id": "craig-road",
+      "name": "Craig Road",
+      "aliases": ["Craig Rd"],
+      "axis": "east-west",
+      "areaIds": ["north-las-vegas-northwest", "downtown-central-east"],
+      "difficulty": "medium",
+      "teachingNote": "Craig runs south of Ann and north of Cheyenne."
+    },
+    {
+      "id": "cheyenne-avenue",
+      "name": "Cheyenne Avenue",
+      "aliases": ["Cheyenne Ave"],
+      "axis": "east-west",
+      "areaIds": ["north-las-vegas-northwest", "summerlin-west", "downtown-central-east"],
+      "difficulty": "easy",
+      "teachingNote": "Cheyenne sits between Craig and Lake Mead in the north valley."
+    },
+    {
+      "id": "lake-mead-boulevard",
+      "name": "Lake Mead Boulevard",
+      "aliases": ["Lake Mead Blvd"],
+      "axis": "east-west",
+      "areaIds": ["north-las-vegas-northwest", "summerlin-west", "downtown-central-east"],
+      "difficulty": "easy",
+      "teachingNote": "Lake Mead crosses the valley south of Cheyenne and north of Charleston."
+    },
+    {
+      "id": "charleston-boulevard",
+      "name": "Charleston Boulevard",
+      "aliases": ["Charleston Blvd"],
+      "axis": "east-west",
+      "areaIds": ["summerlin-west", "spring-valley-southwest", "downtown-central-east"],
+      "difficulty": "easy",
+      "teachingNote": "Charleston runs south of Lake Mead and north of Sahara."
+    },
+    {
+      "id": "sahara-avenue",
+      "name": "Sahara Avenue",
+      "aliases": ["Sahara Ave"],
+      "axis": "east-west",
+      "areaIds": ["summerlin-west", "spring-valley-southwest", "strip-paradise", "downtown-central-east"],
+      "difficulty": "easy",
+      "teachingNote": "Sahara crosses the valley between Charleston and Flamingo."
+    },
+    {
+      "id": "flamingo-road",
+      "name": "Flamingo Road",
+      "aliases": ["Flamingo Rd"],
+      "axis": "east-west",
+      "areaIds": ["spring-valley-southwest", "strip-paradise", "downtown-central-east"],
+      "difficulty": "easy",
+      "teachingNote": "Flamingo crosses the Strip south of Sahara and north of Tropicana."
+    },
+    {
+      "id": "tropicana-avenue",
+      "name": "Tropicana Avenue",
+      "aliases": ["Tropicana Ave"],
+      "axis": "east-west",
+      "areaIds": ["spring-valley-southwest", "strip-paradise", "downtown-central-east"],
+      "difficulty": "easy",
+      "teachingNote": "Tropicana crosses the Strip south of Flamingo and north of Sunset."
+    },
+    {
+      "id": "sunset-road",
+      "name": "Sunset Road",
+      "aliases": ["Sunset Rd"],
+      "axis": "east-west",
+      "areaIds": ["spring-valley-southwest", "strip-paradise", "henderson-green-valley"],
+      "difficulty": "medium",
+      "teachingNote": "Sunset runs along the south valley north of Warm Springs."
+    },
+    {
+      "id": "warm-springs-road",
+      "name": "Warm Springs Road",
+      "aliases": ["Warm Springs Rd"],
+      "axis": "east-west",
+      "areaIds": ["spring-valley-southwest", "strip-paradise", "henderson-green-valley"],
+      "difficulty": "medium",
+      "teachingNote": "Warm Springs is the southernmost road in the ordered east-west set."
+    },
+    {
+      "id": "rampart-boulevard",
+      "name": "Rampart Boulevard",
+      "aliases": ["Rampart Blvd"],
+      "axis": "regional",
+      "areaIds": ["summerlin-west"],
+      "difficulty": "hard",
+      "teachingNote": "Rampart bends through Summerlin instead of following one straight grid line."
+    },
+    {
+      "id": "spring-mountain-road",
+      "name": "Spring Mountain Road",
+      "aliases": ["Spring Mountain Rd"],
+      "axis": "east-west",
+      "areaIds": ["spring-valley-southwest", "strip-paradise"],
+      "difficulty": "medium",
+      "teachingNote": "Spring Mountain runs through Chinatown to the Strip, where the named corridor transitions toward Sands Avenue."
+    },
+    {
+      "id": "paradise-road",
+      "name": "Paradise Road",
+      "aliases": ["Paradise Rd"],
+      "axis": "regional",
+      "areaIds": ["strip-paradise"],
+      "difficulty": "medium",
+      "teachingNote": "Paradise curves along the east side of the Strip and the airport area."
+    },
+    {
+      "id": "green-valley-parkway",
+      "name": "Green Valley Parkway",
+      "aliases": ["Green Valley Pkwy"],
+      "axis": "regional",
+      "areaIds": ["henderson-green-valley"],
+      "difficulty": "hard",
+      "teachingNote": "Green Valley Parkway curves through Henderson rather than holding a single compass line."
+    },
+    {
+      "id": "boulder-highway",
+      "name": "Boulder Highway",
+      "aliases": ["Boulder Hwy"],
+      "axis": "regional",
+      "areaIds": ["downtown-central-east", "henderson-green-valley"],
+      "difficulty": "hard",
+      "teachingNote": "Boulder Highway runs diagonally southeast from the east valley toward Henderson."
+    }
+  ],
+  "groups": [
+    {
+      "id": "west-valley-north-south",
+      "kind": "ordered",
+      "label": "West valley north-south",
+      "axis": "north-south",
+      "orderedDirection": "west-to-east",
+      "streetIds": [
+        "hualapai-way",
+        "fort-apache-road",
+        "durango-drive",
+        "buffalo-drive",
+        "rainbow-boulevard",
+        "jones-boulevard",
+        "decatur-boulevard"
+      ]
+    },
+    {
+      "id": "central-east-north-south",
+      "kind": "ordered",
+      "label": "Central and east north-south",
+      "axis": "north-south",
+      "orderedDirection": "west-to-east",
+      "streetIds": [
+        "las-vegas-boulevard",
+        "maryland-parkway",
+        "eastern-avenue",
+        "pecos-road",
+        "lamb-boulevard",
+        "nellis-boulevard"
+      ]
+    },
+    {
+      "id": "valley-east-west",
+      "kind": "ordered",
+      "label": "Valley east-west",
+      "axis": "east-west",
+      "orderedDirection": "north-to-south",
+      "streetIds": [
+        "ann-road",
+        "craig-road",
+        "cheyenne-avenue",
+        "lake-mead-boulevard",
+        "charleston-boulevard",
+        "sahara-avenue",
+        "flamingo-road",
+        "tropicana-avenue",
+        "sunset-road",
+        "warm-springs-road"
+      ]
+    },
+    {
+      "id": "special-shapes",
+      "kind": "shape",
+      "label": "Curves and regional roads",
+      "axis": "regional",
+      "streetIds": [
+        "rampart-boulevard",
+        "spring-mountain-road",
+        "paradise-road",
+        "green-valley-parkway",
+        "boulder-highway"
+      ]
+    }
+  ]
+}
