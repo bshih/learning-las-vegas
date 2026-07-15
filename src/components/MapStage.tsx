@@ -1,15 +1,33 @@
-import { useEffect, useRef } from "react";
-import type { Guess, Intersection, IntersectionQuestion } from "../data";
-import type { MapAdapter } from "../map";
+import { useEffect, useRef, useState } from "react";
+import type { Coordinate, Intersection } from "../data";
+import type {
+  HighlightedStreet,
+  MapAdapter,
+  StreetFeatureCollection,
+} from "../map";
 import { createMapLibreMapAdapter } from "../map";
 
-type MapStageProps = {
-  guess: Guess | null;
-  intersections: readonly Intersection[];
-  onGuess: (coordinate: Guess["coordinate"]) => void;
+export type MapStageProps = {
+  guess: { coordinate: Coordinate } | null;
+  intersections?: readonly Intersection[];
+  onGuess: (coordinate: Coordinate) => void;
   onNext: () => void;
-  question: IntersectionQuestion;
-  result: Guess | null;
+  question: {
+    id: string;
+    answer?: Intersection;
+  };
+  result: { isCorrect?: boolean } | null;
+  highlightedStreets?: readonly HighlightedStreet[];
+  keyboardAnswers?: readonly {
+    id: string;
+    label: string;
+  }[];
+  nextLabel?: string;
+  onKeyboardAnswer?: (streetId: string) => void;
+  pendingGuess?: Coordinate | null;
+  onPendingGuessChange?: (coordinate: Coordinate | null) => void;
+  resultDescription?: string;
+  streetGeometry?: StreetFeatureCollection;
 };
 
 export function MapStage({
@@ -18,30 +36,75 @@ export function MapStage({
   onGuess,
   onNext,
   question,
-  result
+  result,
+  highlightedStreets,
+  keyboardAnswers,
+  nextLabel = "Next intersection",
+  onKeyboardAnswer,
+  pendingGuess: restoredPendingGuess,
+  onPendingGuessChange,
+  resultDescription,
+  streetGeometry,
 }: MapStageProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const adapterRef = useRef<MapAdapter | null>(null);
+  const [isCoarsePointer, setIsCoarsePointer] = useState(false);
+  const [localPendingGuess, setLocalPendingGuess] = useState<Coordinate | null>(null);
   const revealed = Boolean(result);
   const onGuessRef = useRef(onGuess);
+  const onPendingGuessChangeRef = useRef(onPendingGuessChange);
   const revealedRef = useRef(revealed);
+  const coarsePointerRef = useRef(isCoarsePointer);
+  const promptIdRef = useRef(question.id);
+  const pendingGuess = restoredPendingGuess === undefined
+    ? localPendingGuess
+    : restoredPendingGuess;
 
   useEffect(() => {
     onGuessRef.current = onGuess;
   }, [onGuess]);
 
   useEffect(() => {
+    onPendingGuessChangeRef.current = onPendingGuessChange;
+  }, [onPendingGuessChange]);
+
+  useEffect(() => {
     revealedRef.current = revealed;
   }, [revealed]);
+
+  useEffect(() => {
+    coarsePointerRef.current = isCoarsePointer;
+  }, [isCoarsePointer]);
+
+  useEffect(() => {
+    const pointerQuery = window.matchMedia("(pointer: coarse)");
+    const updatePointerCapability = () => setIsCoarsePointer(pointerQuery.matches);
+    updatePointerCapability();
+    pointerQuery.addEventListener("change", updatePointerCapability);
+    return () => pointerQuery.removeEventListener("change", updatePointerCapability);
+  }, []);
+
+  useEffect(() => {
+    if (promptIdRef.current === question.id) return;
+    promptIdRef.current = question.id;
+    setLocalPendingGuess(null);
+    onPendingGuessChange?.(null);
+  }, [onPendingGuessChange, question.id]);
 
   useEffect(() => {
     if (!containerRef.current) return;
 
     const adapter = createMapLibreMapAdapter({
       onGuess: ({ coordinate }) => {
-        if (!revealedRef.current) {
-          onGuessRef.current(coordinate);
+        if (revealedRef.current) return;
+
+        if (coarsePointerRef.current) {
+          setLocalPendingGuess(coordinate);
+          onPendingGuessChangeRef.current?.(coordinate);
+          return;
         }
+
+        onGuessRef.current(coordinate);
       }
     });
     adapter.mount(containerRef.current);
@@ -56,9 +119,13 @@ export function MapStage({
   useEffect(() => {
     adapterRef.current?.update({
       intersections,
+      promptId: question.id,
       correctIntersection: question.answer,
       correctGuess: Boolean(result?.isCorrect),
       revealed,
+      pendingGuess: revealed ? undefined : pendingGuess ?? undefined,
+      streetGeometry,
+      highlightedStreets,
       markers: guess
         ? [
             {
@@ -70,24 +137,71 @@ export function MapStage({
           ]
         : []
     });
-  }, [guess, intersections, question, revealed]);
+  }, [guess, highlightedStreets, intersections, pendingGuess, question, revealed, streetGeometry]);
+
+  const confirmPendingGuess = () => {
+    if (!pendingGuess || revealed) return;
+    onGuess(pendingGuess);
+    setLocalPendingGuess(null);
+    onPendingGuessChange?.(null);
+  };
+
+  const guessingInstruction = isCoarsePointer
+    ? pendingGuess
+      ? "Guess staged. Tap elsewhere to move it, or confirm."
+      : "Tap the map to stage your guess."
+    : "Click the map to guess.";
 
   return (
     <div className="map-stage">
-      <div ref={containerRef} className="map-stage-canvas" />
+      <div
+        ref={containerRef}
+        className="map-stage-canvas"
+        role="region"
+        aria-label="Interactive Las Vegas map"
+      />
+      <p className="map-stage-announcement" aria-live="polite">
+        {revealed
+          ? resultDescription ?? "Answer revealed. Review the result outside the map."
+          : guessingInstruction}
+      </p>
       {revealed ? (
         <button
           type="button"
           className="map-stage-status map-stage-status-action"
           onClick={onNext}
         >
-          Next intersection
+          {nextLabel}
         </button>
       ) : (
         <div className="map-stage-status" aria-live="polite">
-          Click the map to guess.
+          {guessingInstruction}
         </div>
       )}
+      {isCoarsePointer && !revealed ? (
+        <button
+          type="button"
+          className="map-stage-confirm"
+          disabled={!pendingGuess}
+          onClick={confirmPendingGuess}
+        >
+          Confirm guess
+        </button>
+      ) : null}
+      {!revealed && keyboardAnswers?.length && onKeyboardAnswer ? (
+        <fieldset className="map-stage-keyboard-answers">
+          <legend>Choose an eligible street</legend>
+          {keyboardAnswers.map((answer) => (
+            <button
+              key={answer.id}
+              type="button"
+              onClick={() => onKeyboardAnswer(answer.id)}
+            >
+              {answer.label}
+            </button>
+          ))}
+        </fieldset>
+      ) : null}
     </div>
   );
 }

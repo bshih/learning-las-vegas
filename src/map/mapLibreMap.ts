@@ -1,4 +1,6 @@
 import maplibregl, {
+  type FilterSpecification,
+  type GeoJSONSource,
   type IControl,
   type Map as MapLibreMap,
   type Marker,
@@ -28,6 +30,16 @@ const DEFAULT_VIEW_BOUNDS: BoundingBox = {
 const PAN_LIMIT_BOUNDS: BoundingBox = {
   southwest: { lat: 35.92, lon: -115.42 },
   northeast: { lat: 36.35, lon: -114.9 },
+};
+const STREET_SOURCE_ID = "melissa-map-streets";
+const STREET_BASE_LAYER_ID = "melissa-map-streets-base";
+const STREET_NEIGHBOR_LAYER_ID = "melissa-map-streets-neighbor";
+const STREET_GUESS_LAYER_ID = "melissa-map-streets-guess";
+const STREET_ANSWER_LAYER_ID = "melissa-map-streets-answer";
+const STREET_LABEL_LAYER_ID = "melissa-map-streets-label";
+const EMPTY_STREET_COLLECTION = {
+  type: "FeatureCollection" as const,
+  features: [],
 };
 
 type LabelVisibility = "none" | "visible";
@@ -96,7 +108,9 @@ export class MapLibreMapAdapter implements MapAdapter {
       dragRotate: false,
       touchPitch: false,
       attributionControl: { compact: false },
-      fadeDuration: 180,
+      fadeDuration: window.matchMedia("(prefers-reduced-motion: reduce)").matches
+        ? 0
+        : 180,
     });
     this.map = map;
     map.touchZoomRotate.disableRotation();
@@ -125,6 +139,8 @@ export class MapLibreMapAdapter implements MapAdapter {
 
     map.on("style.load", () => {
       this.captureSymbolLayers();
+      this.ensureStreetLayers();
+      this.renderStreetGeometry();
       this.applyLabelVisibility();
       container.classList.remove("maplibre-map-loading");
       this.renderMarkers();
@@ -132,6 +148,7 @@ export class MapLibreMapAdapter implements MapAdapter {
 
     map.once("load", () => {
       this.applyLabelVisibility();
+      this.renderStreetGeometry();
       this.minimumZoom = map.getZoom();
       map.setMinZoom(this.minimumZoom);
     });
@@ -156,6 +173,7 @@ export class MapLibreMapAdapter implements MapAdapter {
 
   update(state: Partial<MapViewState>): void {
     const wasRevealed = Boolean(this.state.revealed);
+    const previousPromptId = this.state.promptId;
     const previousAnswerId = this.state.correctIntersection?.id;
     this.state = {
       ...this.state,
@@ -165,7 +183,10 @@ export class MapLibreMapAdapter implements MapAdapter {
 
     if (
       !this.state.revealed &&
-      (wasRevealed || this.state.correctIntersection?.id !== previousAnswerId)
+      (wasRevealed ||
+        (this.state.promptId !== undefined &&
+          this.state.promptId !== previousPromptId) ||
+        this.state.correctIntersection?.id !== previousAnswerId)
     ) {
       this.resetView();
     }
@@ -174,6 +195,7 @@ export class MapLibreMapAdapter implements MapAdapter {
       this.applyLabelVisibility();
     }
 
+    this.renderStreetGeometry();
     this.renderMarkers();
   }
 
@@ -230,6 +252,125 @@ export class MapLibreMapAdapter implements MapAdapter {
     map.setMinZoom(this.minimumZoom);
   }
 
+  private ensureStreetLayers(): void {
+    const map = this.map;
+    if (!map || map.getSource(STREET_SOURCE_ID)) return;
+
+    map.addSource(STREET_SOURCE_ID, {
+      type: "geojson",
+      data: this.state.streetGeometry ?? EMPTY_STREET_COLLECTION,
+    });
+    map.addLayer({
+      id: STREET_BASE_LAYER_ID,
+      type: "line",
+      source: STREET_SOURCE_ID,
+      paint: {
+        "line-color": "#19334a",
+        "line-opacity": 0.2,
+        "line-width": ["interpolate", ["linear"], ["zoom"], 8, 1, 14, 2.5],
+      },
+    });
+    map.addLayer({
+      id: STREET_NEIGHBOR_LAYER_ID,
+      type: "line",
+      source: STREET_SOURCE_ID,
+      filter: streetIdFilter([]),
+      paint: {
+        "line-color": "#697f62",
+        "line-opacity": 0.9,
+        "line-width": ["interpolate", ["linear"], ["zoom"], 8, 2, 14, 5],
+      },
+    });
+    map.addLayer({
+      id: STREET_GUESS_LAYER_ID,
+      type: "line",
+      source: STREET_SOURCE_ID,
+      filter: streetIdFilter([]),
+      paint: {
+        "line-color": "#19334a",
+        "line-dasharray": [2, 1.5],
+        "line-opacity": 0.95,
+        "line-width": ["interpolate", ["linear"], ["zoom"], 8, 3, 14, 7],
+      },
+    });
+    map.addLayer({
+      id: STREET_ANSWER_LAYER_ID,
+      type: "line",
+      source: STREET_SOURCE_ID,
+      filter: streetIdFilter([]),
+      paint: {
+        "line-color": "#b54132",
+        "line-opacity": 1,
+        "line-width": ["interpolate", ["linear"], ["zoom"], 8, 4, 14, 9],
+      },
+    });
+    map.addLayer({
+      id: STREET_LABEL_LAYER_ID,
+      type: "symbol",
+      source: STREET_SOURCE_ID,
+      filter: streetIdFilter([]),
+      layout: {
+        "symbol-placement": "line",
+        "text-field": ["coalesce", ["get", "mapLabel"], ["get", "name"]],
+        "text-font": ["Noto Sans Regular"],
+        "text-size": 13,
+        "text-allow-overlap": false,
+        "symbol-spacing": 420,
+      },
+      paint: {
+        "text-color": "#19334a",
+        "text-halo-color": "#f7f1df",
+        "text-halo-width": 2,
+      },
+    });
+  }
+
+  private renderStreetGeometry(): void {
+    const map = this.map;
+    if (!map) return;
+
+    const source = map.getSource(STREET_SOURCE_ID) as GeoJSONSource | undefined;
+    if (!source) return;
+    const allHighlights = this.state.highlightedStreets ?? [];
+    const labels = new Map(
+      allHighlights
+        .filter((street) => street.label !== undefined)
+        .map((street) => [street.id, street.label]),
+    );
+    const streetGeometry = this.state.streetGeometry;
+    source?.setData(
+      streetGeometry
+        ? {
+            ...streetGeometry,
+            features: streetGeometry.features.map((feature) => ({
+              ...feature,
+              properties: {
+                ...feature.properties,
+                mapLabel: labels.get(feature.properties.id),
+              },
+            })),
+          }
+        : EMPTY_STREET_COLLECTION,
+    );
+
+    const highlights = this.state.revealed ? allHighlights : [];
+    const idsFor = (kind: "answer" | "guess" | "neighbor") =>
+      highlights.filter((street) => street.kind === kind).map((street) => street.id);
+    map.setFilter(STREET_ANSWER_LAYER_ID, streetIdFilter(idsFor("answer")));
+    map.setFilter(STREET_GUESS_LAYER_ID, streetIdFilter(idsFor("guess")));
+    map.setFilter(STREET_NEIGHBOR_LAYER_ID, streetIdFilter(idsFor("neighbor")));
+    map.setFilter(
+      STREET_LABEL_LAYER_ID,
+      streetIdFilter(
+        this.state.revealed
+          ? highlights
+              .filter((street) => street.label !== undefined)
+              .map((street) => street.id)
+          : [],
+      ),
+    );
+  }
+
   private renderMarkers(): void {
     const map = this.map;
     if (!map) return;
@@ -255,6 +396,18 @@ export class MapLibreMapAdapter implements MapAdapter {
       for (const marker of this.state.markers ?? []) {
         this.addMarker(marker, splitLabels ? "left" : "right");
       }
+    }
+
+    if (!this.state.revealed && this.state.pendingGuess) {
+      this.addMarker(
+        {
+          id: "pending-guess",
+          kind: "pending",
+          coordinate: this.state.pendingGuess,
+          label: "Pending guess",
+        },
+        "right",
+      );
     }
 
     if (this.state.revealed && correctCoordinate) {
@@ -415,4 +568,8 @@ function toMapLibreBounds(bounds: BoundingBox): maplibregl.LngLatBoundsLike {
     [bounds.southwest.lon, bounds.southwest.lat],
     [bounds.northeast.lon, bounds.northeast.lat],
   ];
+}
+
+function streetIdFilter(ids: readonly string[]): FilterSpecification {
+  return ["in", ["get", "id"], ["literal", [...ids]]];
 }

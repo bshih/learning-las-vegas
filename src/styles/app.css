@@ -460,6 +460,17 @@ textarea {
   background: var(--color-text);
 }
 
+.tile-map-marker-pending {
+  width: 1.4rem;
+  height: 1.4rem;
+}
+
+.tile-map-marker-pending .tile-map-marker-dot {
+  border: 4px dashed var(--color-text);
+  background: var(--color-paper);
+  box-shadow: 0 0 0 3px rgb(247 241 223 / 0.82);
+}
+
 .tile-map-marker-correct .tile-map-marker-dot {
   background: var(--color-accent);
 }
@@ -568,6 +579,92 @@ textarea {
   background: color-mix(in srgb, var(--color-land) 35%, var(--color-paper));
   transform: translate(-1px, -1px);
   box-shadow: 4px 4px 0 rgb(25 51 74 / 0.24);
+}
+
+.map-stage-confirm {
+  position: absolute;
+  right: var(--space-4);
+  bottom: 2.75rem;
+  min-width: 10rem;
+  min-height: 3rem;
+  border: 2px solid var(--color-text);
+  border-radius: var(--radius-sm);
+  padding: 0.65rem 1rem;
+  background: var(--color-text);
+  color: var(--color-paper);
+  cursor: pointer;
+  font-family: var(--font-display);
+  font-weight: 800;
+  box-shadow: 3px 3px 0 rgb(25 51 74 / 0.25);
+  z-index: 2;
+}
+
+.map-stage-confirm:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.map-stage-confirm:not(:disabled):hover,
+.map-stage-confirm:not(:disabled):focus-visible {
+  background: var(--color-accent-dark);
+}
+
+.map-stage-confirm:focus-visible {
+  outline: 3px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+.map-stage-announcement {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.map-stage-keyboard-answers {
+  position: absolute;
+  top: var(--space-4);
+  right: var(--space-4);
+  display: grid;
+  max-height: calc(100% - 8rem);
+  gap: var(--space-2);
+  overflow: auto;
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-sm);
+  padding: var(--space-3);
+  background: color-mix(in srgb, var(--color-paper) 94%, transparent);
+  box-shadow: 2px 2px 0 rgb(25 51 74 / 0.18);
+  z-index: 2;
+}
+
+.map-stage-keyboard-answers legend {
+  padding: 0 var(--space-1);
+  font-weight: 700;
+}
+
+.map-stage-keyboard-answers button {
+  min-height: 2.75rem;
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-sm);
+  padding: 0.45rem 0.65rem;
+  background: var(--color-surface);
+  color: var(--color-text);
+  cursor: pointer;
+  font-weight: 700;
+  text-align: left;
+}
+
+.map-stage-keyboard-answers button:hover,
+.map-stage-keyboard-answers button:focus-visible {
+  background: var(--color-surface-strong);
+}
+
+.map-stage-keyboard-answers button:focus-visible {
+  outline: 3px solid var(--color-focus);
+  outline-offset: 1px;
 }
 
 .map-stage-status-action:focus-visible {
