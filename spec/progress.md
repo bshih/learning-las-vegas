@@ -80,3 +80,4 @@
 - 2026-07-16: Changed normal intersection rounds to 10 distinct prompts, reserving repetition for Replay the misses, and added passive per-question timing with round total/average on the summary.
 - 2026-07-16: Added a 12-street roadside-note pilot. Street reveals can now pair the existing spatial teaching note with a concise sourced landmark, navigation, corridor, history, or name-origin note; non-pilot streets retain the existing reveal unchanged.
 - 2026-07-16: Replaced the street-mode guessed-road dash pattern with a continuous dark-slate highlight so segmented geometry remains visually coherent at every zoom level.
+- 2026-07-16: Expanded roadside-note coverage from 12 to 24 streets with a second sourced pass focused on recognizable parks, corridor transitions, ceremonial names, and east-valley and Henderson landmarks. Eight roads remain intentionally uncovered pending stronger material.

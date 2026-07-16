@@ -22,17 +22,29 @@ const allowedAreaIds = new Set(areaBuckets.map((bucket) => bucket.id));
 const allowedRoadsideNoteCategories = new Set(["corridor", "history", "landmark", "name-origin", "navigation"]);
 const requiredRoadsideNoteIds = new Set([
   "boulder-highway",
+  "buffalo-drive",
   "charleston-boulevard",
+  "cheyenne-avenue",
   "decatur-boulevard",
+  "durango-drive",
+  "eastern-avenue",
+  "flamingo-road",
+  "green-valley-parkway",
   "lake-mead-parkway",
+  "lake-mead-boulevard",
   "las-vegas-boulevard",
   "maryland-parkway",
+  "nellis-boulevard",
   "paradise-road",
+  "pecos-road",
+  "rainbow-boulevard",
   "sahara-avenue",
   "spring-mountain-road",
   "stephanie-street",
+  "st-rose-parkway",
   "sunset-road",
   "tropicana-avenue",
+  "warm-springs-road",
 ]);
 const paddedBounds = { minLat: 35.89, maxLat: 36.39, minLon: -115.46, maxLon: -114.89 };
 const requiredOrderedGroups = {

@@ -94,5 +94,101 @@
     "body": "Henderson's Lake Mead Parkway is different from Lake Mead Boulevard in the north valley. Older signs and businesses may still call it Lake Mead Drive, its name until around 2004 or 2005.",
     "sourceLabel": "Las Vegas Review-Journal",
     "sourceUrl": "https://www.reviewjournal.com/uncategorized/lake-mead-parkway-has-gone-through-many-name-changes/"
+  },
+  {
+    "streetId": "buffalo-drive",
+    "category": "landmark",
+    "title": "Two big parks on one line",
+    "body": "Buffalo passes All American Park near Charleston and Centennial Hills Park in the northwest. Those two large green spaces make useful anchors for opposite ends of the road.",
+    "sourceLabel": "City of Las Vegas",
+    "sourceUrl": "https://www.lasvegasnevada.gov/News/Blog/Detail/get-fit-at-our-parks"
+  },
+  {
+    "streetId": "durango-drive",
+    "category": "landmark",
+    "title": "A road full of park markers",
+    "body": "Durango passes Angel Park near Charleston, Durango Hills Park farther north, and Thunderbird Family Sports Complex near Ann. The park names help track the road up the west valley.",
+    "sourceLabel": "City of Las Vegas",
+    "sourceUrl": "https://www.lasvegasnevada.gov/News/Blog/Detail/get-fit-at-our-parks"
+  },
+  {
+    "streetId": "rainbow-boulevard",
+    "category": "landmark",
+    "title": "Look for the five ballfields",
+    "body": "Rainbow Family Park sits just off Rainbow at Oakey Boulevard. Its five baseball fields and 26 acres make it a recognizable midpoint on this long west-valley road.",
+    "sourceLabel": "City of Las Vegas",
+    "sourceUrl": "https://www.lasvegasnevada.gov/Residents/Parks-Facilities/Rainbow-Family-Park/1000"
+  },
+  {
+    "streetId": "eastern-avenue",
+    "category": "landmark",
+    "title": "The Blue Angel watches Five Points",
+    "body": "At Eastern, Charleston, and Fremont stands the restored 15-foot Blue Angel from a 1957 motel. The statue was designed by Betty Willis, who also created the Welcome to Las Vegas sign.",
+    "sourceLabel": "City of Las Vegas",
+    "sourceUrl": "https://www.lasvegasnevada.gov/News/Blog/Detail/blue-angel-is-back"
+  },
+  {
+    "streetId": "pecos-road",
+    "category": "navigation",
+    "title": "Pecos has a second ceremonial name",
+    "body": "Between Charleston and Owens, Pecos is also ceremonially signed Camino Cesar Chavez. The green Pecos signs and brown honorary signs share the same roadway; addresses did not change.",
+    "sourceLabel": "Las Vegas Review-Journal",
+    "sourceUrl": "https://www.reviewjournal.com/local/local-las-vegas/downtown/section-of-pecos-road-receives-ceremonial-title-for-cesar-chavez/"
+  },
+  {
+    "streetId": "nellis-boulevard",
+    "category": "name-origin",
+    "title": "Nellis was a local fighter pilot",
+    "body": "The boulevard points toward Nellis Air Force Base, renamed in 1950 for William Harrell Nellis. The Las Vegas High graduate was killed on his 70th combat mission during the Battle of the Bulge.",
+    "sourceLabel": "United States Air Force",
+    "sourceUrl": "https://www.nellis.af.mil/About/Fact-Sheets/Display/Article/284158/lieutenant-william-harrell-nellis/"
+  },
+  {
+    "streetId": "cheyenne-avenue",
+    "category": "landmark",
+    "title": "A planetarium on Cheyenne",
+    "body": "The College of Southern Nevada's North Las Vegas campus sits at Cheyenne and Pecos. Its public planetarium and observatory make the campus an easy east-valley anchor.",
+    "sourceLabel": "College of Southern Nevada",
+    "sourceUrl": "https://www.csn.edu/student-life/discover-csn/planetarium"
+  },
+  {
+    "streetId": "lake-mead-boulevard",
+    "category": "corridor",
+    "title": "This one really does reach Lake Mead",
+    "body": "East Lake Mead Boulevard becomes State Route 147 at Pecos and continues to the Lake Mead National Recreation Area boundary. It is the north-valley route toward the lake.",
+    "sourceLabel": "Nevada Department of Transportation",
+    "sourceUrl": "https://www.dot.nv.gov/home/showpublisheddocument/24024/638980409120030000"
+  },
+  {
+    "streetId": "flamingo-road",
+    "category": "history",
+    "title": "Another road named as advertising",
+    "body": "Flamingo Road takes its name from the resort where it crosses Las Vegas Boulevard. Several Strip cross streets were renamed for casinos in the late 1950s and early 1960s.",
+    "sourceLabel": "Las Vegas Review-Journal",
+    "sourceUrl": "https://www.reviewjournal.com/business/why-street-names-along-las-vegas-strip-often-mirror-that-of-casinos/"
+  },
+  {
+    "streetId": "warm-springs-road",
+    "category": "history",
+    "title": "Roy Rogers had a ranch here",
+    "body": "Cowboy star Roy Rogers bought Warm Springs Ranch after visiting Las Vegas for Helldorado. The ranch and its spring were southwest of today's Paradise and Warm Springs intersection.",
+    "sourceLabel": "Las Vegas Review-Journal",
+    "sourceUrl": "https://www.reviewjournal.com/uncategorized/ride-off-into-the-sunset-on-old-west-inspired-streets/"
+  },
+  {
+    "streetId": "green-valley-parkway",
+    "category": "navigation",
+    "title": "Its old name was Salida del Sol",
+    "body": "Both the north and south sections of Green Valley Parkway were formerly called Salida del Sol Drive. Henderson's street index records the older name across the corridor.",
+    "sourceLabel": "City of Henderson",
+    "sourceUrl": "https://www.cityofhenderson.com/home/showpublisheddocument/1136/637383707149600000"
+  },
+  {
+    "streetId": "st-rose-parkway",
+    "category": "corridor",
+    "title": "A state highway between two freeways",
+    "body": "St. Rose Parkway is also State Route 146. Its state-maintained section links Interstate 15 with the 215 Beltway before continuing east through Henderson.",
+    "sourceLabel": "Nevada Department of Transportation",
+    "sourceUrl": "https://www.dot.nv.gov/Home/Components/News/News/6880/16?arch=1&cftype=JRVM9FNC&npage=4&selcat=7"
   }
 ]
