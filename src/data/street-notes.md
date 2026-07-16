@@ -2,9 +2,9 @@
 
 ## Corpus
 
-- Corpus size: 28 streets from `spec/07_street_geometry_data.md`.
+- Corpus size: 32 streets from `spec/07_street_geometry_data.md`.
 - Static geometry: `src/data/streets.geojson` is the app-owned runtime source. Normal play does not request street geometry.
-- Teaching data: `src/data/streetGroups.json` contains canonical names, aliases, areas, difficulty, notes, and the three ordered groups plus the five-road special-shape group.
+- Teaching data: `src/data/streetGroups.json` contains canonical names, aliases, areas, difficulty, notes, and the three ordered groups plus the regional special-shape group.
 - Intended accuracy: valley-scale highlighting and tap scoring, not survey-grade centerlines or turn-by-turn routing.
 
 ## OpenStreetMap Acquisition
@@ -19,7 +19,7 @@
 [out:json][timeout:90];
 way(35.9,-115.45,36.38,-114.9)
   ["highway"]
-  ["name"~"^(North |South |East |West )?(Hualapai Way|Fort Apache Road|Durango Drive|Buffalo Drive|Rainbow Boulevard|Jones Boulevard|Decatur Boulevard|Las Vegas Boulevard|Maryland Parkway|Eastern Avenue|Pecos Road|Lamb Boulevard|Nellis Boulevard|Ann Road|Craig Road|Cheyenne Avenue|Lake Mead Boulevard|Charleston Boulevard|Sahara Avenue|Flamingo Road|Tropicana Avenue|Sunset Road|Warm Springs Road|Rampart Boulevard|Spring Mountain Road|Paradise Road|Green Valley Parkway|Boulder Highway)$",i];
+  ["name"~"^(North |South |East |West )?(Hualapai Way|Fort Apache Road|Durango Drive|Buffalo Drive|Rainbow Boulevard|Jones Boulevard|Decatur Boulevard|Las Vegas Boulevard|Maryland Parkway|Eastern Avenue|Pecos Road|Lamb Boulevard|Nellis Boulevard|Ann Road|Craig Road|Cheyenne Avenue|Lake Mead Boulevard|Charleston Boulevard|Sahara Avenue|Flamingo Road|Tropicana Avenue|Sunset Road|Warm Springs Road|Rampart Boulevard|Spring Mountain Road|Paradise Road|Green Valley Parkway|Boulder Highway|Stephanie Street|St\\.? Rose Parkway|Horizon Ridge Parkway|Lake Mead Parkway)$",i];
 out tags geom;
 ```
 
@@ -31,7 +31,7 @@ The checked-in asset retains named `trunk`, `primary`, `secondary`, `tertiary`, 
 - OSM segments sharing exact endpoints were stitched where the endpoint had one unambiguous continuation.
 - Lines were simplified with a 12 m Douglas-Peucker tolerance. This preserves visible curves at normal play zoom while keeping the GeoJSON under 300 KB.
 - Dual carriageways, divided-road transitions, and genuinely disconnected named segments remain separate lines inside one `MultiLineString`; they are not assigned separate player-facing IDs.
-- All 28 routes were reviewed together over an OpenStreetMap raster basemap on 2026-07-14. The ordered grids aligned with their named roads, and the five special-shape routes were separately reviewed as a playable group. The review page reported no console warnings or errors.
+- The initial 28 routes were reviewed together over an OpenStreetMap raster basemap on 2026-07-14. Stephanie Street, St. Rose Parkway, Horizon Ridge Parkway, and Lake Mead Parkway were added from current OSM geometry on 2026-07-15 to strengthen Henderson coverage and are included in the same regional comparison group.
 
 ## Naming Decisions
 
@@ -39,7 +39,7 @@ The checked-in asset retains named `trunk`, `primary`, `secondary`, `tertiary`, 
 - Common suffix abbreviations (`Rd`, `Ave`, `Blvd`, `Dr`, `Pkwy`, and `Hwy`) are explicit aliases and normalize to their full canonical suffixes.
 - `Spring Mountain Road` includes only OSM ways carrying that name. The connected Sands Avenue corridor is intentionally excluded rather than silently merged.
 - `Lake Mead Boulevard` does not absorb Lake Mead Parkway.
-- The five special-shape streets are `Rampart Boulevard`, `Spring Mountain Road`, `Paradise Road`, `Green Valley Parkway`, and `Boulder Highway`. Their group carries no total-order claim.
+- The special-shape group also includes `Stephanie Street`, `St. Rose Parkway`, `Horizon Ridge Parkway`, and `Lake Mead Parkway`. The group carries no total-order claim.
 
 ## Known Uncertainty
 

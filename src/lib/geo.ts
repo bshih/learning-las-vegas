@@ -15,6 +15,7 @@ export const LAS_VEGAS_BOUNDS: BoundingBox = {
 };
 
 const EARTH_RADIUS_METERS = 6_371_000;
+const SAME_CROSSING_RADIUS_METERS = 150;
 
 const toRadians = (degrees: number) => (degrees * Math.PI) / 180;
 
@@ -63,8 +64,12 @@ export function scoreGuess(
     intersection: answer,
     distanceMeters,
   };
+  const nearestRepresentsAnswer =
+    nearest.intersection.id === answer.id ||
+    haversineDistanceMeters(nearest.intersection.coordinate, answer.coordinate) <=
+      SAME_CROSSING_RADIUS_METERS;
   const isCorrect =
-    nearest.intersection.id === answer.id &&
+    nearestRepresentsAnswer &&
     nearest.distanceMeters <= SCORE_THRESHOLDS_METERS.correct;
   const closenessScore = isCorrect ? 4 : scoreDistance(distanceMeters);
 

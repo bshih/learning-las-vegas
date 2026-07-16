@@ -26,11 +26,11 @@ export default function App() {
           <GamePanel
             header={
               <>
-                <p className="panel-kicker">Choose a lesson</p>
-                <h1 className="panel-title">Learn the valley, one short run at a time.</h1>
+                <p className="panel-kicker">Choose a mode</p>
+                <h1 className="panel-title">Think you know the valley?</h1>
               </>
             }
-            footer={<Button onClick={() => game.startSession()}>Start 10 questions</Button>}
+            footer={<Button onClick={() => game.startSession()}>Start the round</Button>}
           >
             <ModeChooser selected={progress.selectedMode} onChange={game.selectMode} />
             {progress.selectedMode === "intersections" ? (
@@ -43,10 +43,10 @@ export default function App() {
               <section className="street-pool-card">
                 <span>Street pool</span>
                 <strong>{streetDefinitions.length} major roads</strong>
-                <p>Every session draws 10 distinct streets from the full valley set.</p>
+                <p>Every round pulls 10 roads from across the valley.</p>
               </section>
             )}
-            <LessonCard mode={progress.selectedMode} />
+            <ModeCard mode={progress.selectedMode} />
           </GamePanel>
         }
       >
@@ -63,37 +63,37 @@ export default function App() {
           <GamePanel
             header={
               <>
-                <p className="panel-kicker">Session complete</p>
+                <p className="panel-kicker">Round complete</p>
                 <h1 className="score-title">{game.lastSession.score}<span>/40</span></h1>
                 <p className="panel-lede">
-                  {game.lastSession.isNewBest ? "New best for this lesson." : scoreMessage(game.lastSession.score)}
+                  {game.lastSession.isNewBest ? "New high score for this mode." : scoreMessage(game.lastSession.score)}
                 </p>
               </>
             }
             footer={
               <div className="button-stack">
                 {missedNames.length ? (
-                  <Button onClick={() => game.startSession({ retryMisses: true })}>Practice misses</Button>
+                  <Button onClick={() => game.startSession({ retryMisses: true })}>Replay the misses</Button>
                 ) : null}
                 <Button variant={missedNames.length ? "secondary" : "primary"} onClick={() => game.startSession()}>
-                  Play another 10
+                  Go another 10
                 </Button>
-                <Button variant="secondary" onClick={game.returnToSetup}>Change lesson</Button>
+                <Button variant="secondary" onClick={game.returnToSetup}>Switch mode</Button>
               </div>
             }
           >
             <section className="summary-card">
-              <p className="summary-label">{game.lastSession.mode === "streets" ? "Roads" : "Intersections"} to revisit</p>
+              <p className="summary-label">{game.lastSession.mode === "streets" ? "Roads" : "Intersections"} that got away</p>
               {missedNames.length ? (
                 <ul className="miss-list">{missedNames.map((name) => <li key={name}>{name}</li>)}</ul>
               ) : (
-                <p className="clean-run">Clean run — every answer found its mark.</p>
+                <p className="clean-run">Clean sweep — you found every one.</p>
               )}
             </section>
           </GamePanel>
         }
       >
-        <MapPlaceholder message="Nice run. Pick another lesson or tighten up the misses." />
+        <MapPlaceholder message="Nice lap. Go again or chase down the ones that got away." />
       </AppShell>
     );
   }
@@ -103,7 +103,7 @@ export default function App() {
   const promptId = `${activeSession.id}:${activeSession.currentIndex}`;
   const attempts = activeSession.attempts;
   const score = attempts.reduce((total, attempt) => total + attempt.score, 0);
-  const modeLabel = activeSession.mode === "streets" ? "Place the street" : "Find the intersection";
+  const modeLabel = activeSession.mode === "streets" ? "Find the street" : "Find the intersection";
   const prompt = currentStreet?.name ?? intersectionName(currentIntersection);
   const highlights = buildHighlights(currentResult, currentStreet?.id);
   const guess = currentResult && activeSession.attempts[activeSession.currentIndex]
@@ -130,7 +130,7 @@ export default function App() {
           footer={
             <div className="button-stack">
               <Button onClick={game.nextPrompt} disabled={!currentResult}>
-                {activeSession.currentIndex === 9 ? "See session result" : "Next question"}
+                {activeSession.currentIndex === 9 ? "See your score" : "Next question"}
               </Button>
               <Button variant="secondary" onClick={game.returnToSetup}>End session</Button>
             </div>
@@ -153,7 +153,7 @@ export default function App() {
         onPendingGuessChange={game.setPendingGuess}
         resultDescription={resultDescription}
         streetGeometry={activeSession.mode === "streets" ? game.streetGeometry : undefined}
-        nextLabel={activeSession.currentIndex === 9 ? "See session result" : "Next question"}
+        nextLabel={activeSession.currentIndex === 9 ? "See your score" : "Next question"}
       />
     </AppShell>
   );
@@ -164,18 +164,34 @@ function ModeChooser({ selected, onChange }: { selected: "intersections" | "stre
     <fieldset className="mode-chooser">
       <legend>Game mode</legend>
       <div>
-        <button className={selected === "streets" ? "active" : ""} type="button" onClick={() => onChange("streets")}>Place streets</button>
-        <button className={selected === "intersections" ? "active" : ""} type="button" onClick={() => onChange("intersections")}>Find intersections</button>
+        <button
+          aria-pressed={selected === "streets"}
+          className={selected === "streets" ? "active" : ""}
+          type="button"
+          onClick={() => onChange("streets")}
+        >
+          <span>Find streets</span>
+          {selected === "streets" ? <span className="mode-chooser-check" aria-hidden="true">✓</span> : null}
+        </button>
+        <button
+          aria-pressed={selected === "intersections"}
+          className={selected === "intersections" ? "active" : ""}
+          type="button"
+          onClick={() => onChange("intersections")}
+        >
+          <span>Find intersections</span>
+          {selected === "intersections" ? <span className="mode-chooser-check" aria-hidden="true">✓</span> : null}
+        </button>
       </div>
     </fieldset>
   );
 }
 
-function LessonCard({ mode }: { mode: "intersections" | "streets" }) {
+function ModeCard({ mode }: { mode: "intersections" | "streets" }) {
   return (
-    <section className="lesson-card">
+    <section className="mode-card">
       <strong>10 questions · 40 points</strong>
-      <p>{mode === "streets" ? "Place 10 different roads. Later sessions keep rotating through the full pool before recycling them." : "Locate eight intersections, then finish with two targeted repeats."}</p>
+      <p>{mode === "streets" ? "Drop pins on 10 roads from across the valley. Every round mixes up the route." : "Find eight intersections, then get another shot at two that slipped by."}</p>
       <small>Progress stays in this browser. No account needed.</small>
     </section>
   );
@@ -183,7 +199,7 @@ function LessonCard({ mode }: { mode: "intersections" | "streets" }) {
 
 function SessionProgress({ index, score, attempts }: { index: number; score: number; attempts: readonly { score: number }[] }) {
   return (
-    <section className="session-progress" aria-label="Session progress">
+    <section className="session-progress" aria-label="Round progress">
       <div><span>Score</span><strong>{score}<small>/40</small></strong></div>
       <div><span>Question</span><strong>{index + 1}<small>/10</small></strong></div>
       <div className="score-dots" aria-label={`${attempts.length} answered`}>
@@ -194,12 +210,12 @@ function SessionProgress({ index, score, attempts }: { index: number; score: num
 }
 
 function RoundFeedback({ result, currentStreetNote }: { result: RoundResult | null; currentStreetNote?: string }) {
-  if (!result) return <section className="round-feedback empty"><p>Make your best guess. Close answers still earn points.</p></section>;
+  if (!result) return <section className="round-feedback empty"><p>Drop your pin. Close still scores.</p></section>;
   const score = result.mode === "streets" ? result.result.score : result.result.closenessScore;
   const correct = result.mode === "streets" ? result.result.correct : result.result.isCorrect;
   return (
     <section className={`round-feedback ${correct ? "correct" : "miss"}`} aria-live="polite">
-      <div className="reward-row"><span>{correct ? "Nailed it" : score ? "Good read" : "Not this time"}</span><strong>+{score}</strong></div>
+      <div className="reward-row"><span>{scoreLabel(correct, score)}</span><strong>+{score}</strong></div>
       <p className="feedback-copy">{feedbackText(result)}</p>
       {currentStreetNote ? <p className="teaching-note">{currentStreetNote}</p> : null}
     </section>
@@ -227,7 +243,15 @@ function feedbackText(round: RoundResult): string {
   if (feedback.kind === "general-direction") return `The target runs farther ${feedback.direction}.`;
   if (feedback.kind === "shape-nearest") return `Your tap followed ${itemName(feedback.nearestStreetId)} instead.`;
   if (feedback.kind === "shape-area-direction") return `Look ${feedback.direction} toward ${areaName(feedback.areaId)}.`;
-  return feedback.score === 3 ? "Very close — within about a mile." : feedback.score === 2 ? "Right part of town." : feedback.score === 1 ? "Across town, but in range." : "Use the revealed route to reset your mental map.";
+  return feedback.score === 3 ? "You almost had it." : feedback.score === 2 ? "Right neighborhood, wrong block." : feedback.score === 1 ? "Across town, but still on the map." : "Take a look around, then roll on.";
+}
+
+function scoreLabel(correct: boolean, score: number) {
+  if (correct) return "Nailed it";
+  if (score === 3) return "So close";
+  if (score === 2) return "In the neighborhood";
+  if (score === 1) return "Across town";
+  return "Lost in the valley";
 }
 
 function intersectionName(intersection?: Intersection) {
@@ -242,16 +266,16 @@ function itemName(id: string) {
 }
 
 function scoreMessage(score: number) {
-  if (score >= 32) return "Strong map of the valley.";
-  if (score >= 24) return "The structure is taking shape.";
-  if (score >= 16) return "A useful first pass. The repeats will help.";
-  return "Review the misses, then run it back.";
+  if (score >= 32) return "You know these streets.";
+  if (score >= 24) return "Pretty solid lap around the valley.";
+  if (score >= 16) return "Not bad — the map is starting to click.";
+  return "The valley wins this round. Run it back?";
 }
 
 function areaName(areaId: string) {
   return isPlayAreaId(areaId) ? getAreaBucketLabel(areaId) : areaId.replaceAll("-", " ");
 }
 
-function MapPlaceholder({ message = "Choose a lesson, then the map becomes your game board." }: { message?: string }) {
+function MapPlaceholder({ message = "Pick a mode and hit the road." }: { message?: string }) {
   return <div className="map-stage map-placeholder"><span className="atlas-route-shield" aria-hidden="true">LV</span><p>{message}</p></div>;
 }

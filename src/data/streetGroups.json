@@ -251,6 +251,42 @@
       "areaIds": ["downtown-central-east", "henderson-green-valley"],
       "difficulty": "hard",
       "teachingNote": "Boulder Highway runs diagonally southeast from the east valley toward Henderson."
+    },
+    {
+      "id": "stephanie-street",
+      "name": "Stephanie Street",
+      "aliases": ["Stephanie St"],
+      "axis": "regional",
+      "areaIds": ["henderson-green-valley"],
+      "difficulty": "medium",
+      "teachingNote": "Stephanie runs north-south through central Henderson before bending near the foothills."
+    },
+    {
+      "id": "st-rose-parkway",
+      "name": "St. Rose Parkway",
+      "aliases": ["St Rose Parkway", "St Rose Pkwy", "Saint Rose Parkway", "Saint Rose Pkwy"],
+      "axis": "regional",
+      "areaIds": ["henderson-green-valley"],
+      "difficulty": "hard",
+      "teachingNote": "St. Rose sweeps diagonally across the southern edge of the valley toward Henderson."
+    },
+    {
+      "id": "horizon-ridge-parkway",
+      "name": "Horizon Ridge Parkway",
+      "aliases": ["Horizon Ridge Pkwy"],
+      "axis": "regional",
+      "areaIds": ["henderson-green-valley"],
+      "difficulty": "hard",
+      "teachingNote": "Horizon Ridge curves along Henderson's southern foothills rather than following the valley grid."
+    },
+    {
+      "id": "lake-mead-parkway",
+      "name": "Lake Mead Parkway",
+      "aliases": ["Lake Mead Pkwy"],
+      "axis": "regional",
+      "areaIds": ["henderson-green-valley"],
+      "difficulty": "hard",
+      "teachingNote": "Lake Mead Parkway crosses Henderson east-west and is distinct from Lake Mead Boulevard."
     }
   ],
   "groups": [
@@ -314,7 +350,11 @@
         "spring-mountain-road",
         "paradise-road",
         "green-valley-parkway",
-        "boulder-highway"
+        "boulder-highway",
+        "stephanie-street",
+        "st-rose-parkway",
+        "horizon-ridge-parkway",
+        "lake-mead-parkway"
       ]
     }
   ]

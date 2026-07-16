@@ -15,7 +15,7 @@ export function AreaChooser({
     areaOptions.find((option) => option.id === selectedAreaId) || areaOptions[0];
 
   return (
-    <section className="area-chooser" aria-label="Practice area">
+    <section className="area-chooser" aria-label="Game area">
       <label htmlFor="area-select">Area</label>
       <select
         id="area-select"

@@ -6,9 +6,24 @@ const geometry = JSON.parse(fs.readFileSync(path.join(root, "src", "data", "stre
 const catalog = JSON.parse(fs.readFileSync(path.join(root, "src", "data", "streetGroups.json"), "utf8"));
 const overpassUrl = process.env.OVERPASS_URL || "https://overpass-api.de/api/interpreter";
 const maxDistanceMeters = parseMaxDistance(process.argv.slice(2));
+const requestedIds = parseStreetIds(process.argv.slice(2));
+const streets = requestedIds
+  ? catalog.streets.filter((street) => requestedIds.has(street.id))
+  : catalog.streets;
+if (requestedIds && streets.length !== requestedIds.size) {
+  const knownIds = new Set(catalog.streets.map((street) => street.id));
+  throw new Error(`Unknown street ids: ${[...requestedIds].filter((id) => !knownIds.has(id)).join(", ")}`);
+}
 const allowedHighways = new Set(["trunk", "primary", "secondary", "tertiary", "unclassified", "residential"]);
-const canonicalByNormalizedName = new Map(catalog.streets.map((street) => [normalizeOsmName(street.name), street]));
-const pattern = catalog.streets.map((street) => escapeRegExp(street.name)).join("|");
+const canonicalByNormalizedName = new Map(
+  streets.flatMap((street) =>
+    [street.name, ...street.aliases].map((name) => [normalizeOsmName(name), street])
+  )
+);
+const pattern = streets
+  .flatMap((street) => [street.name, ...street.aliases])
+  .map(escapeRegExp)
+  .join("|");
 const query = `[out:json][timeout:90];
 way(35.9,-115.45,36.38,-114.9)["highway"]["name"~"^(North |South |East |West )?(${pattern})$",i];
 out tags geom;`;
@@ -24,7 +39,7 @@ const response = await fetch(overpassUrl, {
 
 if (!response.ok) throw new Error(`Overpass request failed: ${response.status} ${response.statusText}`);
 const osm = await response.json();
-const osmSegmentsById = new Map(catalog.streets.map((street) => [street.id, []]));
+const osmSegmentsById = new Map(streets.map((street) => [street.id, []]));
 
 for (const element of osm.elements) {
   if (
@@ -44,7 +59,7 @@ for (const element of osm.elements) {
 }
 
 const failures = [];
-for (const feature of geometry.features) {
+for (const feature of geometry.features.filter((item) => !requestedIds || requestedIds.has(item.properties.id))) {
   const segments = osmSegmentsById.get(feature.properties.id) || [];
   if (segments.length === 0) {
     failures.push(`${feature.properties.id}: no current OSM geometry found`);
@@ -72,7 +87,7 @@ if (failures.length > 0) {
   process.exit(1);
 }
 
-console.log(`Street geometry verification passed: ${geometry.features.length} streets within ${maxDistanceMeters}m of current OSM geometry.`);
+console.log(`Street geometry verification passed: ${streets.length} streets within ${maxDistanceMeters}m of current OSM geometry.`);
 
 function sampleLine(line) {
   if (line.length <= 3) return line;
@@ -122,4 +137,12 @@ function parseMaxDistance(args) {
   const value = argument ? Number(argument.slice("--max-distance-m=".length)) : 75;
   if (!Number.isFinite(value) || value <= 0) throw new Error("--max-distance-m must be a positive number.");
   return value;
+}
+
+function parseStreetIds(args) {
+  const argument = args.find((value) => value.startsWith("--street-ids="));
+  if (!argument) return null;
+  const ids = argument.slice("--street-ids=".length).split(",").map((value) => value.trim()).filter(Boolean);
+  if (ids.length === 0) throw new Error("--street-ids must contain at least one id.");
+  return new Set(ids);
 }

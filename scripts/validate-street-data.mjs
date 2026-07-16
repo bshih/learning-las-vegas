@@ -54,7 +54,11 @@ const requiredShapeIds = [
   "spring-mountain-road",
   "paradise-road",
   "green-valley-parkway",
-  "boulder-highway"
+  "boulder-highway",
+  "stephanie-street",
+  "st-rose-parkway",
+  "horizon-ridge-parkway",
+  "lake-mead-parkway"
 ];
 const requiredCanonicalNames = [
   "Hualapai Way",
@@ -84,7 +88,11 @@ const requiredCanonicalNames = [
   "Spring Mountain Road",
   "Paradise Road",
   "Green Valley Parkway",
-  "Boulder Highway"
+  "Boulder Highway",
+  "Stephanie Street",
+  "St. Rose Parkway",
+  "Horizon Ridge Parkway",
+  "Lake Mead Parkway"
 ];
 const requiredStreetIds = new Set([
   ...Object.values(requiredOrderedGroups).flat(),
@@ -110,8 +118,12 @@ for (const feature of features) validateFeature(feature);
 for (const street of streets) validateStreet(street);
 for (const group of groups) validateGroup(group);
 
-if (features.length !== 28) errors.push(`expected 28 geometry features, found ${features.length}`);
-if (streets.length !== 28) errors.push(`expected 28 street definitions, found ${streets.length}`);
+if (features.length !== requiredCanonicalNames.length) {
+  errors.push(`expected ${requiredCanonicalNames.length} geometry features, found ${features.length}`);
+}
+if (streets.length !== requiredCanonicalNames.length) {
+  errors.push(`expected ${requiredCanonicalNames.length} street definitions, found ${streets.length}`);
+}
 const canonicalNames = new Set(streets.map((street) => street.name));
 for (const name of requiredCanonicalNames) {
   if (!canonicalNames.has(name)) errors.push(`missing required canonical street name: ${name}`);
@@ -151,7 +163,7 @@ const shapeGroup = groups.find((group) => group.id === "special-shapes");
 if (!shapeGroup || shapeGroup.kind !== "shape") {
   errors.push("missing required special-shapes shape group");
 } else if (JSON.stringify(shapeGroup.streetIds) !== JSON.stringify(requiredShapeIds)) {
-  errors.push("special-shapes: required five-road focus set changed");
+  errors.push("special-shapes: curated regional-road set changed");
 }
 
 for (const item of intersections) {
@@ -298,7 +310,7 @@ function validateGroup(group) {
     }
   } else if (group.kind === "shape") {
     if (!allowedAxes.has(group.axis)) errors.push(`${label}: invalid shape axis ${group.axis}`);
-    if (group.streetIds.length !== 5) errors.push(`${label}: shape-group sessions require exactly 5 streets`);
+    if (group.streetIds.length < 5) errors.push(`${label}: shape groups require at least 5 streets`);
     if ("orderedDirection" in group) errors.push(`${label}: shape groups must not claim an ordered direction`);
   } else {
     errors.push(`${label}: invalid group kind ${group.kind}`);

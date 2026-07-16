@@ -50,14 +50,23 @@
       <li>Reveal mode preserves the current zoom and only nudges the center when the guess or answer would be too close to the viewport edge.</li>
       <li>Starting a fresh unrevealed question restores the default valley frame so any reveal/inspection zoom does not carry forward.</li>
       <li>Close marker labels split left/right to avoid stacking when the guess is nearly correct.</li>
-      <li>Reveal mode adds a high-contrast answer-street callout near the correct marker using the current intersection's primary and cross streets, so the exact answer remains distinct from surrounding vector labels.</li>
-      <li>Wrong reveals do not render generated learning labels from the seed corpus. OpenFreeMap's native vector labels carry nearby street learning context, while the answer callout remains the explicit exact-answer anchor.</li>
+      <li>Reveal mode does not repeat the full intersection name on the map; the sidebar carries the prompt while the map keeps only answer/guess markers and native road context.</li>
+      <li>Wrong reveals do not render generated learning labels from the seed corpus. OpenFreeMap's native vector labels carry nearby street learning context.</li>
       <li>The reveal-state instruction chip is a real Next button wired to the existing game-loop action, so players can advance without scrolling to the sidebar footer.</li>
-      <li>The reveal action now reads “Next intersection” and uses the atlas land green with a stronger border and offset shadow so it reads as clickable rather than informational.</li>
+      <li>The reveal action uses the same route-red primary treatment as the sidebar Next action so its affordance stays consistent across the layout.</li>
       <li>Local progress now persists and displays cumulative points by adding each guess's 0-5 closeness score. Existing saved progress safely starts this new field at zero.</li>
-      <li>Feedback labels now follow distance evidence: Nailed it, Very close, Nearby, A few miles off, Across town, and Lost in the valley. Road-specific feedback appears only when the road-axis heuristic actually identifies one or both answer roads.</li>
+      <li>Feedback labels use a lighter game voice: Nailed it, So close, In the neighborhood, Across town, and Lost in the valley. Road-specific feedback appears only when the road-axis heuristic actually identifies one or both answer roads.</li>
+      <li>The player-facing UI calls the two choices modes, not lessons. Setup, replay, miss-list, and summary copy avoids coaching language in favor of a relaxed road-trip voice.</li>
+      <li>The map-overlay and sidebar Next actions share the same Jost font, size, weight, tracking, route-red color, and paper text color.</li>
+      <li>The mode switch reads Find streets / Find intersections. The selected option uses route red, an inset border, a single right-aligned checkmark outside the text flow, and native <code>aria-pressed</code> state.</li>
+      <li>The public masthead and browser title read Learning Las Vegas; Melissa Map remains the internal project/repository name.</li>
+      <li>The About modal carries Brian's Melissa origin story plus a factual stack note covering React, TypeScript, Vite, MapLibre, OpenFreeMap, and the simplified OpenStreetMap geometry used for whole-road scoring.</li>
+      <li>Street mode keeps the curated street-geometry overlay hidden before a guess. The ordinary unlabeled basemap remains visible, while target and comparison geometry appears only after reveal.</li>
+      <li>Every exact four-point hit animates the shared reward card and +4 score, including street mode where there is no point marker. Intersection hits also animate the marker dot with a short stamp and expanding route-red ring. The marker container itself is not transformed because MapLibre owns its placement transform, and reduced-motion preferences disable all exact-hit animations.</li>
       <li>Correct reveals use one enlarged “Nailed it” marker at the answer instead of comparing overlapping Guess and Correct pins. Misses retain separate markers for learning context.</li>
-      <li>Map attribution is always expanded instead of using MapLibre's compact information toggle, avoiding the overlapping copyright popover while keeping required credits visible.</li>
+      <li>Map attribution uses MapLibre's compact information toggle so required credits remain available without compressing into the map at narrow widths.</li>
+      <li>Intersection scoring treats seed rows within 150 meters as alternate names for one physical crossing. This prevents Charleston/Rampart from losing a nearest-point tie to the co-located Charleston/Fort Apache row while preserving the 650-meter answer radius.</li>
+      <li>A small masthead About link opens an accessible native modal. Its story copy is intentionally placeholder text for Brian's later wording.</li>
       <li>The visual system now takes its cues from mid-century road atlases: warm paper, cartographic navy, route-marker red, muted green, geometric wayfinding type, condensed road lettering, fine rules, and squared paper-like controls. The treatment does not alter gameplay or map contracts.</li>
       <li>The typography was pushed from a general heritage field-guide look toward a late-1950s road-atlas system: Jost supplies Futura-adjacent geometric display type, Barlow Condensed handles road and legend language, and Source Sans 3 remains the dense-reading face.</li>
       <li>OpenFreeMap Bright is transformed before MapLibre commits the style: hosted glyphs are removed, symbol layers use locally rendered Jost or Barlow Condensed stacks, and existing source data, placement, collision, zoom hierarchy, and reveal visibility remain intact.</li>
@@ -84,7 +93,7 @@
       <li>The first corpus started at 70 intersections and was expanded to 76 to give every exposed area bucket at least 10 playable prompts.</li>
       <li>The basemap now depends on public OpenFreeMap style, vector-tile, glyph, and sprite availability. Self-hosted tiles or PMTiles remain future options if that dependency becomes unacceptable.</li>
       <li>Reveal no longer zooms in to expose labels because that removed too much location context; split labels and a small preserve-zoom pan are the current compromise.</li>
-      <li>The answer-street callout duplicates information that may also exist in tile labels, but it keeps the reveal legible without forcing zoom or depending on third-party label density.</li>
+      <li>Removing the answer-street callout makes the map less self-contained, but avoids duplicating the prominent prompt that remains visible in the sidebar.</li>
       <li>Native vector labels are geographically faithful and gain detail as the player zooms, but their density and typography remain governed by the external OpenFreeMap Bright style.</li>
       <li>Spot-check coordinate guards are intentionally narrow for now; broader corpus precision still needs a future ETL or review pass.</li>
       <li>The static build is deployed to the permanent here.now site at <code>https://clever-grove-3t69.here.now/</code>. The OpenFreeMap Bright release was browser-verified through guess, reveal, map-overlay Next, and reset-to-unrevealed flow.</li>
@@ -95,13 +104,14 @@
       <li>The first area chooser is a native select in the sidebar instead of a full start screen; this preserves the fast first prompt while still letting the player choose All Areas or a specific bucket before guessing.</li>
       <li>The OSM verifier is intentionally separate from the normal build because it depends on public Overpass availability and live map data.</li>
       <li>Rows that do not produce an OSM road crossing should be treated as content QA failures, not just coordinate misses; the verifier exposes those instead of hiding them behind approximate points.</li>
-      <li>The learning release uses two explicit modes. Street sessions draw 10 distinct roads from the full 28-road pool and rotate coverage across sessions; only the explicit Practice misses action seeds later repetition. Intersection sessions use eight distinct prompts followed by the two weakest repeats.</li>
+      <li>The game uses two explicit modes. Street sessions draw 10 distinct roads from the full 32-road pool and rotate coverage across sessions; only the explicit Replay the misses action seeds later repetition. Intersection sessions use eight distinct prompts followed by the two weakest repeats.</li>
       <li>Every learning session is exactly 10 prompts and 40 possible points. Both street and intersection scoring use the shared 0-4 distance bands; four points requires resolving to the requested eligible item within the 650 m snap radius.</li>
-      <li>Street learning is grouped by comparable geography: three ordered grid lessons and one special-shape lesson containing Rampart, Spring Mountain, Paradise, Green Valley Parkway, and Boulder Highway. Shape streets compare against the whole shape lesson without claiming a false cardinal ordering.</li>
-      <li>Progress remains browser-local under <code>melissa-map-progress-v2</code>. It stores lesson selection, active-session recovery, completed-session count, best score, and the last session's misses; the old selected area is migrated from the V1 key.</li>
+      <li>Street mode is grouped internally by comparable geography: three ordered grid groups and one special-shape group containing Rampart, Spring Mountain, Paradise, Green Valley Parkway, and Boulder Highway. Shape streets compare against the whole shape group without claiming a false cardinal ordering.</li>
+      <li>Progress remains browser-local under <code>melissa-map-progress-v2</code>. It stores mode selection, active-session recovery, completed-session count, best score, and the last session's misses; the old selected area is migrated from the V1 key.</li>
       <li>Coarse pointers stage a map coordinate before scoring and require a separate Confirm guess action. Fine pointers keep the one-click flow, and street mode also exposes a keyboard-accessible list of eligible roads.</li>
       <li>The MapLibre adapter owns the street GeoJSON source and line layers. Updates before the external style is ready are retained in adapter state and rendered from the <code>style.load</code> boundary instead of touching an uninitialized style.</li>
       <li>The visible eligible-street button list and pre-session five-road briefing were removed after playtesting. The list allowed the requested answer to be selected directly for full points, while the five-road repeat loop made the mode too constrained to teach the broader valley.</li>
+      <li>The Henderson-focused street expansion adds Stephanie Street, St. Rose Parkway, Horizon Ridge Parkway, and Lake Mead Parkway as fully playable regional shapes, raising the corpus from 28 to 32 roads.</li>
     </ul>
 
     <h2>Open Questions</h2>

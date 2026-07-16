@@ -18,7 +18,7 @@ Turn Melissa Map from an endless intersection quiz into a small, replayable lear
 
 ## Modes
 
-### Learn Streets
+### Find Streets
 
 The player locates an entire named street by tapping where it runs. Reveal highlights the full street and, when appropriate, relates it to nearby parallel streets.
 
@@ -40,12 +40,12 @@ The modes are independent. Neither mode is gated behind the other.
 
 ## Session Contract
 
-### Learn Streets
+### Find Streets
 
 - Select 10 distinct streets from the full playable pool.
 - Rotate through all playable streets across sessions before recycling them.
 - Do not repeat a street within a normal session.
-- `Practice misses` may seed the next session with streets missed in the immediately previous session.
+- `Replay the misses` may seed the next session with streets missed in the immediately previous session.
 
 ### Find Intersections
 
@@ -63,17 +63,17 @@ For both modes:
 
 Keep navigation minimal:
 
-- A mode control for `Learn streets` and `Find intersections`.
+- A mode control for `Find streets` and `Find intersections`, with a visibly marked selected state.
 - The existing area selector for intersection scope.
 - A single full-valley street pool; no street-group selector.
-- A single `Start 10-question session` action.
+- A single `Start the round` action.
 
 Do not build a home dashboard, onboarding carousel, recommendation engine, or locked progression for V1.
 
 ## Hosting And Persistence
 
 - The app remains a static Vite build on here.now.
-- Lesson definitions and street geometry ship as static JSON/GeoJSON.
+- Mode definitions and street geometry ship as static JSON/GeoJSON.
 - No database, account, server function, live geocoder, or runtime corpus request is required.
 - `localStorage` keeps the active session, selected mode/scope, session counts, best scores, and last-session misses.
 - Progress is browser/device-local and may be lost when site data is cleared.
@@ -85,7 +85,7 @@ Do not build a home dashboard, onboarding carousel, recommendation engine, or lo
 - Hidden text labels while guessing and labels on reveal.
 - Geographic scoring rather than screen-pixel scoring.
 - Area-filtered intersection decks and scoring pools.
-- Always-visible map attribution.
+- Required map attribution available from the compact information control.
 - Desktop map-first layout and usable mobile layout.
 
 ## Explicitly Out Of Scope

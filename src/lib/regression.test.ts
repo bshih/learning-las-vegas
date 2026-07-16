@@ -145,8 +145,19 @@ assertEqual(
   4,
   "Correct intersection receives four points",
 );
+const sameCrossingAlias = intersection("same-crossing-alias", "Main", "Alias", 36.1008, -115.2);
+const sameCrossingResolution = scoreGuess(
+  targetIntersection,
+  sameCrossingAlias.coordinate,
+  [sameCrossingAlias, targetIntersection],
+);
+assertEqual(
+  sameCrossingResolution.isCorrect,
+  true,
+  "Co-located names for the same physical crossing count as correct",
+);
 
-const streetIds = Array.from({ length: 28 }, (_, index) => `street-${index}`);
+const streetIds = Array.from({ length: 32 }, (_, index) => `street-${index}`);
 const firstStreetFocus = selectStreetFocusItems(streetIds, {
   scopeId: "all-streets",
   completedSessionCount: 0,
@@ -159,12 +170,16 @@ const thirdStreetFocus = selectStreetFocusItems(streetIds, {
   scopeId: "all-streets",
   completedSessionCount: 2,
 });
-assertEqual(firstStreetFocus.length, 10, "Street session has ten items");
-assertEqual(new Set(firstStreetFocus).size, 10, "Street session items are distinct");
-assertEqual(new Set([...firstStreetFocus, ...nextStreetFocus, ...thirdStreetFocus]).size, 28, "Three sessions cover the full pool before recycling");
-const retriedStreetFocus = selectStreetFocusItems(streetIds, {
+const fourthStreetFocus = selectStreetFocusItems(streetIds, {
   scopeId: "all-streets",
   completedSessionCount: 3,
+});
+assertEqual(firstStreetFocus.length, 10, "Street session has ten items");
+assertEqual(new Set(firstStreetFocus).size, 10, "Street session items are distinct");
+assertEqual(new Set([...firstStreetFocus, ...nextStreetFocus, ...thirdStreetFocus, ...fourthStreetFocus]).size, 32, "Four sessions cover the full pool before recycling");
+const retriedStreetFocus = selectStreetFocusItems(streetIds, {
+  scopeId: "all-streets",
+  completedSessionCount: 4,
   retryMissItemIds: [firstStreetFocus[3], firstStreetFocus[7]],
 });
 assertEqual(retriedStreetFocus[0], firstStreetFocus[3], "Street retry misses come first");

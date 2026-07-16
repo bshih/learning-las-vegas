@@ -40,9 +40,11 @@
 ## Map Behavior
 
 - Hide every text-bearing basemap symbol layer while the player is guessing, including roads, neighborhoods, POIs, and airport labels.
+- Do not draw the curated street corpus while the player is guessing; it narrows the answer set. Show street geometry only as reveal feedback.
 - Restore native vector labels after reveal; do not generate separate learning tags.
-- Keep the exact-answer callout visually stronger than ordinary map labels.
+- Keep answer and guess markers distinct without repeating the sidebar prompt on the map.
 - Show one enlarged “Nailed it” marker for correct guesses; reserve separate Guess/Correct markers for misses.
+- Give every exact hit one quick reward-card flash and score pop; intersection markers also get a stamp-and-ring animation. Disable all of it under reduced-motion preferences.
 - Preserve pan and zoom during reveal; reset to the valley frame for a new question.
 - Maintain source attribution in the map viewport.
 

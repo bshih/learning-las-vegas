@@ -108,12 +108,19 @@ export class MapLibreMapAdapter implements MapAdapter {
       maxZoom: 18,
       dragRotate: false,
       touchPitch: false,
-      attributionControl: { compact: false },
+      attributionControl: { compact: true },
       fadeDuration: window.matchMedia("(prefers-reduced-motion: reduce)").matches
         ? 0
         : 180,
     });
     this.map = map;
+    const attribution = container.querySelector<HTMLDetailsElement>(
+      "details.maplibregl-ctrl-attrib",
+    );
+    if (attribution) {
+      attribution.open = false;
+      attribution.classList.remove("maplibregl-compact-show");
+    }
     map.touchZoomRotate.disableRotation();
 
     map.addControl(
@@ -267,6 +274,7 @@ export class MapLibreMapAdapter implements MapAdapter {
       id: STREET_BASE_LAYER_ID,
       type: "line",
       source: STREET_SOURCE_ID,
+      layout: { visibility: "none" },
       paint: {
         "line-color": "#19334a",
         "line-opacity": 0.2,
@@ -357,6 +365,11 @@ export class MapLibreMapAdapter implements MapAdapter {
     );
 
     const highlights = this.state.revealed ? allHighlights : [];
+    map.setLayoutProperty(
+      STREET_BASE_LAYER_ID,
+      "visibility",
+      this.state.revealed ? "visible" : "none",
+    );
     const idsFor = (kind: "answer" | "guess" | "neighbor") =>
       highlights.filter((street) => street.kind === kind).map((street) => street.id);
     map.setFilter(STREET_ANSWER_LAYER_ID, streetIdFilter(idsFor("answer")));
@@ -423,7 +436,6 @@ export class MapLibreMapAdapter implements MapAdapter {
         },
         "right",
       );
-      this.addAnswerCallout(correctCoordinate);
     }
   }
 
@@ -453,38 +465,6 @@ export class MapLibreMapAdapter implements MapAdapter {
       .setLngLat([marker.coordinate.lon, marker.coordinate.lat])
       .addTo(map);
     element.setAttribute("role", "img");
-    element.removeAttribute("tabindex");
-    this.markers.push(mapMarker);
-  }
-
-  private addAnswerCallout(coordinate: Coordinate): void {
-    const map = this.map;
-    const intersection = this.state.correctIntersection;
-    if (!map || !intersection) return;
-
-    const element = document.createElement("div");
-    element.className = "tile-map-answer-callout";
-    element.setAttribute(
-      "aria-label",
-      `Correct intersection: ${intersection.primaryStreet} and ${intersection.crossStreet}`,
-    );
-
-    const firstStreet = document.createElement("span");
-    firstStreet.textContent = intersection.primaryStreet;
-    const secondStreet = document.createElement("span");
-    secondStreet.textContent = intersection.crossStreet;
-    element.append(firstStreet, secondStreet);
-
-    const screenPoint = map.project([coordinate.lon, coordinate.lat]);
-    const placeBelow = screenPoint.y < 120;
-    const mapMarker = new maplibregl.Marker({
-      element,
-      anchor: placeBelow ? "top" : "bottom",
-      offset: [0, placeBelow ? 15 : -15],
-    })
-      .setLngLat([coordinate.lon, coordinate.lat])
-      .addTo(map);
-    element.setAttribute("role", "note");
     element.removeAttribute("tabindex");
     this.markers.push(mapMarker);
   }

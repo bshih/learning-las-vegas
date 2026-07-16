@@ -20,9 +20,9 @@ The result must remain understandable without inspecting the map.
 
 ## Ratings
 
-- `4`: `Nailed it` for intersections; `Right street` for street mode.
-- `3`: `Very close`.
-- `2`: `Nearby` or `A few miles off`, selected to match the feedback context.
+- `4`: `Nailed it`.
+- `3`: `So close`.
+- `2`: `In the neighborhood`.
 - `1`: `Across town`.
 - `0`: `Lost in the valley`.
 
@@ -71,7 +71,7 @@ Follow `08_street_mode.md`:
 Correct:
 
 - Retain one enlarged `Nailed it` intersection marker or the strong route-red street line.
-- Animate the `+4` once near the result heading.
+- Animate every exact hit with one quick reward-card flash and score pop; intersection markers also receive a stamp and expanding ring.
 - Use one restrained reveal transition: marker stamp for intersections or line trace for streets.
 
 Miss:
@@ -87,7 +87,7 @@ Motion settles quickly and never blocks `Next`. Respect `prefers-reduced-motion`
 Show only:
 
 - `Question N of 10`.
-- Current session score.
+- Current round score.
 - A simple 10-position progress treatment.
 
 Do not show streak, lifetime accuracy, lifetime points, mastery, or scheduler terminology.
@@ -100,16 +100,16 @@ After prompt 10, show:
 - Best score for this mode/scope and `New best` when applicable.
 - Correct items.
 - Items missed at least once.
-- Primary action: `Retry misses` when misses exist, otherwise `Play again`.
+- Primary action: `Replay the misses` when misses exist, otherwise `Go another 10`.
 - Secondary actions: replay scope or change mode/scope.
 
 Do not build an achievement or onboarding system around the summary.
 
 ## Language
 
-Voice is concise, local, and encouraging without being childish.
+Voice is concise, local, playful, and encouraging without being childish or coach-like.
 
-Prefer `Right road`, `One major street farther west`, and `This comes back near the end`.
+Prefer `Nailed it`, `So close`, `In the neighborhood`, and `Lost in the valley` for score labels. Keep directional clues concrete and useful.
 
 Avoid competitive ranks, artificial urgency, casino metaphors, cute achievements, or broad claims that the player has mastered Vegas.
 

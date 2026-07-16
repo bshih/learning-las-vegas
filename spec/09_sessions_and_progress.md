@@ -10,7 +10,7 @@ Replace endless deterministic progression and lifetime counters with fixed 10-pr
 
 ## Session Selection
 
-### Learn Streets
+### Find Streets
 
 - Choose 10 distinct streets from the full playable street pool.
 - Rotate deterministically through the pool using completed-session count for the all-streets scope.

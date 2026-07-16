@@ -21,7 +21,7 @@ Do not score against OpenFreeMap's internal vector source-layer names or filters
 
 ## Initial Corpus
 
-The initial release contains the following proposed 28 streets, selected for usefulness rather than completeness.
+The initial release contained 28 streets, selected for usefulness rather than completeness. A Henderson-focused expansion brings the current corpus to 32.
 
 West-valley north-south group, ordered west-to-east:
 
@@ -62,6 +62,10 @@ Drawn but initially excluded from simple ordered-neighbor claims because they cu
 - Paradise Road
 - Green Valley Parkway
 - Boulder Highway
+- Stephanie Street
+- St. Rose Parkway
+- Horizon Ridge Parkway
+- Lake Mead Parkway
 
 Geometry review may move a street between groups, but removing or substituting a proposed street is a product-spec change to record in implementation notes. Do not block the first release on representing every road in every intersection prompt.
 
@@ -155,7 +159,7 @@ Add an offline `npm run validate:streets` command. It validates:
 - Finite coordinates and non-degenerate lines.
 - Allowed axes, difficulty values, and area IDs.
 - Valid group references and no duplicate street IDs within a group.
-- Exactly 5 focus streets in a shape-group session and at least 5 streets in every exposed group.
+- At least 5 streets in every exposed group.
 - Canonical/alias normalization without collisions.
 - Required initial anchor coverage.
 
@@ -165,7 +169,7 @@ Add a separate network-backed geometry verifier if practical. It must remain sep
 
 - Every initial street can be highlighted as one visually coherent route.
 - Ordered groups read correctly on the rendered Vegas map.
-- Rampart, Spring Mountain, Paradise, Green Valley Parkway, and Boulder Highway are selectable in the special-shape group rather than silently filtered out.
+- All curved and regional roads are selectable in the special-shape group rather than silently filtered out.
 - Local GeoJSON renders above the basemap without obscuring required context.
 - Normal gameplay makes no live request for street geometry.
 - Static validation catches broken IDs, groups, aliases, and geometry.
