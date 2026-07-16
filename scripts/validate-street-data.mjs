@@ -6,17 +6,34 @@ const geometryPath = path.join(root, "src", "data", "streets.geojson");
 const catalogPath = path.join(root, "src", "data", "streetGroups.json");
 const areaBucketsPath = path.join(root, "src", "data", "areaBuckets.json");
 const intersectionsPath = path.join(root, "src", "data", "intersections.json");
+const roadsideNotesPath = path.join(root, "src", "data", "roadsideNotes.json");
 
 const geometry = readJson(geometryPath);
 const catalog = readJson(catalogPath);
 const areaBuckets = readJson(areaBucketsPath);
 const intersections = readJson(intersectionsPath);
+const roadsideNotes = readJson(roadsideNotesPath);
 const errors = [];
 
 const supportedGeometryTypes = new Set(["LineString", "MultiLineString"]);
 const allowedAxes = new Set(["north-south", "east-west", "regional"]);
 const allowedDifficulties = new Set(["easy", "medium", "hard"]);
 const allowedAreaIds = new Set(areaBuckets.map((bucket) => bucket.id));
+const allowedRoadsideNoteCategories = new Set(["corridor", "history", "landmark", "name-origin", "navigation"]);
+const requiredRoadsideNoteIds = new Set([
+  "boulder-highway",
+  "charleston-boulevard",
+  "decatur-boulevard",
+  "lake-mead-parkway",
+  "las-vegas-boulevard",
+  "maryland-parkway",
+  "paradise-road",
+  "sahara-avenue",
+  "spring-mountain-road",
+  "stephanie-street",
+  "sunset-road",
+  "tropicana-avenue",
+]);
 const paddedBounds = { minLat: 35.89, maxLat: 36.39, minLon: -115.46, maxLon: -114.89 };
 const requiredOrderedGroups = {
   "west-valley-north-south": [
@@ -117,6 +134,7 @@ const namesByNormalizedValue = new Map();
 for (const feature of features) validateFeature(feature);
 for (const street of streets) validateStreet(street);
 for (const group of groups) validateGroup(group);
+validateRoadsideNotes();
 
 if (features.length !== requiredCanonicalNames.length) {
   errors.push(`expected ${requiredCanonicalNames.length} geometry features, found ${features.length}`);
@@ -197,6 +215,7 @@ const pointCount = features.reduce(
 console.log(`Street data validation passed: ${streets.length} streets in ${groups.length} groups.`);
 console.log(`Geometry: ${lineCount} line(s), ${pointCount} points, ${assetBytes} bytes.`);
 console.log(`Special-shape focus group: ${shapeGroup.streetIds.join(", ")}.`);
+console.log(`Roadside-note pilot: ${roadsideNotes.length} sourced notes.`);
 
 function validateFeature(feature) {
   const id = feature?.properties?.id;
@@ -314,6 +333,41 @@ function validateGroup(group) {
     if ("orderedDirection" in group) errors.push(`${label}: shape groups must not claim an ordered direction`);
   } else {
     errors.push(`${label}: invalid group kind ${group.kind}`);
+  }
+}
+
+function validateRoadsideNotes() {
+  if (!Array.isArray(roadsideNotes)) {
+    errors.push("roadsideNotes.json must contain an array");
+    return;
+  }
+  if (roadsideNotes.length !== requiredRoadsideNoteIds.size) {
+    errors.push(`expected ${requiredRoadsideNoteIds.size} roadside notes, found ${roadsideNotes.length}`);
+  }
+  const seenStreetIds = new Set();
+  for (const note of roadsideNotes) {
+    const streetId = note?.streetId;
+    const label = typeof streetId === "string" ? streetId : "unknown roadside note";
+    if (seenStreetIds.has(streetId)) errors.push(`${label}: duplicate roadside note`);
+    seenStreetIds.add(streetId);
+    if (!definitionIds.has(streetId)) errors.push(`${label}: roadside note references an unknown street`);
+    if (!requiredRoadsideNoteIds.has(streetId)) errors.push(`${label}: not part of the roadside-note pilot`);
+    if (!allowedRoadsideNoteCategories.has(note?.category)) errors.push(`${label}: invalid roadside-note category`);
+    if (typeof note?.title !== "string" || note.title.trim().length < 8 || note.title.length > 60) {
+      errors.push(`${label}: roadside-note title must be 8-60 characters`);
+    }
+    if (typeof note?.body !== "string" || note.body.trim().length < 50 || note.body.length > 260 || !/[.!?]$/.test(note.body.trim())) {
+      errors.push(`${label}: roadside-note body must be 50-260 characters ending in punctuation`);
+    }
+    if (typeof note?.sourceLabel !== "string" || note.sourceLabel.trim() === "") {
+      errors.push(`${label}: roadside note requires a source label`);
+    }
+    if (typeof note?.sourceUrl !== "string" || !note.sourceUrl.startsWith("https://")) {
+      errors.push(`${label}: roadside note requires an HTTPS source URL`);
+    }
+  }
+  for (const streetId of requiredRoadsideNoteIds) {
+    if (!seenStreetIds.has(streetId)) errors.push(`${streetId}: missing required roadside note`);
   }
 }
 

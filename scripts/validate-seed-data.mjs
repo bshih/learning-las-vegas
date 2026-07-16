@@ -15,7 +15,7 @@ const bounds = {
   maxLon: -114.9
 };
 const difficulties = new Set(["easy", "medium", "hard"]);
-const minAreaBucketSize = 10;
+const minAreaBucketSize = 18;
 const requiredStrings = ["id", "streetA", "streetB", "region", "difficulty"];
 const requiredAnchors = [
   "Sahara Avenue",

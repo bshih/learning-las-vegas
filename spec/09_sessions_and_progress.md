@@ -19,9 +19,9 @@ Replace endless deterministic progression and lifetime counters with fixed 10-pr
 
 ### Find Intersections
 
-- Choose 8 distinct intersections with the existing deterministic seeded deck, offset by completed-session count for that area.
-- After prompt 8, select the 2 weakest attempts for prompts 9 and 10.
-- Rank weakness by incorrect result, lower score, then earlier prompt.
+- Choose 10 distinct intersections with the existing deterministic seeded deck, offset by completed-session count for that area.
+- Continue through the area pool across rounds before recycling prompts.
+- Use the explicit retry-misses action when the player wants repetition.
 
 This is session-local repetition, not a long-term recall scheduler.
 
@@ -44,6 +44,7 @@ type SessionAttempt = {
   itemId: string;
   score: 0 | 1 | 2 | 3 | 4;
   correct: boolean;
+  elapsedMs: number;
 };
 
 type ActiveSession = {
@@ -51,9 +52,9 @@ type ActiveSession = {
   mode: "streets" | "intersections";
   scopeId: string;
   focusItemIds: string[];
-  repeatItemIds: string[];
   currentIndex: number;
   attempts: SessionAttempt[];
+  questionStartedAt: number;
 };
 
 type LastSession = {
@@ -61,6 +62,8 @@ type LastSession = {
   scopeId: string;
   score: number;
   missedItemIds: string[];
+  totalTimeMs: number;
+  averageTimeMs: number;
 };
 
 type ScopeSummary = {
@@ -92,6 +95,7 @@ Implementation may normalize the shape but must preserve these semantics. Do not
 - Each prompt awards `0-4`.
 - A 10-prompt session has a maximum of 40.
 - Store best score and completed-session count per mode/scope.
+- Time each question from prompt display until the guess is submitted. Show round total and per-question average on the summary without displaying a countdown during play.
 - Remove streak, lifetime accuracy, and lifetime points from the primary UI.
 
 ## Reset And Exit
@@ -103,7 +107,7 @@ Implementation may normalize the shape but must preserve these semantics. Do not
 
 ## Implementation Surface
 
-- `src/lib/sessionDeck.ts`: deterministic selection and session-local repeat choice.
+- `src/lib/sessionDeck.ts`: deterministic distinct-item selection and scope rotation.
 - `src/state/localProgress.ts`: V2 load, migration, persistence, and active-session transitions.
 - Mode-specific game loops consume the shared session contract.
 - Do not put session policy inside React components or the map adapter.
@@ -114,7 +118,7 @@ Cover:
 
 - 10-prompt fixed length.
 - Ten-distinct-street selection and full-pool rotation.
-- Intersection weakest-two repetition.
+- Ten-distinct-intersection selection and full-pool rotation.
 - Deterministic scope rotation.
 - Retry-misses seeding.
 - V1 selected-area migration.
@@ -126,7 +130,7 @@ Check current official documentation and package health before adding any test d
 
 - Every session ends after exactly 10 prompts and a maximum of 40 points.
 - Street sessions contain 10 distinct streets from the full pool.
-- Intersection sessions repeat the 2 weakest of the first 8.
+- Intersection sessions contain 10 distinct crossings.
 - No mastery, SRS, daily, or streak state exists.
 - Refresh restores the exact session and prompt.
 - Retry misses uses only the immediately previous session.

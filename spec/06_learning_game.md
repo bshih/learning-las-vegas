@@ -49,9 +49,9 @@ The modes are independent. Neither mode is gated behind the other.
 
 ### Find Intersections
 
-- Prompts 1-8 contain distinct intersections.
-- Prompts 9 and 10 repeat the 2 weakest items from prompts 1-8.
-- Rank weakness by incorrect resolution, then lower score, then earlier attempt.
+- All 10 prompts contain distinct intersections.
+- Rotate through the full area pool across rounds before recycling prompts.
+- Repetition is opt-in through `Replay the misses`, not automatic within a normal round.
 
 For both modes:
 
@@ -94,7 +94,7 @@ Do not build a home dashboard, onboarding carousel, recommendation engine, or lo
 - Hints.
 - Accounts, identity, leaderboards, friend rankings, or shared progress.
 - Daily challenges, login streaks, or streak rewards.
-- Timers, lives, energy, power-ups, badges, or currencies.
+- Countdown timers, lives, energy, power-ups, badges, or currencies. A passive count-up timer records total and average answer time on the round summary.
 - First-visit onboarding flows.
 - Freehand street drawing.
 - Live routing, search, geocoding, or corpus generation.
@@ -105,6 +105,6 @@ Do not build a home dashboard, onboarding carousel, recommendation engine, or lo
 - A player can complete and resume a 10-prompt session in either mode.
 - Street mode includes both ordered grid streets and important special-shape streets.
 - Street sessions broaden coverage; explicit miss practice supplies repetition when requested.
-- Intersection misses explain a supported spatial relationship when one exists.
+- Intersection rounds cover 10 distinct crossings and misses explain a supported spatial relationship when one exists.
 - The summary shows score, last-session misses, and clear replay choices.
 - The full experience remains a static here.now deployment.

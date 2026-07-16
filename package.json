@@ -9,6 +9,7 @@
     "preview": "vite preview",
     "test:learning": "node --experimental-strip-types src/lib/regression.test.ts",
     "validate:seed": "node scripts/validate-seed-data.mjs",
+    "discover:intersections": "node scripts/discover-intersection-candidates.mjs",
     "validate:streets": "node scripts/validate-street-data.mjs",
     "verify:seed:coords": "node scripts/verify-seed-coordinates.mjs",
     "verify:streets:geometry": "node scripts/verify-street-geometry.mjs"

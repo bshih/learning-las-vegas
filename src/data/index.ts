@@ -9,6 +9,7 @@ export {
   isPlayAreaId,
 } from "./areaBuckets";
 export { intersections, seedIntersectionData } from "./intersections";
+export { getRoadsideNote, roadsideNotes } from "./roadsideNotes";
 export { sampleIntersections } from "./sampleIntersections";
 export {
   findStreetDefinition,
@@ -22,6 +23,7 @@ export {
   streetGroups,
 } from "./streetData";
 export type { AreaBucket, AreaOption } from "./areaBuckets";
+export type { RoadsideNote, RoadsideNoteCategory } from "./roadsideNotes";
 export type {
   OrderedStreetGroup,
   ShapeStreetGroup,

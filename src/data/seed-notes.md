@@ -2,7 +2,7 @@
 
 ## Summary
 
-- Seed count: 76 intersections.
+- Seed count: 130 intersections.
 - Goal: playable V1 coverage across the Las Vegas valley, not survey-grade cartography.
 - Data format: `src/data/intersections.json` with stable ids, street names, approximate coordinates, region tags, difficulty, aliases, and selective teaching notes. Normalized area buckets are derived from region tags in `src/data/areaBuckets.json`.
 
@@ -18,7 +18,7 @@
 - East/west anchors: Sahara, Charleston, Flamingo, Tropicana, Spring Mountain, Lake Mead, Sunset, Warm Springs, Blue Diamond.
 - North/south anchors: Rainbow, Decatur, Jones, Buffalo, Durango, Fort Apache, Las Vegas Boulevard, Eastern, Maryland, Lamb, Nellis.
 - Regional anchors: Strip, airport/South Strip, Summerlin, Henderson/Green Valley, North Las Vegas, northwest Las Vegas.
-- Player-facing area buckets are normalized from descriptive regions. Each exposed bucket has at least 10 intersections.
+- Player-facing area buckets are normalized from descriptive regions. Each exposed bucket has at least 18 intersections.
 
 ## Sources And Restrictions
 
@@ -37,5 +37,6 @@
 ## Future QA Pass
 
 - Add a reviewed flag or `accuracy` field if future gameplay needs tighter scoring.
-- Compare every point against an OSM/Clark County road-centerline export before expanding beyond 100 intersections.
+- The 2026-07-16 expansion added 54 OSM-verified crossings among the existing 32 playable streets. Area pools now range from 18 to 24 intersections rather than 10 to 16.
+- Use `npm run discover:intersections` to audit additional crossings among the playable street corpus, then review area assignment and difficulty before adding candidates to the static seed.
 - Consider ETL later, but keep this hand-curated set as a stable regression fixture.

@@ -144,6 +144,9 @@ export function MapStage({
       ? "Guess staged. Tap elsewhere to move it, or confirm."
       : "Tap the map to stage your guess."
     : "Click the map to guess.";
+  const mapStatusText = isCoarsePointer && pendingGuess
+    ? "Confirm guess?"
+    : "Click the map to guess";
 
   return (
     <div className="map-stage">
@@ -166,21 +169,19 @@ export function MapStage({
         >
           {nextLabel}
         </button>
-      ) : (
-        <div className="map-stage-status" aria-live="polite">
-          {guessingInstruction}
-        </div>
-      )}
-      {isCoarsePointer && !revealed ? (
+      ) : isCoarsePointer && pendingGuess ? (
         <button
           type="button"
-          className="map-stage-confirm"
-          disabled={!pendingGuess}
+          className="map-stage-status map-stage-status-action"
           onClick={confirmPendingGuess}
         >
-          Confirm guess
+          {mapStatusText}
         </button>
-      ) : null}
+      ) : (
+        <div className="map-stage-status" aria-live="polite">
+          {mapStatusText}
+        </div>
+      )}
     </div>
   );
 }

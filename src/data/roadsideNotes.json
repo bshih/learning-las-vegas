@@ -1,0 +1,98 @@
+[
+  {
+    "streetId": "las-vegas-boulevard",
+    "category": "corridor",
+    "title": "The road before the Strip",
+    "body": "Las Vegas Boulevard was once Highway 91, the main road into town from Southern California. North of Sahara, restored vintage signs form a neon trail toward downtown.",
+    "sourceLabel": "City of Las Vegas",
+    "sourceUrl": "https://www.lasvegasnevada.gov/News/Blog/Detail/newly-refurbished-neon-signs-along-las-vegas-boulevard"
+  },
+  {
+    "streetId": "decatur-boulevard",
+    "category": "name-origin",
+    "title": "Named at a nearly empty intersection",
+    "body": "In the 1930s, only two families lived near what is now Decatur and Vegas Drive. Resident Leonard Frechette chose the road's name when the other family declined.",
+    "sourceLabel": "Las Vegas Review-Journal",
+    "sourceUrl": "https://www.reviewjournal.com/uncategorized/las-vegas-decatur-boulevards-history-pulls-from-the-navy/"
+  },
+  {
+    "streetId": "maryland-parkway",
+    "category": "landmark",
+    "title": "UNLV's dirt-road beginning",
+    "body": "UNLV opened beside Maryland Parkway in 1957, when the road was still two lanes of dirt. The original campus occupied just 80 acres.",
+    "sourceLabel": "UNLV",
+    "sourceUrl": "https://www.unlv.edu/about/history"
+  },
+  {
+    "streetId": "charleston-boulevard",
+    "category": "landmark",
+    "title": "Follow it out of town",
+    "body": "Drive west on Charleston and the city gives way to State Route 159 and Red Rock Canyon. The conservation area lies about 17 miles west of the Strip on the same corridor.",
+    "sourceLabel": "Bureau of Land Management",
+    "sourceUrl": "https://www.blm.gov/programs/national-conservation-lands/nevada/red-rock-canyon"
+  },
+  {
+    "streetId": "sahara-avenue",
+    "category": "navigation",
+    "title": "Where the city stops",
+    "body": "At the Strip, Sahara Avenue marks the boundary of the City of Las Vegas. Most of the famous resort corridor to its south is actually in unincorporated Clark County.",
+    "sourceLabel": "Clark County",
+    "sourceUrl": "https://www.clarkcountynv.gov/residents/about_clark_county/"
+  },
+  {
+    "streetId": "tropicana-avenue",
+    "category": "history",
+    "title": "The casino is gone; the road remains",
+    "body": "Tropicana Avenue was named for the resort at Las Vegas Boulevard. The Tropicana was demolished in 2024, but its name remains on one of the valley's major east-west roads.",
+    "sourceLabel": "Associated Press",
+    "sourceUrl": "https://apnews.com/article/a2a6e4f57c9ef5a8110602b8b6b2d1e7"
+  },
+  {
+    "streetId": "sunset-road",
+    "category": "landmark",
+    "title": "The road along Sunset Park",
+    "body": "Sunset forms the park's northern edge; Warm Springs forms its southern edge, and Eastern borders it on the west. Together they make a useful three-road landmark beside the airport.",
+    "sourceLabel": "Clark County Museum",
+    "sourceUrl": "https://webfiles.clarkcountynv.gov/Parks%20%26%20Recreation/Museum/Clark%20County%20Museum/Centennial/history-timeline.pdf"
+  },
+  {
+    "streetId": "spring-mountain-road",
+    "category": "navigation",
+    "title": "Three names, one crooked corridor",
+    "body": "Spring Mountain runs through Chinatown to Las Vegas Boulevard. Across the Strip it becomes Sands Avenue, then bends south and joins Twain Avenue.",
+    "sourceLabel": "Clark County planning record",
+    "sourceUrl": "https://www.clarkcountynv.gov/adobe/assets/urn%3Aaaid%3Aaem%3Ab6aa47e8-1861-4546-981c-87d887aeda87/original/as/paradise-agenda-022520.pdf"
+  },
+  {
+    "streetId": "paradise-road",
+    "category": "navigation",
+    "title": "Half of an airport pair",
+    "body": "Near the airport, Paradise carries traffic south while University Center Drive, formerly Swenson Street, serves as its northbound counterpart. Together they form a split one-way corridor.",
+    "sourceLabel": "Nevada highway reference",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Harry_Reid_Airport_Connector"
+  },
+  {
+    "streetId": "boulder-highway",
+    "category": "corridor",
+    "title": "Before the freeway, this was the connection",
+    "body": "Boulder Highway was once the only road linking downtown Las Vegas, Henderson, and Boulder City. Motels, casinos, and roadside businesses grew along the route before US 95 drew traffic away.",
+    "sourceLabel": "City of Henderson",
+    "sourceUrl": "https://www.cityofhenderson.com/government/departments/community-development-and-services/special-projects/boulder-highway-initiatives-2031"
+  },
+  {
+    "streetId": "stephanie-street",
+    "category": "name-origin",
+    "title": "Stephanie is a real person",
+    "body": "Stephanie Street was named for Stephanie Page Wurzer when she was a child and the route was still an isolated dirt road. It later became one of Henderson's major commercial streets.",
+    "sourceLabel": "Las Vegas Review-Journal",
+    "sourceUrl": "https://www.reviewjournal.com/uncategorized/hendersons-stephanie-street-named-as-part-of-a-campaign-promise/"
+  },
+  {
+    "streetId": "lake-mead-parkway",
+    "category": "navigation",
+    "title": "Not Lake Mead Boulevard",
+    "body": "Henderson's Lake Mead Parkway is different from Lake Mead Boulevard in the north valley. Older signs and businesses may still call it Lake Mead Drive, its name until around 2004 or 2005.",
+    "sourceLabel": "Las Vegas Review-Journal",
+    "sourceUrl": "https://www.reviewjournal.com/uncategorized/lake-mead-parkway-has-gone-through-many-name-changes/"
+  }
+]

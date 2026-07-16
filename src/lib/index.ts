@@ -37,8 +37,6 @@ export type {
   StreetScoreResult,
 } from "./streetScoring";
 export {
-  buildIntersectionSessionItemIds,
-  chooseWeakestIntersectionRepeats,
   selectIntersectionFocusItems,
   selectScopeItems,
   selectStreetFocusItems,

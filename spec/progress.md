@@ -74,3 +74,9 @@
 - 2026-07-15: Simplified the selected mode to a single right-aligned checkmark, reframed the About stack section as “How it works,” and expanded the playable street corpus from 28 to 32 with Stephanie, St. Rose, Horizon Ridge, and Lake Mead Parkway geometry for stronger Henderson coverage.
 - 2026-07-16: Replaced the About stack copy with a matter-of-fact tool summary and hid the curated street overlay during guessing so the playable road set is no longer pre-highlighted.
 - 2026-07-16: Deployed the 32-road release to the permanent here.now site and browser-verified the production selector, About copy, and an unassisted Stephanie Street prompt with no app console errors.
+- 2026-07-16: Replaced the separate mobile Confirm guess control with an in-place transformation of the map instruction square to “Confirm guess?”, using the same Jost typography as the map Next action.
+- 2026-07-16: Deployed the in-place mobile Confirm guess control to the permanent here.now site after build and responsive browser verification.
+- 2026-07-16: Expanded the static seed from 76 to 130 OSM-verified intersections using only the existing 32-road corpus. Area pools now range from 18 to 24 prompts.
+- 2026-07-16: Changed normal intersection rounds to 10 distinct prompts, reserving repetition for Replay the misses, and added passive per-question timing with round total/average on the summary.
+- 2026-07-16: Added a 12-street roadside-note pilot. Street reveals can now pair the existing spatial teaching note with a concise sourced landmark, navigation, corridor, history, or name-origin note; non-pilot streets retain the existing reveal unchanged.
+- 2026-07-16: Replaced the street-mode guessed-road dash pattern with a continuous dark-slate highlight so segmented geometry remains visually coherent at every zoom level.

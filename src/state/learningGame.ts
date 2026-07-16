@@ -20,7 +20,6 @@ import type {
   StreetDefinition,
 } from "../data";
 import {
-  buildIntersectionSessionItemIds,
   scoreGuess,
   scoreStreetGuess,
   selectIntersectionFeedback,
@@ -45,17 +44,17 @@ const LEGACY_STORAGE_KEY = "melissa-map-progress-v1";
 export type GameMode = "intersections" | "streets";
 export type GameScreen = "setup" | "playing" | "summary";
 
-type StoredAttempt = SessionAttempt & { coordinate: Coordinate };
+type StoredAttempt = SessionAttempt & { coordinate: Coordinate; elapsedMs: number };
 
 type ActiveSession = {
   id: string;
   mode: GameMode;
   scopeId: string;
   focusItemIds: string[];
-  repeatItemIds: string[];
   currentIndex: number;
   attempts: StoredAttempt[];
   pendingGuess: Coordinate | null;
+  questionStartedAt: number;
 };
 
 type ScopeSummary = {
@@ -70,6 +69,8 @@ export type LastSession = {
   missedItemIds: string[];
   correctItemIds: string[];
   isNewBest: boolean;
+  totalTimeMs: number;
+  averageTimeMs: number;
 };
 
 type LocalProgress = {
@@ -107,9 +108,7 @@ export function useLearningGame(intersections: readonly Intersection[]) {
     () => filterIntersectionsByArea(intersections, selectedAreaId),
     [intersections, selectedAreaId],
   );
-  const schedule = activeSession
-    ? [...activeSession.focusItemIds, ...activeSession.repeatItemIds]
-    : [];
+  const schedule = activeSession?.focusItemIds ?? [];
   const currentItemId = activeSession ? schedule[activeSession.currentIndex] : undefined;
   const currentIntersection =
     activeSession?.mode === "intersections"
@@ -165,10 +164,10 @@ export function useLearningGame(intersections: readonly Intersection[]) {
       mode,
       scopeId,
       focusItemIds,
-      repeatItemIds: [],
       currentIndex: 0,
       attempts: [],
       pendingGuess: null,
+      questionStartedAt: Date.now(),
     };
     setProgress((current) => ({
       ...current,
@@ -192,17 +191,15 @@ export function useLearningGame(intersections: readonly Intersection[]) {
   function submitCoordinate(coordinate: Coordinate) {
     if (!activeSession || currentAttempt || progress.screen !== "playing") return;
     const scored = scoreCurrent(activeSession, coordinate, currentIntersection, currentStreet, activeIntersections);
+    const submittedAt = Date.now();
     setProgress((current) => {
       const session = current.activeSession;
       if (!session || session.attempts[session.currentIndex]) return current;
-      const attempts = [...session.attempts, { ...scored, coordinate }];
-      let repeatItemIds = session.repeatItemIds;
-      if (session.mode === "intersections" && session.currentIndex === 7) {
-        repeatItemIds = buildIntersectionSessionItemIds(session.focusItemIds, attempts).slice(8);
-      }
+      const elapsedMs = Math.max(0, submittedAt - session.questionStartedAt);
+      const attempts = [...session.attempts, { ...scored, coordinate, elapsedMs }];
       return {
         ...current,
-        activeSession: { ...session, attempts, repeatItemIds, pendingGuess: null },
+        activeSession: { ...session, attempts, pendingGuess: null },
       };
     });
   }
@@ -218,6 +215,7 @@ export function useLearningGame(intersections: readonly Intersection[]) {
                 ...current.activeSession,
                 currentIndex: current.activeSession.currentIndex + 1,
                 pendingGuess: null,
+                questionStartedAt: Date.now(),
               },
             }
           : current,
@@ -232,6 +230,7 @@ export function useLearningGame(intersections: readonly Intersection[]) {
       const session = current.activeSession;
       if (!session || session.attempts.length !== 10) return current;
       const score = session.attempts.reduce((total, attempt) => total + attempt.score, 0);
+      const totalTimeMs = session.attempts.reduce((total, attempt) => total + attempt.elapsedMs, 0);
       const missedItemIds = [...new Set(session.attempts.filter((attempt) => !attempt.correct).map((attempt) => attempt.itemId))];
       const correctItemIds = [...new Set(session.attempts.filter((attempt) => attempt.correct).map((attempt) => attempt.itemId))];
       const scopeKey = getScopeKey(session.mode, session.scopeId);
@@ -255,6 +254,8 @@ export function useLearningGame(intersections: readonly Intersection[]) {
           missedItemIds,
           correctItemIds,
           isNewBest,
+          totalTimeMs,
+          averageTimeMs: totalTimeMs / session.attempts.length,
         },
       };
     });
@@ -395,7 +396,13 @@ function loadProgress(): LocalProgress {
     if (!stored) return fallback;
     const parsed = JSON.parse(stored) as Partial<LocalProgress>;
     const activeSession = normalizeActiveSession(parsed.activeSession);
-    const lastSession = parsed.lastSession;
+    const lastSession = parsed.lastSession
+      ? {
+          ...parsed.lastSession,
+          totalTimeMs: parsed.lastSession.totalTimeMs ?? 0,
+          averageTimeMs: parsed.lastSession.averageTimeMs ?? 0,
+        }
+      : undefined;
     return {
       version: 2,
       screen: activeSession
@@ -419,7 +426,12 @@ function normalizeActiveSession(session: ActiveSession | undefined): ActiveSessi
   if (session.mode === "streets" && (session.scopeId !== ALL_STREETS_SCOPE_ID || session.focusItemIds.length !== 10)) {
     return undefined;
   }
-  return session;
+  if (session.mode === "intersections" && session.focusItemIds.length !== 10) return undefined;
+  return {
+    ...session,
+    questionStartedAt: Date.now(),
+    attempts: session.attempts.map((attempt) => ({ ...attempt, elapsedMs: attempt.elapsedMs ?? 0 })),
+  };
 }
 
 function loadLegacyArea(): PlayAreaId {

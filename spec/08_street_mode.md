@@ -30,8 +30,8 @@ Use input capability such as `matchMedia("(pointer: coarse)")`, not user-agent m
 - The first tap places a pending guess marker but does not score or reveal.
 - Another tap moves the pending marker.
 - Pan and zoom gestures never commit a guess.
-- A fixed `Confirm guess` button commits the pending coordinate.
-- The button is disabled until a pending coordinate exists.
+- The existing map instruction square turns into an enabled `Confirm guess?` button after a coordinate is staged.
+- The shared control avoids adding a second overlapping mobile button and uses the same typography as the map's Next action.
 - Starting a new prompt clears the pending marker.
 
 Use this same coarse-pointer confirmation behavior in intersection mode.
@@ -67,6 +67,7 @@ For shape-group streets, compare against other compatible shape-group candidates
 - Draw the target as the strongest route-red line.
 - Mark the player's selected coordinate.
 - Draw the nearest eligible wrong street in lower-emphasis navy when known.
+- Keep that guessed-street line continuous and solid. Do not use a dash pattern, because independently rendered road segments break the pattern at different zoom levels.
 - Label the target directly on its line.
 - For ordered groups, label immediate neighbors in muted styling.
 - For shape groups, preserve a wide enough view to understand the road's path through the valley.
@@ -138,7 +139,7 @@ The adapter renders geometry and pending state. Scoring and session behavior rem
 ## Accessibility
 
 - Prompt and feedback are represented outside the map.
-- Color is not the only distinction between answer, guess, and neighbor lines.
+- Color is not the only distinction between answer, guess, and neighbor lines; line width and explicit labels also distinguish them.
 - Map highlights have equivalent result text.
 - Respect `prefers-reduced-motion` for any line reveal.
 - V1 does not provide an alternate multiple-choice answer list; it made the requested answer directly selectable and undermined the map task.
@@ -148,7 +149,7 @@ The adapter renders geometry and pending state. Scoring and session behavior rem
 - Player can complete a 10-prompt session of 10 distinct roads drawn from the full ordered and shape-street pool.
 - Street scoring is invariant to zoom level.
 - Perpendicular roads do not steal correctness.
-- Coarse-pointer taps stage a guess and only `Confirm guess` submits it.
+- Coarse-pointer taps stage a guess and only `Confirm guess?` submits it.
 - Panning does not submit a guess.
 - Reload restores the current session and pending coordinate.
 - Reveal clearly displays the target street and supported context.

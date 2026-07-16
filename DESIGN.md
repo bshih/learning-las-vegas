@@ -44,6 +44,7 @@
 - Restore native vector labels after reveal; do not generate separate learning tags.
 - Keep answer and guess markers distinct without repeating the sidebar prompt on the map.
 - Show one enlarged “Nailed it” marker for correct guesses; reserve separate Guess/Correct markers for misses.
+- Render both street-mode answer and nearest-guess geometry as solid, continuous lines. Use route red for the answer and a narrower dark slate line for the guess; labels provide the non-color distinction.
 - Give every exact hit one quick reward-card flash and score pop; intersection markers also get a stamp-and-ring animation. Disable all of it under reduced-motion preferences.
 - Preserve pan and zoom during reveal; reset to the valley frame for a new question.
 - Maintain source attribution in the map viewport.

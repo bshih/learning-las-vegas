@@ -538,12 +538,80 @@ textarea {
   font-size: 0.92rem;
 }
 
+.roadside-note {
+  display: grid;
+  gap: var(--space-2);
+  border-top: 2px solid var(--color-text);
+  padding-top: var(--space-3);
+}
+
+.roadside-note-label {
+  color: var(--color-accent-dark);
+  font-family: var(--font-road);
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+.roadside-note h2 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  line-height: 1.15;
+}
+
+.roadside-note > p:not(.roadside-note-label) {
+  color: var(--color-muted);
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+.roadside-note a {
+  width: fit-content;
+  color: var(--color-text);
+  font-family: var(--font-road);
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-underline-offset: 0.18em;
+}
+
+.roadside-note a:focus-visible {
+  outline: 3px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
 .summary-card {
   display: grid;
   gap: var(--space-3);
 }
 
 .summary-label { margin: 0; }
+
+.round-time-summary {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-2);
+  margin: var(--space-3) 0 0;
+}
+
+.round-time-summary div {
+  border-top: 1px solid var(--color-border);
+  padding-top: var(--space-2);
+}
+
+.round-time-summary dt {
+  color: var(--color-muted);
+  font-family: var(--font-road);
+  font-size: 0.82rem;
+}
+
+.round-time-summary dd {
+  margin: 0.15rem 0 0;
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 700;
+}
 
 .miss-list {
   display: grid;
@@ -962,10 +1030,6 @@ textarea {
   padding: 0.55rem 0.75rem;
   background: color-mix(in srgb, var(--color-paper) 92%, transparent);
   color: var(--color-text);
-  font-family: var(--font-road);
-  font-size: 0.9rem;
-  font-weight: 600;
-  letter-spacing: 0.015em;
   box-shadow: 2px 2px 0 rgb(25 51 74 / 0.16);
   pointer-events: none;
   z-index: 2;
@@ -984,7 +1048,7 @@ textarea {
 }
 
 .button,
-.map-stage-status-action {
+.map-stage-status {
   font-family: var(--font-display);
   font-size: 1rem;
   font-weight: 700;
@@ -1060,39 +1124,6 @@ textarea {
 .about-dialog-tech p {
   color: var(--color-muted);
   font-size: 0.92rem;
-}
-
-.map-stage-confirm {
-  position: absolute;
-  right: var(--space-4);
-  bottom: 2.75rem;
-  min-width: 10rem;
-  min-height: 3rem;
-  border: 2px solid var(--color-text);
-  border-radius: var(--radius-sm);
-  padding: 0.65rem 1rem;
-  background: var(--color-text);
-  color: var(--color-paper);
-  cursor: pointer;
-  font-family: var(--font-display);
-  font-weight: 800;
-  box-shadow: 3px 3px 0 rgb(25 51 74 / 0.25);
-  z-index: 2;
-}
-
-.map-stage-confirm:disabled {
-  cursor: not-allowed;
-  opacity: 0.55;
-}
-
-.map-stage-confirm:not(:disabled):hover,
-.map-stage-confirm:not(:disabled):focus-visible {
-  background: var(--color-accent-dark);
-}
-
-.map-stage-confirm:focus-visible {
-  outline: 3px solid var(--color-focus);
-  outline-offset: 2px;
 }
 
 .map-stage-announcement {

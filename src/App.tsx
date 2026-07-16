@@ -5,12 +5,13 @@ import { GamePanel } from "./components/GamePanel";
 import { MapStage } from "./components/MapStage";
 import {
   getAreaBucketLabel,
+  getRoadsideNote,
   getStreetDefinition,
   intersections,
   isPlayAreaId,
   streetDefinitions,
 } from "./data";
-import type { Intersection } from "./data";
+import type { Intersection, RoadsideNote } from "./data";
 import type { HighlightedStreet } from "./map";
 import { useLearningGame } from "./state/learningGame";
 import type { RoundResult } from "./state/learningGame";
@@ -68,6 +69,10 @@ export default function App() {
                 <p className="panel-lede">
                   {game.lastSession.isNewBest ? "New high score for this mode." : scoreMessage(game.lastSession.score)}
                 </p>
+                <dl className="round-time-summary">
+                  <div><dt>Total time</dt><dd>{formatDuration(game.lastSession.totalTimeMs)}</dd></div>
+                  <div><dt>Average</dt><dd>{formatDuration(game.lastSession.averageTimeMs)} / question</dd></div>
+                </dl>
               </>
             }
             footer={
@@ -110,6 +115,7 @@ export default function App() {
     ? { coordinate: activeSession.attempts[activeSession.currentIndex].coordinate }
     : null;
   const resultDescription = currentResult ? feedbackText(currentResult) : undefined;
+  const roadsideNote = currentStreet ? getRoadsideNote(currentStreet.id) : undefined;
 
   return (
     <AppShell
@@ -137,7 +143,11 @@ export default function App() {
           }
         >
           <SessionProgress index={activeSession.currentIndex} score={score} attempts={attempts} />
-          <RoundFeedback result={currentResult} currentStreetNote={currentStreet?.teachingNote ?? currentIntersection?.teachingNote} />
+          <RoundFeedback
+            result={currentResult}
+            currentStreetNote={currentStreet?.teachingNote ?? currentIntersection?.teachingNote}
+            roadsideNote={roadsideNote}
+          />
         </GamePanel>
       }
     >
@@ -191,7 +201,7 @@ function ModeCard({ mode }: { mode: "intersections" | "streets" }) {
   return (
     <section className="mode-card">
       <strong>10 questions · 40 points</strong>
-      <p>{mode === "streets" ? "Drop pins on 10 roads from across the valley. Every round mixes up the route." : "Find eight intersections, then get another shot at two that slipped by."}</p>
+      <p>{mode === "streets" ? "Drop pins on 10 roads from across the valley. Every round mixes up the route." : "Find 10 different intersections. New rounds keep moving through the area's full pool."}</p>
       <small>Progress stays in this browser. No account needed.</small>
     </section>
   );
@@ -209,7 +219,15 @@ function SessionProgress({ index, score, attempts }: { index: number; score: num
   );
 }
 
-function RoundFeedback({ result, currentStreetNote }: { result: RoundResult | null; currentStreetNote?: string }) {
+function RoundFeedback({
+  result,
+  currentStreetNote,
+  roadsideNote,
+}: {
+  result: RoundResult | null;
+  currentStreetNote?: string;
+  roadsideNote?: RoadsideNote;
+}) {
   if (!result) return <section className="round-feedback empty"><p>Drop your pin. Close still scores.</p></section>;
   const score = result.mode === "streets" ? result.result.score : result.result.closenessScore;
   const correct = result.mode === "streets" ? result.result.correct : result.result.isCorrect;
@@ -218,7 +236,19 @@ function RoundFeedback({ result, currentStreetNote }: { result: RoundResult | nu
       <div className="reward-row"><span>{scoreLabel(correct, score)}</span><strong>+{score}</strong></div>
       <p className="feedback-copy">{feedbackText(result)}</p>
       {currentStreetNote ? <p className="teaching-note">{currentStreetNote}</p> : null}
+      {roadsideNote ? <RoadsideNoteCard note={roadsideNote} /> : null}
     </section>
+  );
+}
+
+function RoadsideNoteCard({ note }: { note: RoadsideNote }) {
+  return (
+    <aside className="roadside-note">
+      <p className="roadside-note-label">Roadside note · {note.category.replace("-", " ")}</p>
+      <h2>{note.title}</h2>
+      <p>{note.body}</p>
+      <a href={note.sourceUrl} target="_blank" rel="noreferrer">Source: {note.sourceLabel}</a>
+    </aside>
   );
 }
 
@@ -270,6 +300,13 @@ function scoreMessage(score: number) {
   if (score >= 24) return "Pretty solid lap around the valley.";
   if (score >= 16) return "Not bad — the map is starting to click.";
   return "The valley wins this round. Run it back?";
+}
+
+function formatDuration(milliseconds: number) {
+  const totalSeconds = Math.max(0, Math.round(milliseconds / 1000));
+  const minutes = Math.floor(totalSeconds / 60);
+  const seconds = totalSeconds % 60;
+  return minutes ? `${minutes}:${seconds.toString().padStart(2, "0")}` : `${seconds}s`;
 }
 
 function areaName(areaId: string) {

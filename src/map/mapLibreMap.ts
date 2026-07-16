@@ -298,8 +298,7 @@ export class MapLibreMapAdapter implements MapAdapter {
       source: STREET_SOURCE_ID,
       filter: streetIdFilter([]),
       paint: {
-        "line-color": "#19334a",
-        "line-dasharray": [2, 1.5],
+        "line-color": "#33404a",
         "line-opacity": 0.95,
         "line-width": ["interpolate", ["linear"], ["zoom"], 8, 3, 14, 7],
       },

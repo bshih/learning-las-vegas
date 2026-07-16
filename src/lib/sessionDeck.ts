@@ -14,7 +14,7 @@ export type ScopeSelectionOptions = {
 };
 
 const STREET_SESSION_COUNT = 10;
-const INTERSECTION_FOCUS_COUNT = 8;
+const INTERSECTION_SESSION_COUNT = 10;
 
 function seededRank(input: string): number {
   let hash = 2166136261;
@@ -82,50 +82,5 @@ export function selectIntersectionFocusItems(
   intersectionIds: readonly string[],
   options: ScopeSelectionOptions,
 ): string[] {
-  return selectScopeItems(intersectionIds, INTERSECTION_FOCUS_COUNT, options);
-}
-
-function firstAttemptByItem(
-  attempts: readonly SessionAttempt[],
-): ReadonlyMap<string, { attempt: SessionAttempt; index: number }> {
-  const indexed = new Map<string, { attempt: SessionAttempt; index: number }>();
-  attempts.forEach((attempt, index) => {
-    if (!indexed.has(attempt.itemId)) indexed.set(attempt.itemId, { attempt, index });
-  });
-  return indexed;
-}
-
-export function chooseWeakestIntersectionRepeats(
-  focusItemIds: readonly string[],
-  firstAttempts: readonly SessionAttempt[],
-): string[] {
-  if (focusItemIds.length !== INTERSECTION_FOCUS_COUNT) {
-    throw new RangeError("Intersection sessions require exactly 8 focus items");
-  }
-  const attempts = firstAttemptByItem(firstAttempts);
-  const ranked = focusItemIds
-    .map((itemId, promptIndex) => ({ itemId, promptIndex, attempt: attempts.get(itemId)?.attempt }))
-    .sort((left, right) => {
-      if (!left.attempt && !right.attempt) return left.promptIndex - right.promptIndex;
-      if (!left.attempt) return 1;
-      if (!right.attempt) return -1;
-      if (left.attempt.correct !== right.attempt.correct) {
-        return left.attempt.correct ? 1 : -1;
-      }
-      return left.attempt.score - right.attempt.score || left.promptIndex - right.promptIndex;
-    })
-    .slice(0, 2);
-
-  // Scheduling the earlier original prompt first maximizes spacing before each retry.
-  return ranked.sort((left, right) => left.promptIndex - right.promptIndex).map(({ itemId }) => itemId);
-}
-
-export function buildIntersectionSessionItemIds(
-  focusItemIds: readonly string[],
-  firstAttempts: readonly SessionAttempt[],
-): string[] {
-  return [
-    ...focusItemIds,
-    ...chooseWeakestIntersectionRepeats(focusItemIds, firstAttempts),
-  ];
+  return selectScopeItems(intersectionIds, INTERSECTION_SESSION_COUNT, options);
 }

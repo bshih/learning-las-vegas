@@ -10,10 +10,8 @@ import {
 } from "./streetScoring.ts";
 import { scoreGuess } from "./geo.ts";
 import {
-  buildIntersectionSessionItemIds,
   selectIntersectionFocusItems,
   selectStreetFocusItems,
-  type SessionAttempt,
 } from "./sessionDeck.ts";
 import {
   selectIntersectionFeedback,
@@ -186,27 +184,38 @@ assertEqual(retriedStreetFocus[0], firstStreetFocus[3], "Street retry misses com
 assertEqual(retriedStreetFocus[1], firstStreetFocus[7], "Street retry miss order is stable");
 assertEqual(new Set(retriedStreetFocus).size, 10, "Retry sessions remain distinct");
 
-const intersectionIds = ["i0", "i1", "i2", "i3", "i4", "i5", "i6", "i7", "i8", "i9"];
+const intersectionIds = Array.from({ length: 24 }, (_, index) => `i${index}`);
 const intersectionFocus = selectIntersectionFocusItems(intersectionIds, {
   scopeId: "all",
   completedSessionCount: 0,
-  retryMissItemIds: ["i9", "i8", "missing", "i9"],
+  retryMissItemIds: ["i23", "i22", "missing", "i23"],
 });
-assertEqual(intersectionFocus.length, 8, "Intersection focus has eight distinct items");
-assertEqual(intersectionFocus[0], "i9", "Retry misses seed the next selection");
-assertEqual(intersectionFocus[1], "i8", "Retry miss order is stable");
-const intersectionAttempts: SessionAttempt[] = intersectionFocus.map((itemId, index) => ({
-  itemId,
-  correct: index !== 1 && index !== 6,
-  score: (index === 1 ? 0 : index === 6 ? 1 : 4) as 0 | 1 | 2 | 3 | 4,
-}));
-const intersectionSession = buildIntersectionSessionItemIds(
-  intersectionFocus,
-  intersectionAttempts,
+assertEqual(intersectionFocus.length, 10, "Intersection round has ten distinct items");
+assertEqual(new Set(intersectionFocus).size, 10, "Intersection round does not repeat prompts");
+assertEqual(intersectionFocus[0], "i23", "Retry misses seed the next selection");
+assertEqual(intersectionFocus[1], "i22", "Retry miss order is stable");
+const firstIntersectionRound = selectIntersectionFocusItems(intersectionIds, {
+  scopeId: "all",
+  completedSessionCount: 0,
+});
+const secondIntersectionRound = selectIntersectionFocusItems(intersectionIds, {
+  scopeId: "all",
+  completedSessionCount: 1,
+});
+const thirdIntersectionRound = selectIntersectionFocusItems(intersectionIds, {
+  scopeId: "all",
+  completedSessionCount: 2,
+});
+assertEqual(
+  new Set([...firstIntersectionRound, ...secondIntersectionRound, ...thirdIntersectionRound]).size,
+  24,
+  "Three intersection rounds cover the full 24-item area pool",
 );
-assertEqual(intersectionSession.length, 10, "Intersection session has ten prompts");
-assertEqual(intersectionSession[8], intersectionFocus[1], "Weakest intersection repeats");
-assertEqual(intersectionSession[9], intersectionFocus[6], "Second-weakest intersection repeats");
+assertEqual(
+  firstIntersectionRound.filter((itemId) => secondIntersectionRound.includes(itemId)).length,
+  0,
+  "Consecutive full-area rounds do not overlap when the pool has at least 20 items",
+);
 
 const eastWestOrder: OrderedFeedbackGroup = {
   id: "east-west",
