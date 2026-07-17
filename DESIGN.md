@@ -1,10 +1,10 @@
-# Melissa Map Design
+# Learning Las Vegas Design
 
 ## Reference
 
 - Product direction: a late-1950s American glovebox road atlas—cream paper, dark blue cartographic ink, route-marker red, muted land green, geometric sans titles, condensed road lettering, fine rules, and squared utility controls.
 - Map reference: Google Maps road hierarchy and label behavior. Major roads should read first, local streets should stay quiet, and labels should appear progressively as the player zooms.
-- Usability reference: the existing Melissa Map game loop. The atlas treatment must preserve the map-first layout, immediate prompt, obvious area selector, and high-contrast reveal actions.
+- Usability reference: the existing Learning Las Vegas game loop. The atlas treatment must preserve the map-first layout, immediate prompt, obvious area selector, and high-contrast reveal actions.
 
 ## Typography
 

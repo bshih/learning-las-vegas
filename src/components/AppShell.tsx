@@ -55,12 +55,30 @@ export function AppShell({ children, sidebar }: AppShellProps) {
             I moved to Las Vegas several years ago. One of our friends, Melissa, is a native and whenever we talk about any place in the city, she inevitably says, “oh you mean the one at {"<specific intersection>"}?”... to which the rest of us always respond with a shrug because outside of a few major streets, we have no idea where anything is.
           </p>
           <p className="about-dialog-punchline">
-            <strong>WELL NO LONGER.</strong> Now you too can learn to be like Melissa.
+            <strong>WELL, NO LONGER.</strong> Now, you too can learn to be like Melissa.
           </p>
           <section className="about-dialog-tech" aria-labelledby="about-tech-title">
             <h3 id="about-tech-title">Learning Las Vegas is built with...</h3>
             <p>
               React, TypeScript, and Vite power the game. MapLibre renders OpenFreeMap’s OpenStreetMap-based vector map. Street mode uses simplified OpenStreetMap road geometry that is checked into the project, so guesses can be scored against the full shape of each road rather than a single point.
+            </p>
+            <p>
+              Want to make one for your city?{" "}
+              <a
+                href="https://github.com/bshih/learning-las-vegas"
+                target="_blank"
+                rel="noreferrer"
+              >
+                View and fork the project on GitHub
+              </a>
+              .
+            </p>
+            <p>
+              Built by{" "}
+              <a href="https://www.brianshih.com/" target="_blank" rel="noreferrer">
+                Brian Shih
+              </a>
+              .
             </p>
           </section>
           <button type="submit" className="button button-primary">Close</button>

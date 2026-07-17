@@ -281,4 +281,4 @@ assertEqual(
   "Shape groups use area direction without ordered counts",
 );
 
-console.log("Melissa Map pure-logic regression fixtures passed");
+console.log("Learning Las Vegas pure-logic regression fixtures passed");

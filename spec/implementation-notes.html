@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <title>Melissa Map Implementation Notes</title>
+    <title>Learning Las Vegas Implementation Notes</title>
     <style>
       body {
         font-family: ui-sans-serif, system-ui, sans-serif;
@@ -26,7 +26,7 @@
     </style>
   </head>
   <body>
-    <h1>Melissa Map Implementation Notes</h1>
+    <h1>Learning Las Vegas Implementation Notes</h1>
 
     <h2>Design Decisions</h2>
     <ul>
@@ -59,7 +59,8 @@
       <li>The player-facing UI calls the two choices modes, not lessons. Setup, replay, miss-list, and summary copy avoids coaching language in favor of a relaxed road-trip voice.</li>
       <li>The map-overlay and sidebar Next actions share the same Jost font, size, weight, tracking, route-red color, and paper text color.</li>
       <li>The mode switch reads Find streets / Find intersections. The selected option uses route red, an inset border, a single right-aligned checkmark outside the text flow, and native <code>aria-pressed</code> state.</li>
-      <li>The public masthead and browser title read Learning Las Vegas; Melissa Map remains the internal project/repository name.</li>
+      <li>The product, package, documentation, and intended public repository use Learning Las Vegas. Legacy <code>melissa-map-progress-*</code> storage keys remain unchanged so renaming does not erase local progress.</li>
+      <li>The production build uses Vite base path <code>/learning-las-vegas/</code> because the permanent URL is hosted below the <code>lab.brianshih.com</code> domain root. Root-relative asset URLs would otherwise resolve to <code>/assets/</code> and return 404.</li>
       <li>The About modal carries Brian's Melissa origin story plus a factual stack note covering React, TypeScript, Vite, MapLibre, OpenFreeMap, and the simplified OpenStreetMap geometry used for whole-road scoring.</li>
       <li>Street mode keeps the curated street-geometry overlay hidden before a guess. The ordinary unlabeled basemap remains visible, while target and comparison geometry appears only after reveal.</li>
       <li>Every exact four-point hit animates the shared reward card and +4 score, including street mode where there is no point marker. Intersection hits also animate the marker dot with a short stamp and expanding route-red ring. The marker container itself is not transformed because MapLibre owns its placement transform, and reduced-motion preferences disable all exact-hit animations.</li>

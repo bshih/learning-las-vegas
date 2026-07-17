@@ -1126,6 +1126,21 @@ textarea {
   font-size: 0.92rem;
 }
 
+.about-dialog-tech a {
+  color: var(--color-text);
+  font-weight: 700;
+  text-underline-offset: 0.18em;
+}
+
+.about-dialog-tech a:hover {
+  color: var(--color-accent-dark);
+}
+
+.about-dialog-tech a:focus-visible {
+  outline: 3px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
 .map-stage-announcement {
   position: absolute;
   width: 1px;
