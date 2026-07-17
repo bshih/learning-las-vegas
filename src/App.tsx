@@ -67,7 +67,8 @@ export default function App() {
                 <p className="panel-kicker">Round complete</p>
                 <h1 className="score-title">{game.lastSession.score}<span>/40</span></h1>
                 <p className="panel-lede">
-                  {game.lastSession.isNewBest ? "New high score for this mode." : scoreMessage(game.lastSession.score)}
+                  <strong>{scoreJudgment(game.lastSession.score)}</strong>
+                  {game.lastSession.isNewBest ? <><br />New high score for this mode.</> : null}
                 </p>
                 <dl className="round-time-summary">
                   <div><dt>Total time</dt><dd>{formatDuration(game.lastSession.totalTimeMs)}</dd></div>
@@ -295,11 +296,14 @@ function itemName(id: string) {
   return intersectionName(intersection) || id;
 }
 
-function scoreMessage(score: number) {
-  if (score >= 32) return "You know these streets.";
-  if (score >= 24) return "Pretty solid lap around the valley.";
-  if (score >= 16) return "Not bad — the map is starting to click.";
-  return "The valley wins this round. Run it back?";
+function scoreJudgment(score: number) {
+  if (score === 40) return "Las Vegas native";
+  if (score >= 36) return "Born and raised?";
+  if (score >= 30) return "Vegas local";
+  if (score >= 20) return "You know your way around";
+  if (score >= 12) return "You've been off the Strip before";
+  if (score >= 6) return "Keep the GPS on";
+  return "You must be visiting…";
 }
 
 function formatDuration(milliseconds: number) {

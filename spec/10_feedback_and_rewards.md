@@ -97,6 +97,7 @@ Do not show streak, lifetime accuracy, lifetime points, mastery, or scheduler te
 After prompt 10, show:
 
 - Session score out of 40.
+- One score judgment: `You must be visiting…` (0-5), `Keep the GPS on` (6-11), `You've been off the Strip before` (12-19), `You know your way around` (20-29), `Vegas local` (30-35), `Born and raised?` (36-39), or `Las Vegas native` (40).
 - Best score for this mode/scope and `New best` when applicable.
 - Correct items.
 - Items missed at least once.
@@ -111,7 +112,7 @@ Voice is concise, local, playful, and encouraging without being childish or coac
 
 Prefer `Nailed it`, `So close`, `In the neighborhood`, and `Lost in the valley` for score labels. Keep directional clues concrete and useful.
 
-Avoid competitive ranks, artificial urgency, casino metaphors, cute achievements, or broad claims that the player has mastered Vegas.
+Avoid competitive ranks, artificial urgency, casino metaphors, cute achievements, or broad claims that the player has mastered Vegas beyond the intentionally playful score judgments above.
 
 ## Visual Direction
 
