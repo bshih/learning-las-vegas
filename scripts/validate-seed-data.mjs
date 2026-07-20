@@ -32,7 +32,13 @@ const requiredAnchors = [
   "Eastern Avenue",
   "Maryland Parkway",
   "Lamb Boulevard",
-  "Nellis Boulevard"
+  "Nellis Boulevard",
+  "Valley View Boulevard",
+  "Washington Avenue",
+  "Desert Inn Road",
+  "Russell Road",
+  "Windmill Lane",
+  "Blue Diamond Road"
 ];
 const coordinateQaChecks = [
   {

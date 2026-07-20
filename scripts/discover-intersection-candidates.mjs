@@ -10,6 +10,12 @@ const roadHighways = new Set([
   "motorway", "trunk", "primary", "secondary", "tertiary", "unclassified", "residential",
   "motorway_link", "trunk_link", "primary_link", "secondary_link", "tertiary_link",
 ]);
+const requestedIds = parseStreetIds(process.argv.slice(2));
+if (requestedIds) {
+  const knownIds = new Set(catalog.streets.map((street) => street.id));
+  const unknownIds = [...requestedIds].filter((id) => !knownIds.has(id));
+  if (unknownIds.length > 0) throw new Error(`Unknown street ids: ${unknownIds.join(", ")}`);
+}
 
 const names = catalog.streets.flatMap((street) => [street.name, ...street.aliases]);
 const pattern = names.map(escapeRegExp).sort((a, b) => b.length - a.length).join("|");
@@ -42,6 +48,7 @@ for (let left = 0; left < catalog.streets.length; left += 1) {
   for (let right = left + 1; right < catalog.streets.length; right += 1) {
     const streetA = catalog.streets[left];
     const streetB = catalog.streets[right];
+    if (requestedIds && !requestedIds.has(streetA.id) && !requestedIds.has(streetB.id)) continue;
     const waysA = ways.filter((way) => way.street.id === streetA.id);
     const waysB = ways.filter((way) => way.street.id === streetB.id);
     for (const wayA of waysA) {
@@ -114,4 +121,12 @@ function distanceMeters(a, b) {
 
 function escapeRegExp(value) {
   return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+function parseStreetIds(args) {
+  const argument = args.find((value) => value.startsWith("--street-ids="));
+  if (!argument) return undefined;
+  const ids = argument.slice("--street-ids=".length).split(",").map((value) => value.trim()).filter(Boolean);
+  if (ids.length === 0) throw new Error("--street-ids must contain at least one id.");
+  return new Set(ids);
 }

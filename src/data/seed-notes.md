@@ -2,7 +2,7 @@
 
 ## Summary
 
-- Seed count: 130 intersections.
+- Seed count: 158 intersections.
 - Goal: playable V1 coverage across the Las Vegas valley, not survey-grade cartography.
 - Data format: `src/data/intersections.json` with stable ids, street names, approximate coordinates, region tags, difficulty, aliases, and selective teaching notes. Normalized area buckets are derived from region tags in `src/data/areaBuckets.json`.
 
@@ -38,5 +38,6 @@
 
 - Add a reviewed flag or `accuracy` field if future gameplay needs tighter scoring.
 - The 2026-07-16 expansion added 54 OSM-verified crossings among the existing 32 playable streets. Area pools now range from 18 to 24 intersections rather than 10 to 16.
+- The 2026-07-19 expansion added 28 OSM-verified crossings for Valley View, Washington, Desert Inn, Russell, Windmill, and Blue Diamond. Each new playable street now appears in 4-7 prompts, and area pools range from 19 to 36 intersections.
 - Use `npm run discover:intersections` to audit additional crossings among the playable street corpus, then review area assignment and difficulty before adding candidates to the static seed.
 - Consider ETL later, but keep this hand-curated set as a stable regression fixture.

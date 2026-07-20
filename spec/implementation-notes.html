@@ -92,7 +92,7 @@
       <li>Manual seed corpus is faster and safer for V1 than building the full OSM/Clark County ETL immediately.</li>
       <li>OpenFreeMap is intentionally used without a CARTO fallback because service reliability is not critical for this version.</li>
       <li>The sample corpus remains available for tiny fixtures, but app gameplay should use the 76-item <code>intersections</code> export.</li>
-      <li>The first corpus started at 70 intersections, grew to 76 to give every exposed area bucket at least 10 prompts, and then to 130 to reduce repetition and cover more combinations of the existing streets.</li>
+      <li>The first corpus started at 70 intersections, grew to 76 to give every exposed area bucket at least 10 prompts, then to 130 to reduce repetition, and now to 158 after the six-road valley-grid expansion.</li>
       <li>The basemap now depends on public OpenFreeMap style, vector-tile, glyph, and sprite availability. Self-hosted tiles or PMTiles remain future options if that dependency becomes unacceptable.</li>
       <li>Reveal no longer zooms in to expose labels because that removed too much location context; split labels and a small preserve-zoom pan are the current compromise.</li>
       <li>Removing the answer-street callout makes the map less self-contained, but avoids duplicating the prominent prompt that remains visible in the sidebar.</li>
@@ -114,13 +114,16 @@
       <li>The MapLibre adapter owns the street GeoJSON source and line layers. Updates before the external style is ready are retained in adapter state and rendered from the <code>style.load</code> boundary instead of touching an uninitialized style.</li>
       <li>The visible eligible-street button list and pre-session five-road briefing were removed after playtesting. The list allowed the requested answer to be selected directly for full points, while the five-road repeat loop made the mode too constrained to teach the broader valley.</li>
       <li>The Henderson-focused street expansion adds Stephanie Street, St. Rose Parkway, Horizon Ridge Parkway, and Lake Mead Parkway as fully playable regional shapes, raising the corpus from 28 to 32 roads.</li>
-      <li>The intersection corpus now contains 130 OSM-verified crossings, including 54 new combinations drawn only from the existing 32-road street corpus. Area pools range from 18 to 24 prompts.</li>
+      <li>The valley-grid expansion adds Valley View Boulevard, Washington Avenue, Desert Inn Road, Russell Road, Windmill Lane, and Blue Diamond Road, raising the playable corpus from 32 to 38 roads without adding a Basic/Advanced mode split.</li>
+      <li>The intersection corpus now contains 158 OSM-verified crossings. The latest 28 give every new road 4-7 prompts and raise area pools to 19-36 prompts.</li>
       <li>Normal intersection rounds now contain 10 distinct crossings. Automatic weakest-item repeats were removed; Replay the misses remains the explicit repetition path.</li>
       <li>Each submitted guess stores elapsed milliseconds from prompt display to submission. The round summary shows total and average answer time without adding countdown pressure during play.</li>
       <li>Street-mode nearest-guess geometry uses a continuous dark-slate line instead of a dash array. The narrower width and explicit label keep it distinct from the solid route-red answer while avoiding segment-phase breaks across zoom levels.</li>
       <li>Street reveals support a separate static roadside-note layer for memorable landmarks, navigation quirks, corridor identity, history, and occasional name origins. The 12-street pilot keeps these sourced editorial facts distinct from the existing spatial <code>teachingNote</code>.</li>
       <li>Roadside-note provenance ships with the local data and is exposed as a compact source link. Streets outside the pilot render no empty note container, and the app makes no runtime content request.</li>
-      <li>The second roadside-note pass expands coverage from 12 to 24 of 32 playable streets. Eight roads remain uncovered because available material was too generic or weakly sourced; coverage is not a completeness metric worth lowering the editorial bar for.</li>
+      <li>The second roadside-note pass covers 24 playable streets. The road pool later grew to 38; uncovered roads still render no empty note, and coverage is not a completeness metric worth lowering the editorial bar for.</li>
+      <li>The street importer now joins OSM fragments only at unambiguous shared endpoints, drops degenerate joined fragments, and writes readable feature blocks with compact coordinate arrays. This fixed a 643 KB fragmented expansion output while preserving the 12 m simplification tolerance and keeping the runtime asset near 150 KB.</li>
+      <li>Lake Mead Parkway was refreshed from current OSM after the full geometry verifier found one stale sampled point at a 191 m offset. The refreshed route has a 0 m maximum sampled offset, and all 38 playable streets pass the 75 m verification limit.</li>
     </ul>
 
     <h2>Open Questions</h2>

@@ -67,7 +67,8 @@ geometry.features = geometry.features.filter(
   (feature) => !requestedIds.has(feature.properties.id),
 );
 for (const street of requestedStreets) {
-  const lines = linesById.get(street.id);
+  const lines = stitchLines(linesById.get(street.id) || [])
+    .filter((line) => lineLengthMeters(line) >= 25);
   if (!lines?.length) throw new Error(`No usable OSM geometry found for ${street.name}.`);
   geometry.features.push({
     type: "Feature",
@@ -79,7 +80,63 @@ for (const street of requestedStreets) {
   console.log(`${street.id}: added ${lines.length} line(s)`);
 }
 
-fs.writeFileSync(geometryPath, `${JSON.stringify(geometry, null, 2)}\n`);
+fs.writeFileSync(geometryPath, serializeFeatureCollection(geometry));
+
+function serializeFeatureCollection(collection) {
+  const features = collection.features.map((feature) => [
+    "    {",
+    `      \"type\": ${JSON.stringify(feature.type)},`,
+    `      \"properties\": ${JSON.stringify(feature.properties)},`,
+    `      \"geometry\": ${JSON.stringify(feature.geometry)}`,
+    "    }",
+  ].join("\n"));
+  return [
+    "{",
+    `  \"type\": ${JSON.stringify(collection.type)},`,
+    "  \"features\": [",
+    features.join(",\n"),
+    "  ]",
+    "}",
+    "",
+  ].join("\n");
+}
+
+function stitchLines(inputLines) {
+  const lines = inputLines.map((line) => [...line]);
+
+  while (true) {
+    const endpoints = new Map();
+    for (let index = 0; index < lines.length; index += 1) {
+      addEndpoint(endpoints, lines[index][0], { index, side: "start" });
+      addEndpoint(endpoints, lines[index][lines[index].length - 1], { index, side: "end" });
+    }
+
+    const match = [...endpoints.values()].find(
+      (references) => references.length === 2 && references[0].index !== references[1].index,
+    );
+    if (!match) return lines;
+
+    const [leftReference, rightReference] = match;
+    const left = leftReference.side === "start"
+      ? [...lines[leftReference.index]].reverse()
+      : lines[leftReference.index];
+    const right = rightReference.side === "end"
+      ? [...lines[rightReference.index]].reverse()
+      : lines[rightReference.index];
+    const merged = simplify([...left, ...right.slice(1)], 12);
+    const firstIndex = Math.min(leftReference.index, rightReference.index);
+    const secondIndex = Math.max(leftReference.index, rightReference.index);
+    lines[firstIndex] = merged;
+    lines.splice(secondIndex, 1);
+  }
+}
+
+function addEndpoint(endpoints, coordinate, reference) {
+  const key = coordinate.join(",");
+  const references = endpoints.get(key) || [];
+  references.push(reference);
+  endpoints.set(key, references);
+}
 
 function splitToBounds(coordinates) {
   const lines = [];

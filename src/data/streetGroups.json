@@ -64,6 +64,15 @@
       "teachingNote": "Decatur is the eastern edge of the west-valley practice set."
     },
     {
+      "id": "valley-view-boulevard",
+      "name": "Valley View Boulevard",
+      "aliases": ["Valley View Blvd"],
+      "axis": "north-south",
+      "areaIds": ["spring-valley-southwest", "strip-paradise", "downtown-central-east"],
+      "difficulty": "medium",
+      "teachingNote": "Valley View runs east of Decatur and west of Las Vegas Boulevard through the central valley."
+    },
+    {
       "id": "las-vegas-boulevard",
       "name": "Las Vegas Boulevard",
       "aliases": ["Las Vegas Blvd"],
@@ -154,6 +163,15 @@
       "teachingNote": "Lake Mead crosses the valley south of Cheyenne and north of Charleston."
     },
     {
+      "id": "washington-avenue",
+      "name": "Washington Avenue",
+      "aliases": ["Washington Ave"],
+      "axis": "east-west",
+      "areaIds": ["summerlin-west", "downtown-central-east"],
+      "difficulty": "medium",
+      "teachingNote": "Washington runs south of Lake Mead and north of Charleston through the central valley."
+    },
+    {
       "id": "charleston-boulevard",
       "name": "Charleston Boulevard",
       "aliases": ["Charleston Blvd"],
@@ -170,6 +188,15 @@
       "areaIds": ["summerlin-west", "spring-valley-southwest", "strip-paradise", "downtown-central-east"],
       "difficulty": "easy",
       "teachingNote": "Sahara crosses the valley between Charleston and Flamingo."
+    },
+    {
+      "id": "desert-inn-road",
+      "name": "Desert Inn Road",
+      "aliases": ["Desert Inn Rd"],
+      "axis": "east-west",
+      "areaIds": ["summerlin-west", "spring-valley-southwest", "strip-paradise", "downtown-central-east"],
+      "difficulty": "medium",
+      "teachingNote": "Desert Inn crosses the central valley south of Sahara and north of Spring Mountain."
     },
     {
       "id": "flamingo-road",
@@ -190,6 +217,15 @@
       "teachingNote": "Tropicana crosses the Strip south of Flamingo and north of Sunset."
     },
     {
+      "id": "russell-road",
+      "name": "Russell Road",
+      "aliases": ["Russell Rd"],
+      "axis": "east-west",
+      "areaIds": ["spring-valley-southwest", "strip-paradise", "downtown-central-east"],
+      "difficulty": "medium",
+      "teachingNote": "Russell crosses the south valley between Tropicana and Sunset."
+    },
+    {
       "id": "sunset-road",
       "name": "Sunset Road",
       "aliases": ["Sunset Rd"],
@@ -205,7 +241,16 @@
       "axis": "east-west",
       "areaIds": ["spring-valley-southwest", "strip-paradise", "henderson-green-valley"],
       "difficulty": "medium",
-      "teachingNote": "Warm Springs is the southernmost road in the ordered east-west set."
+      "teachingNote": "Warm Springs runs south of Sunset and north of Windmill."
+    },
+    {
+      "id": "windmill-lane",
+      "name": "Windmill Lane",
+      "aliases": ["Windmill Ln"],
+      "axis": "east-west",
+      "areaIds": ["spring-valley-southwest", "strip-paradise", "henderson-green-valley"],
+      "difficulty": "medium",
+      "teachingNote": "Windmill runs across the south valley below Warm Springs."
     },
     {
       "id": "rampart-boulevard",
@@ -251,6 +296,15 @@
       "areaIds": ["downtown-central-east", "henderson-green-valley"],
       "difficulty": "hard",
       "teachingNote": "Boulder Highway runs diagonally southeast from the east valley toward Henderson."
+    },
+    {
+      "id": "blue-diamond-road",
+      "name": "Blue Diamond Road",
+      "aliases": ["Blue Diamond Rd", "State Route 160", "SR 160"],
+      "axis": "regional",
+      "areaIds": ["spring-valley-southwest"],
+      "difficulty": "medium",
+      "teachingNote": "Blue Diamond angles southwest from Interstate 15 toward the edge of the valley."
     },
     {
       "id": "stephanie-street",
@@ -313,6 +367,7 @@
       "axis": "north-south",
       "orderedDirection": "west-to-east",
       "streetIds": [
+        "valley-view-boulevard",
         "las-vegas-boulevard",
         "maryland-parkway",
         "eastern-avenue",
@@ -332,12 +387,16 @@
         "craig-road",
         "cheyenne-avenue",
         "lake-mead-boulevard",
+        "washington-avenue",
         "charleston-boulevard",
         "sahara-avenue",
+        "desert-inn-road",
         "flamingo-road",
         "tropicana-avenue",
+        "russell-road",
         "sunset-road",
-        "warm-springs-road"
+        "warm-springs-road",
+        "windmill-lane"
       ]
     },
     {
@@ -351,6 +410,7 @@
         "paradise-road",
         "green-valley-parkway",
         "boulder-highway",
+        "blue-diamond-road",
         "stephanie-street",
         "st-rose-parkway",
         "horizon-ridge-parkway",

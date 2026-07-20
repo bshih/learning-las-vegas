@@ -2,7 +2,7 @@
 
 ## Status
 
-Pending review.
+Implemented; expanded to 38 streets on 2026-07-19.
 
 ## Objective
 
@@ -21,7 +21,7 @@ Do not score against OpenFreeMap's internal vector source-layer names or filters
 
 ## Initial Corpus
 
-The initial release contained 28 streets, selected for usefulness rather than completeness. A Henderson-focused expansion brings the current corpus to 32.
+The initial release contained 28 streets, selected for usefulness rather than completeness. A Henderson-focused expansion raised the corpus to 32. A valley-grid expansion added six omitted local anchors, bringing the current corpus to 38.
 
 West-valley north-south group, ordered west-to-east:
 
@@ -35,12 +35,13 @@ West-valley north-south group, ordered west-to-east:
 
 Central/east north-south group, ordered west-to-east:
 
-1. Las Vegas Boulevard
-2. Maryland Parkway
-3. Eastern Avenue
-4. Pecos Road
-5. Lamb Boulevard
-6. Nellis Boulevard
+1. Valley View Boulevard
+2. Las Vegas Boulevard
+3. Maryland Parkway
+4. Eastern Avenue
+5. Pecos Road
+6. Lamb Boulevard
+7. Nellis Boulevard
 
 Valley east-west group, ordered north-to-south:
 
@@ -48,12 +49,16 @@ Valley east-west group, ordered north-to-south:
 2. Craig Road
 3. Cheyenne Avenue
 4. Lake Mead Boulevard
-5. Charleston Boulevard
-6. Sahara Avenue
-7. Flamingo Road
-8. Tropicana Avenue
-9. Sunset Road
-10. Warm Springs Road
+5. Washington Avenue
+6. Charleston Boulevard
+7. Sahara Avenue
+8. Desert Inn Road
+9. Flamingo Road
+10. Tropicana Avenue
+11. Russell Road
+12. Sunset Road
+13. Warm Springs Road
+14. Windmill Lane
 
 Drawn but initially excluded from simple ordered-neighbor claims because they curve, branch, change names, or are primarily regional:
 
@@ -62,6 +67,7 @@ Drawn but initially excluded from simple ordered-neighbor claims because they cu
 - Paradise Road
 - Green Valley Parkway
 - Boulder Highway
+- Blue Diamond Road
 - Stephanie Street
 - St. Rose Parkway
 - Horizon Ridge Parkway

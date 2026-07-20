@@ -108,7 +108,7 @@ Never invent ordered-neighbor counts for special-shape streets.
 
 ## Session Composition
 
-- Select 10 distinct streets from the full 32-street pool using deterministic rotation by completed-session count.
+- Select 10 distinct streets from the full 38-street pool using deterministic rotation by completed-session count.
 - Continue the rotation across sessions so the full pool appears before recycled streets fill later sessions.
 - Normal sessions contain no same-session street repeats.
 - `Practice misses` seeds the next 10-distinct-street session with the immediately previous street misses, then fills from the normal rotation.

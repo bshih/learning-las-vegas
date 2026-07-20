@@ -11,7 +11,7 @@ Use short, sourced reveal notes to make major Las Vegas streets easier to recogn
 ## V1 Contract
 
 - Roadside notes appear only after a reveal in Find streets mode.
-- The first pass covered 12 flagship streets; the second expanded coverage to 24 of the 32 playable streets.
+- The first pass covered 12 flagship streets; the second expanded coverage to 24 streets. The 2026-07-19 corpus expansion raised the playable pool to 38 without lowering the source bar for notes.
 - Every note has one concise title, one 25-45 word body, a category, and an HTTPS source.
 - Notes supplement the existing spatial teaching note rather than replacing scoring or correction feedback.
 - The content ships as static local data. Gameplay makes no runtime research, geocoding, or content requests.
@@ -37,7 +37,7 @@ Use short, sourced reveal notes to make major Las Vegas streets easier to recogn
 
 Las Vegas Boulevard, Decatur Boulevard, Maryland Parkway, Charleston Boulevard, Sahara Avenue, Tropicana Avenue, Sunset Road, Spring Mountain Road, Paradise Road, Boulder Highway, Stephanie Street, Lake Mead Parkway, Buffalo Drive, Durango Drive, Rainbow Boulevard, Eastern Avenue, Pecos Road, Nellis Boulevard, Cheyenne Avenue, Lake Mead Boulevard, Flamingo Road, Warm Springs Road, Green Valley Parkway, and St. Rose Parkway.
 
-The eight streets still intentionally uncovered are Hualapai Way, Fort Apache Road, Jones Boulevard, Lamb Boulevard, Ann Road, Craig Road, Rampart Boulevard, and Horizon Ridge Parkway. Add one only when a source supports a fact more distinctive than a generic nearby business or park.
+The streets still intentionally uncovered are Hualapai Way, Fort Apache Road, Jones Boulevard, Lamb Boulevard, Ann Road, Craig Road, Rampart Boulevard, Horizon Ridge Parkway, Valley View Boulevard, Washington Avenue, Desert Inn Road, Russell Road, Windmill Lane, and Blue Diamond Road. Add one only when a source supports a fact more distinctive than a generic nearby business or park.
 
 ## Release Checks
 
