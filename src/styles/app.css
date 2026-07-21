@@ -338,7 +338,16 @@ textarea {
   font-size: 1rem;
   font-weight: 800;
   line-height: 1;
-  transform: translateY(-50%);
+  opacity: 1;
+  transform: translateY(-50%) scale(1);
+  transition: opacity var(--motion-mode) var(--ease-out), transform var(--motion-mode) var(--ease-out);
+}
+
+@starting-style {
+  .mode-chooser-check {
+    opacity: 0;
+    transform: translateY(-50%) scale(0.95);
+  }
 }
 
 .mode-chooser button:hover:not(.active) {
@@ -801,7 +810,7 @@ textarea {
   padding: 0 var(--space-4);
   cursor: pointer;
   box-shadow: 2px 2px 0 rgb(25 51 74 / 0.18);
-  transition: background-color 120ms ease, color 120ms ease, transform 120ms ease, box-shadow 120ms ease;
+  transition: background-color var(--motion-press) var(--ease-out), color var(--motion-press) var(--ease-out), transform var(--motion-press) var(--ease-out), box-shadow var(--motion-press) var(--ease-out);
 }
 
 .button:disabled {
@@ -819,13 +828,9 @@ textarea {
   color: var(--color-text);
 }
 
-.button:not(:disabled):hover {
-  transform: translate(-1px, -1px);
-  box-shadow: 3px 3px 0 rgb(25 51 74 / 0.22);
-}
-
-.button-primary:not(:disabled):hover {
-  background: var(--color-accent-dark);
+.button:not(:disabled):active:not(:focus-visible) {
+  transform: translate(1px, 1px) scale(0.97);
+  box-shadow: 1px 1px 0 rgb(25 51 74 / 0.18);
 }
 
 .map-stage {
@@ -1044,7 +1049,7 @@ textarea {
   cursor: pointer;
   box-shadow: 3px 3px 0 rgb(25 51 74 / 0.22);
   pointer-events: auto;
-  transition: background-color 120ms ease, transform 120ms ease, box-shadow 120ms ease;
+  transition: background-color var(--motion-press) var(--ease-out), transform var(--motion-press) var(--ease-out), box-shadow var(--motion-press) var(--ease-out);
 }
 
 .button,
@@ -1056,12 +1061,126 @@ textarea {
   line-height: 1;
 }
 
-.map-stage-status-action:hover,
 .map-stage-status-action:focus-visible {
   border-color: var(--color-accent-dark);
   background: var(--color-accent-dark);
-  transform: translate(-1px, -1px);
-  box-shadow: 4px 4px 0 rgb(25 51 74 / 0.24);
+  outline: 3px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+.map-stage-status-action:active:not(:focus-visible) {
+  transform: translate(1px, 1px) scale(0.97);
+  box-shadow: 1px 1px 0 rgb(25 51 74 / 0.18);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .button:not(:disabled):hover {
+    transform: translate(-1px, -1px);
+    box-shadow: 3px 3px 0 rgb(25 51 74 / 0.22);
+  }
+
+  .button-primary:not(:disabled):hover {
+    background: var(--color-accent-dark);
+  }
+
+  .map-stage-status-action:hover {
+    border-color: var(--color-accent-dark);
+    background: var(--color-accent-dark);
+    transform: translate(-1px, -1px);
+    box-shadow: 4px 4px 0 rgb(25 51 74 / 0.24);
+  }
+
+  .button:not(:disabled):hover:active:not(:focus-visible),
+  .map-stage-status-action:hover:active:not(:focus-visible) {
+    transform: translate(1px, 1px) scale(0.97);
+    box-shadow: 1px 1px 0 rgb(25 51 74 / 0.18);
+  }
+}
+
+.score-title,
+.summary-judgment,
+.round-time-summary,
+.summary-card {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity var(--motion-summary) var(--ease-out), transform var(--motion-summary) var(--ease-out);
+}
+
+.summary-judgment {
+  transition-delay: 40ms;
+}
+
+.round-time-summary {
+  transition-delay: 80ms;
+}
+
+.summary-card {
+  transition-delay: 120ms;
+}
+
+@starting-style {
+  .score-title,
+  .summary-judgment,
+  .round-time-summary,
+  .summary-card {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+.about-dialog {
+  opacity: 0;
+  transform: scale(0.97);
+  transition:
+    opacity var(--motion-dialog) var(--ease-out),
+    transform var(--motion-dialog) var(--ease-out),
+    overlay var(--motion-dialog) allow-discrete,
+    display var(--motion-dialog) allow-discrete;
+}
+
+.about-dialog[open] {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.about-dialog.closing {
+  opacity: 0;
+  transform: scale(0.97);
+}
+
+.about-dialog.no-motion,
+.about-dialog.no-motion::backdrop {
+  transition: none;
+}
+
+@starting-style {
+  .about-dialog[open] {
+    opacity: 0;
+    transform: scale(0.97);
+  }
+}
+
+.about-dialog::backdrop {
+  background: rgb(25 51 74 / 0.58);
+  opacity: 0;
+  transition:
+    opacity var(--motion-dialog) var(--ease-out),
+    overlay var(--motion-dialog) allow-discrete,
+    display var(--motion-dialog) allow-discrete;
+}
+
+.about-dialog[open]::backdrop {
+  opacity: 1;
+}
+
+.about-dialog.closing::backdrop {
+  opacity: 0;
+}
+
+@starting-style {
+  .about-dialog[open]::backdrop {
+    opacity: 0;
+  }
 }
 
 .about-dialog {
@@ -1074,10 +1193,6 @@ textarea {
   color: var(--color-text);
   box-shadow: 8px 8px 0 rgb(25 51 74 / 0.28);
   overflow-y: auto;
-}
-
-.about-dialog::backdrop {
-  background: rgb(25 51 74 / 0.58);
 }
 
 .about-dialog-card {
@@ -1222,11 +1337,8 @@ textarea {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
+  html {
     scroll-behavior: auto !important;
-    transition-duration: 0.01ms !important;
   }
 
   .tile-map-marker-success .tile-map-marker-dot,
@@ -1234,5 +1346,30 @@ textarea {
   .round-feedback.correct,
   .round-feedback.correct .reward-row > strong {
     animation: none;
+  }
+
+  .button,
+  .map-stage-status-action {
+    transition-property: background-color, color, box-shadow;
+  }
+
+  .button:not(:disabled):hover,
+  .button:not(:disabled):active:not(:focus-visible),
+  .map-stage-status-action:hover,
+  .map-stage-status-action:focus-visible,
+  .map-stage-status-action:active:not(:focus-visible) {
+    transform: none;
+  }
+
+  .mode-chooser-check,
+  .score-title,
+  .summary-judgment,
+  .round-time-summary,
+  .summary-card,
+  .about-dialog,
+  .about-dialog[open] {
+    transform: none;
+    transition-delay: 0ms;
+    transition-property: opacity;
   }
 }

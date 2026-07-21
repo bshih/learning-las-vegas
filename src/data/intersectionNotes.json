@@ -1,0 +1,98 @@
+[
+  {
+    "intersectionId": "flamingo-las-vegas-blvd",
+    "category": "casino-history",
+    "title": "The resort named the road",
+    "body": "Flamingo Road takes its name from the resort at Las Vegas Boulevard. Several Strip cross streets were renamed for casinos in the late 1950s and early 1960s.",
+    "sourceLabel": "Las Vegas Review-Journal",
+    "sourceUrl": "https://www.reviewjournal.com/business/why-street-names-along-las-vegas-strip-often-mirror-that-of-casinos/"
+  },
+  {
+    "intersectionId": "tropicana-las-vegas-blvd",
+    "category": "casino-history",
+    "title": "The casino is gone; the corner remains",
+    "body": "The Tropicana closed in April 2024 after welcoming guests for 67 years. Its two hotel towers were leveled in an elaborate implosion that October.",
+    "sourceLabel": "Associated Press",
+    "sourceUrl": "https://apnews.com/article/a2a6e4f57c9ef5a8110602b8b6b2d1e7"
+  },
+  {
+    "intersectionId": "sahara-las-vegas-blvd",
+    "category": "boundary",
+    "title": "Where Las Vegas officially stops",
+    "body": "At Las Vegas Boulevard, Sahara Avenue marks the boundary of the City of Las Vegas. Most of the resort corridor to the south is in unincorporated Clark County.",
+    "sourceLabel": "Clark County",
+    "sourceUrl": "https://www.clarkcountynv.gov/residents/about_clark_county/"
+  },
+  {
+    "intersectionId": "charleston-eastern",
+    "category": "landmark",
+    "title": "The Blue Angel watches Five Points",
+    "body": "Near Charleston, Eastern, and Fremont stands the restored 15-foot Blue Angel from a 1957 motel. Betty Willis, who created the Welcome to Las Vegas sign, designed it.",
+    "sourceLabel": "City of Las Vegas",
+    "sourceUrl": "https://www.lasvegasnevada.gov/News/Blog/Detail/blue-angel-is-back"
+  },
+  {
+    "intersectionId": "charleston-buffalo",
+    "category": "landmark",
+    "title": "Two big parks, one west-side line",
+    "body": "All American Park sits near Buffalo and Charleston, while Centennial Hills Park anchors Buffalo farther north. The two large green spaces make opposite ends of the road easier to remember.",
+    "sourceLabel": "City of Las Vegas",
+    "sourceUrl": "https://www.lasvegasnevada.gov/News/Blog/Detail/get-fit-at-our-parks"
+  },
+  {
+    "intersectionId": "charleston-durango",
+    "category": "landmark",
+    "title": "Angel Park marks the crossing",
+    "body": "Durango passes Angel Park near Charleston, Durango Hills Park farther north, and Thunderbird Family Sports Complex near Ann. Their names turn one long west-side road into a chain of park markers.",
+    "sourceLabel": "City of Las Vegas",
+    "sourceUrl": "https://www.lasvegasnevada.gov/News/Blog/Detail/get-fit-at-our-parks"
+  },
+  {
+    "intersectionId": "tropicana-maryland",
+    "category": "history",
+    "title": "UNLV began beside a dirt road",
+    "body": "UNLV opened beside Maryland Parkway in 1957, when the road was still two lanes of dirt. The original campus occupied just 80 acres north of this crossing.",
+    "sourceLabel": "UNLV",
+    "sourceUrl": "https://www.unlv.edu/about/history"
+  },
+  {
+    "intersectionId": "henderson-sunset-eastern",
+    "category": "landmark",
+    "title": "Three roads frame one giant park",
+    "body": "Sunset forms the park's northern edge, Warm Springs forms its southern edge, and Eastern borders it on the west. Together they make a three-road landmark beside the airport.",
+    "sourceLabel": "Clark County Museum",
+    "sourceUrl": "https://webfiles.clarkcountynv.gov/Parks%20%26%20Recreation/Museum/Clark%20County%20Museum/Centennial/history-timeline.pdf"
+  },
+  {
+    "intersectionId": "henderson-lake-mead-boulder-hwy",
+    "category": "history",
+    "title": "Before the freeway, this was the connection",
+    "body": "Boulder Highway was once the only road linking downtown Las Vegas, Henderson, and Boulder City. Motels, casinos, and roadside businesses grew along it before US 95 drew traffic away.",
+    "sourceLabel": "City of Henderson",
+    "sourceUrl": "https://www.cityofhenderson.com/government/departments/community-development-and-services/special-projects/boulder-highway-initiatives-2031"
+  },
+  {
+    "intersectionId": "henderson-sunset-stephanie",
+    "category": "name-origin",
+    "title": "Stephanie is a real person",
+    "body": "Stephanie Street was named for Stephanie Page Wurzer when she was a child and the route was still an isolated dirt road. It later became one of Henderson's major commercial streets.",
+    "sourceLabel": "Las Vegas Review-Journal",
+    "sourceUrl": "https://www.reviewjournal.com/uncategorized/hendersons-stephanie-street-named-as-part-of-a-campaign-promise/"
+  },
+  {
+    "intersectionId": "airport-warm-springs-paradise",
+    "category": "history",
+    "title": "Roy Rogers had a ranch here",
+    "body": "Cowboy star Roy Rogers bought Warm Springs Ranch after visiting Las Vegas for Helldorado. The ranch and its spring were southwest of today's Paradise and Warm Springs intersection.",
+    "sourceLabel": "Las Vegas Review-Journal",
+    "sourceUrl": "https://www.reviewjournal.com/uncategorized/ride-off-into-the-sunset-on-old-west-inspired-streets/"
+  },
+  {
+    "intersectionId": "airport-russell-las-vegas-blvd",
+    "category": "landmark",
+    "title": "The Welcome sign is just south",
+    "body": "Betty Willis designed the Welcome to Fabulous Las Vegas sign in 1959. It stands in the Las Vegas Boulevard median just south of Russell Road.",
+    "sourceLabel": "Las Vegas Review-Journal",
+    "sourceUrl": "https://www.reviewjournal.com/news/fabulous-las-vegas-welcome-sign-now-is-historic/"
+  }
+]

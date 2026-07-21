@@ -190,5 +190,101 @@
     "body": "St. Rose Parkway is also State Route 146. Its state-maintained section links Interstate 15 with the 215 Beltway before continuing east through Henderson.",
     "sourceLabel": "Nevada Department of Transportation",
     "sourceUrl": "https://www.dot.nv.gov/Home/Components/News/News/6880/16?arch=1&cftype=JRVM9FNC&npage=4&selcat=7"
+  },
+  {
+    "streetId": "hualapai-way",
+    "category": "history",
+    "title": "The west-side roads hid an alphabet",
+    "body": "A former valley civil engineer traced an old west-side alphabet: Antelope, Buffalo, Cimarron, Durango, El Capitan, Fort Apache, Grand Canyon, then Hualapai. Summerlin's curved streets ended the sequence.",
+    "sourceLabel": "Las Vegas Review-Journal",
+    "sourceUrl": "https://www.reviewjournal.com/local/local-las-vegas/downtown/letters-to-the-editor-june-18-24/"
+  },
+  {
+    "streetId": "fort-apache-road",
+    "category": "name-origin",
+    "title": "Named for a John Wayne western",
+    "body": "A Clark County planning employee named Fort Apache Road for the 1948 John Ford western starring John Wayne and Henry Fonda. The same employee also named nearby streets after cars and television characters.",
+    "sourceLabel": "Las Vegas Review-Journal",
+    "sourceUrl": "https://www.reviewjournal.com/uncategorized/several-southwest-area-streets-named-on-a-whim/"
+  },
+  {
+    "streetId": "lamb-boulevard",
+    "category": "name-origin",
+    "title": "Not the Lamb most locals expect",
+    "body": "Lamb Boulevard was named for Press Lamb—not Floyd Lamb, the former state senator behind the park's name. The prominent local family also included Sheriff Ralph Lamb and County Commissioner Darwin Lamb.",
+    "sourceLabel": "Las Vegas Review-Journal",
+    "sourceUrl": "https://www.reviewjournal.com/uncategorized/knowing-vegas-who-are-some-of-southern-nevadas-streets-named-for/"
+  },
+  {
+    "streetId": "craig-road",
+    "category": "name-origin",
+    "title": "Lois Craig owned more than the ranch",
+    "body": "Craig Road was named for Lois Craig, a North Las Vegas landowner. Nearby Craig Ranch began as farmland, became a golf course in the early 1960s, and later became a regional park.",
+    "sourceLabel": "Las Vegas Review-Journal",
+    "sourceUrl": "https://www.reviewjournal.com/news/craig-ranch-regional-parks-name-comes-from-two-possibilities/"
+  },
+  {
+    "streetId": "rampart-boulevard",
+    "category": "landmark",
+    "title": "The curve through Tivoli Village",
+    "body": "Rampart bends past Boca Park and Tivoli Village at Alta Drive. Tivoli opened in 2011 with European-style architecture, turning the curve into one of the west valley's most recognizable retail corners.",
+    "sourceLabel": "Las Vegas Review-Journal",
+    "sourceUrl": "https://www.reviewjournal.com/business/tivoli-village-developer-planning-700000-square-foot-shopping-mall/"
+  },
+  {
+    "streetId": "horizon-ridge-parkway",
+    "category": "landmark",
+    "title": "A fly-fishing mural for a parks pioneer",
+    "body": "Dundee Jones Park near Horizon Ridge and Jeffreys honors Henderson's former parks director. Its 33-foot fly-fishing mural celebrates Jones, who helped lay the foundation for the city's park system.",
+    "sourceLabel": "City of Henderson",
+    "sourceUrl": "https://www.cityofhenderson.com/Home/Components/News/News/511/567"
+  },
+  {
+    "streetId": "valley-view-boulevard",
+    "category": "landmark",
+    "title": "Where Las Vegas began with water",
+    "body": "The Springs Preserve covers 180 acres along Valley View at the site of the springs that gave Las Vegas its name. Long before casinos, that water drew plants, animals, and people to the valley.",
+    "sourceLabel": "Las Vegas Review-Journal",
+    "sourceUrl": "https://www.reviewjournal.com/news/wet-and-wild-las-vegas/"
+  },
+  {
+    "streetId": "washington-avenue",
+    "category": "landmark",
+    "title": "The city's oldest surviving schoolhouse",
+    "body": "The Historic Westside School at Washington and D opened in 1923 as Las Vegas Grammar School Branch No. 1. It is the oldest surviving schoolhouse in Las Vegas.",
+    "sourceLabel": "City of Las Vegas",
+    "sourceUrl": "https://www.lasvegasnevada.gov/Residents/History/Timeline"
+  },
+  {
+    "streetId": "desert-inn-road",
+    "category": "name-origin",
+    "title": "The casino vanished; its road kept the name",
+    "body": "Desert Inn Road was named for Wilbur Clark's resort. Clark also named Toni Avenue for his wife, Shirley Street for his father, LuLu Avenue for his mother, and Wilbur Street for himself.",
+    "sourceLabel": "Las Vegas Review-Journal",
+    "sourceUrl": "https://www.reviewjournal.com/uncategorized/desert-inn-road-named-for-one-of-valleys-biggest-supporters/"
+  },
+  {
+    "streetId": "russell-road",
+    "category": "landmark",
+    "title": "The Welcome sign is just south",
+    "body": "Betty Willis designed the Welcome to Fabulous Las Vegas sign in 1959. It stands in the Las Vegas Boulevard median just south of Russell Road, marking the Strip's familiar southern gateway.",
+    "sourceLabel": "Las Vegas Review-Journal",
+    "sourceUrl": "https://www.reviewjournal.com/news/fabulous-las-vegas-welcome-sign-now-is-historic/"
+  },
+  {
+    "streetId": "windmill-lane",
+    "category": "history",
+    "title": "From horse country to commuter route",
+    "body": "East of Las Vegas Boulevard, Windmill Lane once crossed a quiet horse community. Development turned the former back road into a through route for commuters moving around the south valley.",
+    "sourceLabel": "Las Vegas Business Press",
+    "sourceUrl": "https://businesspress.vegas/real-estate/residential-developments-planned-for-southwest/"
+  },
+  {
+    "streetId": "blue-diamond-road",
+    "category": "history",
+    "title": "Enough dirt for 1,800 swimming pools",
+    "body": "A 2017 widening project on Blue Diamond Road moved enough dirt to fill 1,800 average swimming pools and used enough asphalt for 8,000 driveways. The road is also State Route 160.",
+    "sourceLabel": "Nevada Department of Transportation",
+    "sourceUrl": "https://www.dot.nv.gov/Home/Components/News/News/956/395?cftype=News"
   }
 ]

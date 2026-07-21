@@ -21,6 +21,10 @@
 
 - No learning-game product blocker; specs 06-10 were approved for implementation on 2026-07-14.
 
+## 2026-07-20 Motion polish
+
+- `12_motion_polish.md`: done; verified locally at desktop, 390 px, and reduced motion.
+
 ## Notes
 
 - Workspace started empty and not as a git repository.
@@ -86,3 +90,5 @@
 - 2026-07-17: Added seven playful final-score judgments from “You must be visiting…” through the perfect-score “Las Vegas native,” while preserving the separate new-high-score notice.
 - 2026-07-19: Expanded Find streets from 32 to 38 roads with Valley View, Washington, Desert Inn, Russell, Windmill, and Blue Diamond. Added 28 OSM-verified crossings for the same roads, bringing the intersection seed to 158.
 - 2026-07-19: Refreshed Lake Mead Parkway after current OSM drift put one sampled point 191 m off the checked-in route. All 38 playable street geometries now pass the live verifier within its 75 m limit.
+- 2026-07-20: Added restrained press feedback, mode-check feedback, round-summary stagger, and About dialog transitions, with fine-pointer hover gating and a reduced-motion path.
+- 2026-07-20: Expanded roadside notes from 24 to 36 of 38 streets and added 12 sourced intersection notes covering casino history, parks, landmarks, public art, name origins, a ranch, and the city boundary. Jones and Ann remain uncovered rather than carrying weak filler; the other 146 intersections render no empty card.

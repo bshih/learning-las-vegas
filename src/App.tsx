@@ -5,13 +5,14 @@ import { GamePanel } from "./components/GamePanel";
 import { MapStage } from "./components/MapStage";
 import {
   getAreaBucketLabel,
+  getIntersectionNote,
   getRoadsideNote,
   getStreetDefinition,
   intersections,
   isPlayAreaId,
   streetDefinitions,
 } from "./data";
-import type { Intersection, RoadsideNote } from "./data";
+import type { Intersection, IntersectionNote, RoadsideNote } from "./data";
 import type { HighlightedStreet } from "./map";
 import { useLearningGame } from "./state/learningGame";
 import type { RoundResult } from "./state/learningGame";
@@ -66,7 +67,7 @@ export default function App() {
               <>
                 <p className="panel-kicker">Round complete</p>
                 <h1 className="score-title">{game.lastSession.score}<span>/40</span></h1>
-                <p className="panel-lede">
+                <p className="panel-lede summary-judgment">
                   <strong>{scoreJudgment(game.lastSession.score)}</strong>
                   {game.lastSession.isNewBest ? <><br />New high score for this mode.</> : null}
                 </p>
@@ -117,6 +118,9 @@ export default function App() {
     : null;
   const resultDescription = currentResult ? feedbackText(currentResult) : undefined;
   const roadsideNote = currentStreet ? getRoadsideNote(currentStreet.id) : undefined;
+  const intersectionNote = activeSession.mode === "intersections" && currentIntersection
+    ? getIntersectionNote(currentIntersection.id)
+    : undefined;
 
   return (
     <AppShell
@@ -147,6 +151,7 @@ export default function App() {
           <RoundFeedback
             result={currentResult}
             currentStreetNote={currentStreet?.teachingNote ?? currentIntersection?.teachingNote}
+            intersectionNote={intersectionNote}
             roadsideNote={roadsideNote}
           />
         </GamePanel>
@@ -223,10 +228,12 @@ function SessionProgress({ index, score, attempts }: { index: number; score: num
 function RoundFeedback({
   result,
   currentStreetNote,
+  intersectionNote,
   roadsideNote,
 }: {
   result: RoundResult | null;
   currentStreetNote?: string;
+  intersectionNote?: IntersectionNote;
   roadsideNote?: RoadsideNote;
 }) {
   if (!result) return <section className="round-feedback empty"><p>Drop your pin. Close still scores.</p></section>;
@@ -237,15 +244,22 @@ function RoundFeedback({
       <div className="reward-row"><span>{scoreLabel(correct, score)}</span><strong>+{score}</strong></div>
       <p className="feedback-copy">{feedbackText(result)}</p>
       {currentStreetNote ? <p className="teaching-note">{currentStreetNote}</p> : null}
-      {roadsideNote ? <RoadsideNoteCard note={roadsideNote} /> : null}
+      {roadsideNote ? <EditorialNoteCard label="Roadside note" note={roadsideNote} /> : null}
+      {intersectionNote ? <EditorialNoteCard label="Local note" note={intersectionNote} /> : null}
     </section>
   );
 }
 
-function RoadsideNoteCard({ note }: { note: RoadsideNote }) {
+function EditorialNoteCard({
+  label,
+  note,
+}: {
+  label: "Local note" | "Roadside note";
+  note: IntersectionNote | RoadsideNote;
+}) {
   return (
     <aside className="roadside-note">
-      <p className="roadside-note-label">Roadside note · {note.category.replace("-", " ")}</p>
+      <p className="roadside-note-label">{label} · {note.category.replace("-", " ")}</p>
       <h2>{note.title}</h2>
       <p>{note.body}</p>
       <a href={note.sourceUrl} target="_blank" rel="noreferrer">Source: {note.sourceLabel}</a>

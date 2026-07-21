@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { MouseEvent, ReactNode } from "react";
 
 type AppShellProps = {
@@ -8,9 +8,39 @@ type AppShellProps = {
 
 export function AppShell({ children, sidebar }: AppShellProps) {
   const aboutDialogRef = useRef<HTMLDialogElement | null>(null);
+  const closeTimerRef = useRef<number | null>(null);
+  const [isClosingAbout, setIsClosingAbout] = useState(false);
+
+  useEffect(() => () => {
+    if (closeTimerRef.current !== null) window.clearTimeout(closeTimerRef.current);
+  }, []);
+
+  const openAbout = (event: MouseEvent<HTMLButtonElement>) => {
+    const dialog = aboutDialogRef.current;
+    if (!dialog) return;
+    dialog.classList.toggle("no-motion", event.detail === 0);
+    dialog.showModal();
+  };
+
+  const closeAbout = (immediately = false) => {
+    const dialog = aboutDialogRef.current;
+    if (!dialog?.open) return;
+
+    if (immediately || window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      dialog.close();
+      return;
+    }
+
+    setIsClosingAbout(true);
+    closeTimerRef.current = window.setTimeout(() => {
+      dialog.close();
+      setIsClosingAbout(false);
+      closeTimerRef.current = null;
+    }, 200);
+  };
 
   const closeFromBackdrop = (event: MouseEvent<HTMLDialogElement>) => {
-    if (event.target === event.currentTarget) event.currentTarget.close();
+    if (event.target === event.currentTarget) closeAbout();
   };
 
   return (
@@ -30,7 +60,7 @@ export function AppShell({ children, sidebar }: AppShellProps) {
               <button
                 type="button"
                 className="atlas-about-link"
-                onClick={() => aboutDialogRef.current?.showModal()}
+                onClick={openAbout}
               >
                 About
               </button>
@@ -44,11 +74,15 @@ export function AppShell({ children, sidebar }: AppShellProps) {
       </main>
       <dialog
         ref={aboutDialogRef}
-        className="about-dialog"
+        className={`about-dialog${isClosingAbout ? " closing" : ""}`}
         aria-labelledby="about-dialog-title"
         onClick={closeFromBackdrop}
+        onCancel={(event) => {
+          event.preventDefault();
+          closeAbout(true);
+        }}
       >
-        <form method="dialog" className="about-dialog-card">
+        <div className="about-dialog-card">
           <p className="panel-kicker">About</p>
           <h2 id="about-dialog-title">Why I built this</h2>
           <p>
@@ -81,8 +115,14 @@ export function AppShell({ children, sidebar }: AppShellProps) {
               .
             </p>
           </section>
-          <button type="submit" className="button button-primary">Close</button>
-        </form>
+          <button
+            type="button"
+            className="button button-primary"
+            onClick={(event) => closeAbout(event.detail === 0)}
+          >
+            Close
+          </button>
+        </div>
       </dialog>
     </>
   );

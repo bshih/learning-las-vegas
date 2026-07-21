@@ -17,6 +17,11 @@
   --color-map-bg: #d8d8c8;
   --radius-sm: 2px;
   --radius-md: 3px;
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --motion-press: 160ms;
+  --motion-mode: 140ms;
+  --motion-dialog: 200ms;
+  --motion-summary: 240ms;
   --space-2: 0.5rem;
   --space-3: 0.75rem;
   --space-4: 1rem;

@@ -6,12 +6,14 @@ const geometryPath = path.join(root, "src", "data", "streets.geojson");
 const catalogPath = path.join(root, "src", "data", "streetGroups.json");
 const areaBucketsPath = path.join(root, "src", "data", "areaBuckets.json");
 const intersectionsPath = path.join(root, "src", "data", "intersections.json");
+const intersectionNotesPath = path.join(root, "src", "data", "intersectionNotes.json");
 const roadsideNotesPath = path.join(root, "src", "data", "roadsideNotes.json");
 
 const geometry = readJson(geometryPath);
 const catalog = readJson(catalogPath);
 const areaBuckets = readJson(areaBucketsPath);
 const intersections = readJson(intersectionsPath);
+const intersectionNotes = readJson(intersectionNotesPath);
 const roadsideNotes = readJson(roadsideNotesPath);
 const errors = [];
 
@@ -20,31 +22,58 @@ const allowedAxes = new Set(["north-south", "east-west", "regional"]);
 const allowedDifficulties = new Set(["easy", "medium", "hard"]);
 const allowedAreaIds = new Set(areaBuckets.map((bucket) => bucket.id));
 const allowedRoadsideNoteCategories = new Set(["corridor", "history", "landmark", "name-origin", "navigation"]);
+const allowedIntersectionNoteCategories = new Set(["boundary", "casino-history", "history", "landmark", "name-origin"]);
+const requiredIntersectionNoteIds = new Set([
+  "airport-russell-las-vegas-blvd",
+  "airport-warm-springs-paradise",
+  "charleston-buffalo",
+  "charleston-durango",
+  "charleston-eastern",
+  "flamingo-las-vegas-blvd",
+  "henderson-lake-mead-boulder-hwy",
+  "henderson-sunset-eastern",
+  "henderson-sunset-stephanie",
+  "sahara-las-vegas-blvd",
+  "tropicana-maryland",
+  "tropicana-las-vegas-blvd",
+]);
 const requiredRoadsideNoteIds = new Set([
+  "blue-diamond-road",
   "boulder-highway",
   "buffalo-drive",
   "charleston-boulevard",
   "cheyenne-avenue",
   "decatur-boulevard",
   "durango-drive",
+  "desert-inn-road",
   "eastern-avenue",
   "flamingo-road",
+  "fort-apache-road",
   "green-valley-parkway",
+  "horizon-ridge-parkway",
+  "hualapai-way",
   "lake-mead-parkway",
   "lake-mead-boulevard",
   "las-vegas-boulevard",
+  "lamb-boulevard",
   "maryland-parkway",
   "nellis-boulevard",
   "paradise-road",
   "pecos-road",
   "rainbow-boulevard",
+  "rampart-boulevard",
+  "russell-road",
   "sahara-avenue",
   "spring-mountain-road",
   "stephanie-street",
   "st-rose-parkway",
   "sunset-road",
   "tropicana-avenue",
+  "valley-view-boulevard",
+  "washington-avenue",
   "warm-springs-road",
+  "windmill-lane",
+  "craig-road",
 ]);
 const paddedBounds = { minLat: 35.89, maxLat: 36.39, minLon: -115.46, maxLon: -114.89 };
 const requiredOrderedGroups = {
@@ -153,11 +182,13 @@ const groups = Array.isArray(catalog?.groups) ? catalog.groups : [];
 const featureIds = new Set();
 const definitionIds = new Set();
 const groupIds = new Set();
+const intersectionIds = new Set(intersections.map((intersection) => intersection.id));
 const namesByNormalizedValue = new Map();
 
 for (const feature of features) validateFeature(feature);
 for (const street of streets) validateStreet(street);
 for (const group of groups) validateGroup(group);
+validateIntersectionNotes();
 validateRoadsideNotes();
 
 if (features.length !== requiredCanonicalNames.length) {
@@ -240,6 +271,7 @@ console.log(`Street data validation passed: ${streets.length} streets in ${group
 console.log(`Geometry: ${lineCount} line(s), ${pointCount} points, ${assetBytes} bytes.`);
 console.log(`Special-shape focus group: ${shapeGroup.streetIds.join(", ")}.`);
 console.log(`Roadside-note pilot: ${roadsideNotes.length} sourced notes.`);
+console.log(`Intersection-note pilot: ${intersectionNotes.length} sourced notes.`);
 
 function validateFeature(feature) {
   const id = feature?.properties?.id;
@@ -392,6 +424,41 @@ function validateRoadsideNotes() {
   }
   for (const streetId of requiredRoadsideNoteIds) {
     if (!seenStreetIds.has(streetId)) errors.push(`${streetId}: missing required roadside note`);
+  }
+}
+
+function validateIntersectionNotes() {
+  if (!Array.isArray(intersectionNotes)) {
+    errors.push("intersectionNotes.json must contain an array");
+    return;
+  }
+  if (intersectionNotes.length !== requiredIntersectionNoteIds.size) {
+    errors.push(`expected ${requiredIntersectionNoteIds.size} intersection notes, found ${intersectionNotes.length}`);
+  }
+  const seenIntersectionIds = new Set();
+  for (const note of intersectionNotes) {
+    const intersectionId = note?.intersectionId;
+    const label = typeof intersectionId === "string" ? intersectionId : "unknown intersection note";
+    if (seenIntersectionIds.has(intersectionId)) errors.push(`${label}: duplicate intersection note`);
+    seenIntersectionIds.add(intersectionId);
+    if (!intersectionIds.has(intersectionId)) errors.push(`${label}: intersection note references an unknown intersection`);
+    if (!requiredIntersectionNoteIds.has(intersectionId)) errors.push(`${label}: not part of the intersection-note pilot`);
+    if (!allowedIntersectionNoteCategories.has(note?.category)) errors.push(`${label}: invalid intersection-note category`);
+    if (typeof note?.title !== "string" || note.title.trim().length < 8 || note.title.length > 60) {
+      errors.push(`${label}: intersection-note title must be 8-60 characters`);
+    }
+    if (typeof note?.body !== "string" || note.body.trim().length < 50 || note.body.length > 260 || !/[.!?]$/.test(note.body.trim())) {
+      errors.push(`${label}: intersection-note body must be 50-260 characters ending in punctuation`);
+    }
+    if (typeof note?.sourceLabel !== "string" || note.sourceLabel.trim() === "") {
+      errors.push(`${label}: intersection note requires a source label`);
+    }
+    if (typeof note?.sourceUrl !== "string" || !note.sourceUrl.startsWith("https://")) {
+      errors.push(`${label}: intersection note requires an HTTPS source URL`);
+    }
+  }
+  for (const intersectionId of requiredIntersectionNoteIds) {
+    if (!seenIntersectionIds.has(intersectionId)) errors.push(`${intersectionId}: missing required intersection note`);
   }
 }
 
